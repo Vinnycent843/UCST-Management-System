@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Finance Details — UCST</title>
+<style>
+  body { 
+    font-family: Georgia, 'Times New Roman', Times, serif; 
+    background: #f8f9fa; 
+    margin:0; 
+    padding:0; 
+  }
+  header { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    background:#007bff; 
+    color:#fff; 
+    padding:10px 20px; 
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  header h1 { margin:0; font-size:20px; }
+  #searchBox { 
+    padding:8px 12px; 
+    border-radius:5px; 
+    border:none; 
+    min-width: 200px;
+  }
+  #toggleTheme { 
+    cursor:pointer; 
+    margin-left:10px; 
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 5px;
+  }
+  
+  /* Stats Cards */
+  .stats-container {
+    display: flex;
+    gap: 15px;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px 20px;
+    min-width: 200px;
+    flex: 1;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-left: 4px solid #007bff;
+  }
+  .stat-card h3 {
+    margin: 0 0 10px 0;
+    color: #555;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stat-card .value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+  }
+  .stat-card.positive { border-left-color: #28a745; }
+  .stat-card.positive .value { color: #28a745; }
+  .stat-card.warning { border-left-color: #ffc107; }
+  .stat-card.warning .value { color: #ffc107; }
+  .stat-card.danger { border-left-color: #dc3545; }
+  .stat-card.danger .value { color: #dc3545; }
+  
+  /* Table Container */
+  .table-container {
+    padding: 0 20px;
+    overflow-x: auto;
+  }
+  table { 
+    width:100%; 
+    border-collapse:collapse; 
+    margin:20px 0; 
+    min-width: 800px;
+  }
+  th, td { 
+    padding:12px 15px; 
+    border:1px solid #ddd; 
+    text-align:left; 
+  }
+  th { 
+    background:#007bff; 
+    color:#fff; 
+    position: sticky;
+    top: 60px;
+    z-index: 10;
+  }
+  tr:nth-child(even) { background:#f9f9f9; }
+  tr:hover { background:#e9f7fe; }
+  
+  /* Status Badges */
+  .status-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .status-paid {
+    background: #d4edda;
+    color: #155724;
+  }
+  .status-partial {
+    background: #fff3cd;
+    color: #856404;
+  }
+  .status-unpaid {
+    background: #f8d7da;
+    color: #721c24;
+  }
+  
+  /* Modal */
+  .modal { 
+    display:none; 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background:rgba(0,0,0,0.5); 
+    justify-content:center; 
+    align-items:center; 
+    z-index:1000; 
+  }
+  .modal-content { 
+    background:#fff; 
+    padding:25px; 
+    border-radius:10px; 
+    width:400px; 
+    max-height:90%; 
+    overflow:auto; 
+    position:relative; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+  .modal-content label { display:block; margin:10px 0 5px; font-weight: 600; }
+  .modal-content input, .modal-content select { 
+    width:100%; 
+    padding:10px; 
+    border:1px solid #ddd; 
+    border-radius:5px; 
+    margin-bottom: 15px;
+  }
+  
+  /* Loading */
+  .loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+  }
+  .loading::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* PDF Preview Modal */
+  #pdfPreviewModal .modal-content { 
+    width:90%; 
+    max-width:1000px; 
+    height:85%; 
+    overflow:auto; 
+    position:relative; 
+    padding: 15px;
+  }
+  #pdfPreviewModal iframe { width:100%; height:calc(100% - 50px); border:none; }
+  #pdfPreviewModal .modal-actions { 
+    position:absolute; 
+    top:15px; 
+    left:15px; 
+    z-index:10; 
+    display: flex;
+    gap: 10px;
+  }
+  #pdfPreviewModal span.close-btn { 
+    position:absolute; 
+    top:15px; 
+    right:15px; 
+    cursor:pointer; 
+    font-size:22px; 
+    z-index:10; 
+    background: #007bff;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Buttons */
+  button {
+    padding: 8px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  button:hover { background: #0056b3; }
+  .btn-success { background: #28a745; }
+  .btn-success:hover { background: #1e7e34; }
+  .btn-danger { background: #dc3545; }
+  .btn-danger:hover { background: #c82333; }
+  .btn-warning { background: #ffc107; color: #000; }
+  .btn-warning:hover { background: #e0a800; }
+  
+  /* Dark Theme */
+  .dark { background:#212529; color:#f8f9fa; }
+  .dark table, .dark th, .dark td { border-color:#555; }
+  .dark th { background:#343a40; }
+  .dark tr:hover { background:#2c3034; }
+  .dark tr:nth-child(even) { background:#2a2d32; }
+  .dark .stat-card { background: #343a40; color: #f8f9fa; }
+  .dark #searchBox { 
+    background: #495057; 
+    color: #f8f9fa; 
+    border: 1px solid #6c757d;
+  }
+  .dark .modal-content { background: #343a40; color: #f8f9fa; }
+  .dark .modal-content input, .dark .modal-content select { 
+    background: #495057; 
+    color: #f8f9fa; 
+    border-color: #6c757d;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    header { flex-direction: column; gap: 10px; align-items: flex-start; }
+    #searchBox { width: 100%; }
+    .stats-container { flex-direction: column; }
+    .stat-card { min-width: 100%; }
+    .table-container { padding: 0 10px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Finance Details — UCST</h1>
+  <div style="display: flex; align-items: center; gap: 10px;">
+    <input type="text" id="searchBox" placeholder="Search student...">
+    <span id="toggleTheme">🌙</span>
+  </div>
+</header>
+
+<!-- Statistics Cards -->
+<div class="stats-container" id="statsContainer">
+  <div class="stat-card">
+    <h3>Total Students</h3>
+    <div class="value" id="totalStudents">0</div>
+  </div>
+  <div class="stat-card positive">
+    <h3>Fully Paid</h3>
+    <div class="value" id="fullyPaid">0</div>
+  </div>
+  <div class="stat-card warning">
+    <h3>Partial Payments</h3>
+    <div class="value" id="partialPayments">0</div>
+  </div>
+  <div class="stat-card danger">
+    <h3>Unpaid</h3>
+    <div class="value" id="unpaidStudents">0</div>
+  </div>
+  <div class="stat-card">
+    <h3>Total Revenue</h3>
+    <div class="value" id="totalRevenue">Ksh 0</div>
+  </div>
+</div>
+
+<!-- Table Container -->
+<div class="table-container">
+  <table id="financeTable">
+    <thead>
+      <tr>
+        <th>Adm No</th>
+        <th>Full Name</th>
+        <th>Course</th>
+        <th>Annual Tuition</th>
+        <th>Amount Paid</th>
+        <th>Balance</th>
+        <th>Status</th>
+        <th>Last Payment</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <tr>
+        <td colspan="8" class="loading">Loading finance data...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- PDF Preview Modal -->
+<div class="modal" id="pdfPreviewModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closePDFPreview()">✖</span>
+    <div class="modal-actions">
+      <button onclick="printPDF()" class="btn-success">🖨️ Print</button>
+      <button onclick="downloadPDF()" class="btn-warning">⬇️ Download PDF</button>
+      <button onclick="closePDFPreview()" class="btn-danger">Close</button>
+    </div>
+    <iframe id="pdfIframe"></iframe>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+  authDomain: "jnnp-system.firebaseapp.com",
+  databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+  projectId: "jnnp-system",
+  storageBucket: "jnnp-system.firebasestorage.app",
+  messagingSenderId: "769232855377",
+  appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
+// Global variables
+let admissions = {};
+let payments = {};
+let courses = {};
+let currentDoc = null;
+let totalStudents = 0;
+let fullyPaidCount = 0;
+let partialPaymentsCount = 0;
+let unpaidCount = 0;
+let totalRevenue = 0;
+
+// Real-time listeners for database changes
+db.ref("admissions").on("value", (snapshot) => {
+  admissions = snapshot.val() || {};
+  updateStatistics();
+  renderTable();
+});
+
+db.ref("payments").on("value", (snapshot) => {
+  payments = snapshot.val() || {};
+  updateStatistics();
+  renderTable();
+});
+
+// Load courses to get annual tuition
+db.ref("courses").on("value", (snapshot) => {
+  courses = snapshot.val() || {};
+  updateStatistics();
+  renderTable();
+});
+
+// Function to get annual tuition for a student
+function getAnnualTuition(student) {
+  // First check if student has annualTution field directly
+  if (student.annualTution !== undefined && student.annualTution !== null) {
+    return parseFloat(student.annualTution) || 0;
+  }
+  
+  // If not, check if student has courseName to match with courses database
+  if (student.courseName && courses) {
+    // Find the course in courses database
+    const courseEntry = Object.values(courses).find(course => 
+      course.courseName && course.courseName.toLowerCase() === student.courseName.toLowerCase()
+    );
+    
+    if (courseEntry && courseEntry.annualTuition !== undefined) {
+      return parseFloat(courseEntry.annualTuition) || 0;
+    }
+  }
+  
+  // Default fallback
+  return 0;
+}
+
+// Function to update statistics
+function updateStatistics() {
+  const studentIds = Object.keys(admissions);
+  totalStudents = studentIds.length;
+  
+  fullyPaidCount = 0;
+  partialPaymentsCount = 0;
+  unpaidCount = 0;
+  totalRevenue = 0;
+  
+  studentIds.forEach(studentId => {
+    const admission = admissions[studentId];
+    const annualTuition = getAnnualTuition(admission);
+    
+    // Get all payments for this student
+    let studentPayments = [];
+    if (payments) {
+      Object.values(payments).forEach(payment => {
+        if (String(payment.admNo) === String(admission.admNo)) {
+          studentPayments.push(payment);
+        }
+      });
+    }
+    
+    // Calculate total paid
+    let totalPaid = studentPayments.reduce((sum, payment) => {
+      return sum + (parseFloat(payment.amountPaid) || 0);
+    }, 0);
+    
+    totalRevenue += totalPaid;
+    
+    // Determine status
+    const balance = annualTuition - totalPaid;
+    
+    if (totalPaid >= annualTuition) {
+      fullyPaidCount++;
+    } else if (totalPaid > 0 && totalPaid < annualTuition) {
+      partialPaymentsCount++;
+    } else {
+      unpaidCount++;
+    }
+  });
+  
+  // Update UI
+  document.getElementById('totalStudents').textContent = totalStudents;
+  document.getElementById('fullyPaid').textContent = fullyPaidCount;
+  document.getElementById('partialPayments').textContent = partialPaymentsCount;
+  document.getElementById('unpaidStudents').textContent = unpaidCount;
+  document.getElementById('totalRevenue').textContent = `Ksh ${totalRevenue.toLocaleString()}`;
+}
+
+// Function to render the table with dynamic data
+function renderTable() {
+  const body = document.getElementById("tableBody");
+  
+  if (Object.keys(admissions).length === 0) {
+    body.innerHTML = `
+      <tr>
+        <td colspan="8" style="text-align: center; padding: 40px; color: #666;">
+          No student records found. Add students to the admissions database.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+  
+  let html = '';
+  const studentIds = Object.keys(admissions);
+  
+  studentIds.forEach(studentId => {
+    const admission = admissions[studentId];
+    const annualTuition = getAnnualTuition(admission);
+    
+    // Get all payments for this student
+    let studentPayments = [];
+    let lastPaymentDate = null;
+    
+    if (payments) {
+      Object.values(payments).forEach(payment => {
+        if (String(payment.admNo) === String(admission.admNo)) {
+          studentPayments.push(payment);
+          
+          // Track latest payment date
+          if (payment.paymentDate && (!lastPaymentDate || payment.paymentDate > lastPaymentDate)) {
+            lastPaymentDate = payment.paymentDate;
+          }
+        }
+      });
+    }
+    
+    // Calculate total paid
+    let totalPaid = studentPayments.reduce((sum, payment) => {
+      return sum + (parseFloat(payment.amountPaid) || 0);
+    }, 0);
+    
+    // Calculate balance
+    const balance = annualTuition - totalPaid;
+    
+    // Determine payment status
+    let status = '';
+    let statusClass = '';
+    
+    if (totalPaid >= annualTuition) {
+      status = 'Paid';
+      statusClass = 'status-paid';
+    } else if (totalPaid > 0 && totalPaid < annualTuition) {
+      status = 'Partial';
+      statusClass = 'status-partial';
+    } else {
+      status = 'Unpaid';
+      statusClass = 'status-unpaid';
+    }
+    
+    // Format last payment date
+    let formattedDate = 'No payments';
+    if (lastPaymentDate) {
+      const date = new Date(lastPaymentDate);
+      formattedDate = date.toLocaleDateString();
+    }
+    
+    html += `
+      <tr>
+        <td>${admission.admNo || 'N/A'}</td>
+        <td>${admission.fullName || 'N/A'}</td>
+        <td>${admission.courseName || 'N/A'}</td>
+        <td>Ksh ${annualTuition.toLocaleString()}</td>
+        <td>Ksh ${totalPaid.toLocaleString()}</td>
+        <td style="font-weight: ${balance > 0 ? 'bold' : 'normal'}; color: ${balance > 0 ? '#dc3545' : '#28a745'}">
+          Ksh ${balance.toLocaleString()}
+        </td>
+        <td><span class="status-badge ${statusClass}">${status}</span></td>
+        <td>${formattedDate}</td>
+      </tr>
+    `;
+  });
+  
+  body.innerHTML = html;
+}
+
+// Function to generate PDF report
+function generatePDFReport() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('landscape');
+  
+  // Title
+  doc.setFontSize(20);
+  doc.text('UCST Finance Report', 14, 15);
+  doc.setFontSize(12);
+  doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 22);
+  
+  // Statistics
+  doc.setFontSize(14);
+  doc.text('Summary Statistics', 14, 35);
+  doc.setFontSize(10);
+  
+  let yPos = 45;
+  doc.text(`Total Students: ${totalStudents}`, 14, yPos);
+  doc.text(`Fully Paid: ${fullyPaidCount}`, 70, yPos);
+  doc.text(`Partial Payments: ${partialPaymentsCount}`, 120, yPos);
+  doc.text(`Unpaid: ${unpaidCount}`, 180, yPos);
+  doc.text(`Total Revenue: Ksh ${totalRevenue.toLocaleString()}`, 230, yPos);
+  
+  // Table
+  const tableData = [];
+  const studentIds = Object.keys(admissions);
+  
+  studentIds.forEach(studentId => {
+    const admission = admissions[studentId];
+    const annualTuition = getAnnualTuition(admission);
+    
+    // Get payments for this student
+    let studentPayments = [];
+    if (payments) {
+      Object.values(payments).forEach(payment => {
+        if (String(payment.admNo) === String(admission.admNo)) {
+          studentPayments.push(payment);
+        }
+      });
+    }
+    
+    // Calculate totals
+    let totalPaid = studentPayments.reduce((sum, payment) => {
+      return sum + (parseFloat(payment.amountPaid) || 0);
+    }, 0);
+    
+    const balance = annualTuition - totalPaid;
+    
+    tableData.push([
+      admission.admNo || '',
+      admission.fullName || '',
+      admission.courseName || '',
+      `Ksh ${annualTuition.toLocaleString()}`,
+      `Ksh ${totalPaid.toLocaleString()}`,
+      `Ksh ${balance.toLocaleString()}`,
+      totalPaid >= annualTuition ? 'Paid' : (totalPaid > 0 ? 'Partial' : 'Unpaid')
+    ]);
+  });
+  
+  // Add table
+  doc.autoTable({
+    head: [['Adm No', 'Full Name', 'Course', 'Annual Tuition', 'Amount Paid', 'Balance', 'Status']],
+    body: tableData,
+    startY: 55,
+    theme: 'grid',
+    headStyles: { fillColor: [0, 123, 255] },
+    margin: { left: 14, right: 14 }
+  });
+  
+  currentDoc = doc;
+  openPDFPreview(doc);
+}
+
+// --- PDF Preview Functions ---
+function openPDFPreview(doc) {
+  const pdfDataUri = doc.output('datauristring');
+  document.getElementById("pdfIframe").src = pdfDataUri;
+  document.getElementById("pdfPreviewModal").style.display = "flex";
+}
+
+function closePDFPreview() { 
+  document.getElementById("pdfPreviewModal").style.display = "none"; 
+}
+
+function printPDF() { 
+  if (currentDoc) {
+    document.getElementById("pdfIframe").contentWindow.print(); 
+  }
+}
+
+function downloadPDF() { 
+  if (currentDoc) {
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:]/g, '-');
+    currentDoc.save(`UCST_Finance_Report_${timestamp}.pdf`); 
+  }
+}
+
+// --- Search Functionality ---
+document.getElementById("searchBox").addEventListener("keyup", (e) => {
+  const searchTerm = e.target.value.toLowerCase();
+  const rows = document.querySelectorAll("#tableBody tr");
+  
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(searchTerm) ? "" : "none";
+  });
+});
+
+// --- Theme Toggle ---
+document.getElementById("toggleTheme").addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  const themeIcon = document.getElementById("toggleTheme");
+  themeIcon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+});
+
+// --- Add Report Button to Header ---
+document.addEventListener('DOMContentLoaded', () => {
+  const headerDiv = document.querySelector('header div');
+  const reportBtn = document.createElement('button');
+  reportBtn.innerHTML = '📊 Generate Report';
+  reportBtn.className = 'btn-success';
+  reportBtn.style.marginLeft = '10px';
+  reportBtn.onclick = generatePDFReport;
+  headerDiv.appendChild(reportBtn);
+});
+
+// --- Refresh Button ---
+document.addEventListener('DOMContentLoaded', () => {
+  const headerDiv = document.querySelector('header div');
+  const refreshBtn = document.createElement('button');
+  refreshBtn.innerHTML = '🔄 Refresh';
+  refreshBtn.style.marginLeft = '10px';
+  refreshBtn.onclick = () => {
+    // Force reload data
+    location.reload();
+  };
+  headerDiv.appendChild(refreshBtn);
+});
+
+// --- Auto-refresh every 30 seconds ---
+setInterval(() => {
+  // The Firebase listeners already update in real-time
+  // This is just a backup to ensure data freshness
+  console.log('Auto-refreshing data...');
+}, 30000);
+
+// Initial render
+renderTable();
+</script>
+</body>
+</html>

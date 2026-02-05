@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCST College - AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2062f0;
+            --primary-light: #4a86f8;
+            --primary-dark: #0a3cb9;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #f5f7fb 0%, #e3e8f5 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: all 0.5s ease;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 3s infinite alternate;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2rem;
+            animation: fadeIn 2s ease;
+        }
+
+        /* Floating elements for background */
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(32, 98, 240, 0.1);
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .floating-element:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            left: 70%;
+            animation-delay: 6s;
+        }
+
+        /* Demo Content */
+        .demo-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .demo-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            backdrop-filter: blur(10px);
+            transform: translateY(0);
+            transition: all 0.4s ease;
+            animation: fadeInUp 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .demo-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .demo-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .demo-card h3 i {
+            color: var(--primary-light);
+            transition: transform 0.3s ease;
+        }
+
+        .demo-card:hover h3 i {
+            transform: scale(1.2);
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .feature {
+            background: rgba(32, 98, 240, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .feature i {
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+
+        .feature:hover i {
+            color: white;
+        }
+
+        /* Chat Widget Styles */
+        .chat-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            z-index: 1000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .chat-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(32, 98, 240, 0.4);
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 30px rgba(32, 98, 240, 0.6);
+        }
+
+        .chat-button:hover::before {
+            transform: translateX(100%);
+        }
+
+        .chat-widget {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            height: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            transform: scale(0.9);
+            opacity: 0;
+            animation: widgetAppear 0.5s forwards;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            animation: shimmer 3s infinite;
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .chat-header h3 i {
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        .close-chat {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .close-chat:hover {
+            background: rgba(255,255,255,0.3);
+            transform: rotate(90deg);
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            line-height: 1.4;
+            position: relative;
+            animation: messageAppear 0.4s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-bottom-right-radius: 5px;
+            transform-origin: right bottom;
+        }
+
+        .assistant-message {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-bottom-left-radius: 5px;
+            transform-origin: left bottom;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            gap: 12px;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(32, 98, 240, 0.2);
+            transform: scale(1.02);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(32, 98, 240, 0.3);
+        }
+
+        .send-button:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 6px 15px rgba(32, 98, 240, 0.4);
+        }
+
+        .suggestions {
+            padding: 15px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            background: rgba(245, 245, 245, 0.8);
+        }
+
+        .suggestion {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .suggestion:hover {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(32, 98, 240, 0.3);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 20px;
+            padding: 12px 18px;
+            color: #666;
+            font-style: italic;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .typing-dots {
+            display: inline-block;
+        }
+
+        .typing-dots span {
+            animation: typing 1.4s infinite;
+            opacity: 0.6;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(32, 98, 240, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(32, 98, 240, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(32, 98, 240, 0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 5px rgba(32, 98, 240, 0.5); }
+            100% { text-shadow: 0 0 15px rgba(32, 98, 240, 0.8), 0 0 20px rgba(32, 98, 240, 0.6); }
+        }
+
+        @keyframes widgetAppear {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes messageAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.6; }
+            30% { opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                width: 100%;
+                bottom: 0;
+                right: 0;
+            }
+            
+            .chat-widget {
+                height: 70vh;
+                border-radius: 20px 20px 0 0;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .demo-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating background elements -->
+    <div class="floating-elements">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>UCST College - Advanced AI Assistant</h1>
+            <p>Now with comprehensive knowledge about education, exams, and college operations</p>
+        </div>
+
+        <div class="demo-content">
+            <div class="demo-card">
+                <h3><i class="fas fa-robot"></i> Enhanced Knowledge Base</h3>
+                <p>This AI assistant now understands complex questions about education systems, exams, academic policies, and much more.</p>
+                <div class="features">
+                    <div class="feature"><i class="fas fa-brain"></i> Advanced AI</div>
+                    <div class="feature"><i class="fas fa-graduation-cap"></i> Education Expert</div>
+                    <div class="feature"><i class="fas fa-book"></i> Exam Knowledge</div>
+                    <div class="feature"><i class="fas fa-chart-line"></i> Academic Advice</div>
+                </div>
+            </div>
+
+            <div class="demo-card">
+                <h3><i class="fas fa-graduation-cap"></i> What It Can Help With</h3>
+                <ul style="padding-left: 20px; margin-bottom: 15px;">
+                    <li>Exam preparation strategies and tips</li>
+                    <li>Academic policies and procedures</li>
+                    <li>Course selection and career guidance</li>
+                    <li>Study techniques and time management</li>
+                    <li>Educational psychology concepts</li>
+                </ul>
+            </div>
+
+            <div class="demo-card">
+                <h3><i class="fas fa-lightbulb"></i> Try Asking About</h3>
+                <ul style="padding-left: 20px; margin-top: 10px;">
+                    <li>"How to prepare for final exams?"</li>
+                    <li>"What are KNEC registration requirements?"</li>
+                    <li>"Study techniques for better retention"</li>
+                    <li>"Career options after my course"</li>
+                    <li>"How to manage academic stress?"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enhanced AI Assistant Chat Widget -->
+    <div class="chat-container">
+        <div class="chat-widget" id="chatWidget">
+            <div class="chat-header">
+                <h3><i class="fas fa-robot"></i> UCST Education Assistant</h3>
+                <button class="close-chat" id="closeChat">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message assistant-message">
+                    Hello! I'm your enhanced UCST College assistant. I can help with courses, admissions, exams, study techniques, career guidance, and educational advice. How can I assist you today?
+                </div>
+            </div>
+            <div class="suggestions">
+                <div class="suggestion" data-question="How to prepare for final exams?">Exam Prep</div>
+                <div class="suggestion" data-question="What are the KNEC requirements?">KNEC Info</div>
+                <div class="suggestion" data-question="Best study techniques">Study Tips</div>
+                <div class="suggestion" data-question="Career guidance after courses">Careers</div>
+                <div class="suggestion" data-question="Time management for students">Time Mgmt</div>
+                <div class="suggestion" data-question="Academic stress management">Stress Help</div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                Assistant is thinking<span class="typing-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask about exams, education, careers...">
+                <button class="send-button" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <button class="chat-button" id="chatButton">
+            <i class="fas fa-comments"></i>
+        </button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const chatButton = document.getElementById('chatButton');
+        const chatWidget = document.getElementById('chatWidget');
+        const closeChat = document.getElementById('closeChat');
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const suggestions = document.querySelectorAll('.suggestion');
+
+        // Enhanced knowledge base for education and exams
+        const knowledgeBase = {
+            // Exam-related information
+            exams: {
+                preparation: [
+                    "Start preparing at least 3-4 weeks before exams",
+                    "Create a study schedule and stick to it",
+                    "Practice with past papers and mock tests",
+                    "Focus on understanding concepts rather than memorization",
+                    "Take regular breaks during study sessions",
+                    "Form study groups for difficult subjects"
+                ],
+                knec: {
+                    registration: "KNEC registration requires: 1) Completed application form, 2) Passport photos, 3) Copy of ID, 4) Previous academic certificates, 5) Registration fees",
+                    deadlines: "KNEC registration deadlines are usually 2 months before exam dates. Check the academic calendar for specific dates",
+                    requirements: "Students must have completed the required coursework and practical sessions to be eligible for KNEC exams"
+                },
+                strategies: [
+                    "Read all instructions carefully before starting",
+                    "Manage your time - allocate time per question",
+                    "Answer questions you know first",
+                    "Review your answers before submitting",
+                    "Stay calm and focused during the exam"
+                ]
+            },
+            
+            // Study techniques
+            study: {
+                techniques: [
+                    "Pomodoro Technique: 25min study, 5min break",
+                    "Active recall: Test yourself regularly",
+                    "Spaced repetition: Review material over increasing intervals",
+                    "Mind mapping for visual learners",
+                    "Teaching others to reinforce understanding"
+                ],
+                timeManagement: [
+                    "Create a weekly study plan",
+                    "Prioritize difficult subjects during peak concentration hours",
+                    "Use digital tools like calendar apps for reminders",
+                    "Avoid multitasking during study sessions",
+                    "Set specific, achievable goals for each study session"
+                ]
+            },
+            
+            // Career guidance
+            careers: {
+                afterCourses: {
+                    mechanical: "Mechanical Engineering graduates can work in automotive, manufacturing, energy, aerospace industries, or pursue further studies",
+                    business: "Business graduates can work in management, marketing, finance, entrepreneurship, or HR roles",
+                    computing: "Computing graduates can become software developers, IT support, network administrators, data analysts, or cybersecurity specialists",
+                    electrical: "Electrical Engineering graduates can work in power systems, electronics, telecommunications, or automation industries"
+                },
+                advice: [
+                    "Research job market trends in your field",
+                    "Network with professionals in your industry",
+                    "Consider internships for practical experience",
+                    "Develop both technical and soft skills",
+                    "Create a professional portfolio or CV"
+                ]
+            },
+            
+            // Academic support
+            academic: {
+                stress: [
+                    "Practice regular physical exercise",
+                    "Maintain a balanced diet and sleep schedule",
+                    "Use relaxation techniques like deep breathing",
+                    "Talk to counselors or trusted mentors",
+                    "Break large tasks into manageable steps"
+                ],
+                policies: {
+                    attendance: "Minimum 75% attendance required for all courses",
+                    grading: "Grading system: A (70-100%), B (60-69%), C (50-59%), D (40-49%), E (Below 40%)",
+                    appeals: "Academic appeals must be submitted within 14 days of result publication"
+                }
+            }
+        };
+
+        // Toggle chat widget
+        chatButton.addEventListener('click', () => {
+            chatWidget.style.display = 'flex';
+            chatButton.style.display = 'none';
+            chatInput.focus();
+        });
+
+        // Close chat widget
+        closeChat.addEventListener('click', () => {
+            chatWidget.style.display = 'none';
+            chatButton.style.display = 'flex';
+        });
+
+        // Send message on button click
+        sendButton.addEventListener('click', sendMessage);
+
+        // Send message on Enter key
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Quick suggestion buttons
+        suggestions.forEach(suggestion => {
+            suggestion.addEventListener('click', () => {
+                const question = suggestion.getAttribute('data-question');
+                chatInput.value = question;
+                sendMessage();
+            });
+        });
+
+        // Send message function
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            
+            if (message) {
+                // Add user message to chat
+                addMessage('user', message);
+                chatInput.value = '';
+                
+                // Show typing indicator
+                typingIndicator.style.display = 'block';
+                scrollToBottom();
+                
+                // Generate and display response
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    const response = generateEnhancedResponse(message);
+                    addMessage('assistant', response);
+                }, 1500);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(sender, text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender === 'user' ? 'user-message' : 'assistant-message');
+            messageDiv.textContent = text;
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        // Scroll to bottom of chat
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Enhanced response generation with comprehensive knowledge
+        function generateEnhancedResponse(question) {
+            question = question.toLowerCase();
+            
+            // Exam preparation questions
+            if (question.includes('exam') || question.includes('test') || question.includes('final')) {
+                if (question.includes('prep') || question.includes('study') || question.includes('prepare')) {
+                    return `Exam Preparation Tips:\n\n${knowledgeBase.exams.preparation.map((tip, index) => `${index + 1}. ${tip}`).join('\n')}\n\nRemember to also: ${knowledgeBase.exams.strategies.join(', ')}`;
+                }
+                if (question.includes('knec')) {
+                    if (question.includes('register') || question.includes('requirement')) {
+                        return `KNEC Registration Requirements:\n\n${knowledgeBase.exams.knec.registration}\n\nDeadlines: ${knowledgeBase.exams.knec.deadlines}\n\nEligibility: ${knowledgeBase.exams.knec.requirements}`;
+                    }
+                    return "KNEC (Kenya National Examinations Council) conducts national exams. For registration, you need completed forms, photos, ID copy, previous certificates, and fees. Registration deadlines are usually 2 months before exam dates.";
+                }
+                return "Exams are conducted at the end of each semester. You need minimum 75% attendance to be eligible. Prepare by creating a study schedule, practicing past papers, and understanding concepts rather than memorizing.";
+            }
+            
+            // Study techniques
+            else if (question.includes('study') || question.includes('learn') || question.includes('technique')) {
+                if (question.includes('time') || question.includes('manage')) {
+                    return `Time Management for Students:\n\n${knowledgeBase.study.timeManagement.map((tip, index) => `${index + 1}. ${tip}`).join('\n')}`;
+                }
+                return `Effective Study Techniques:\n\n${knowledgeBase.study.techniques.map((tech, index) => `${index + 1}. ${tech}`).join('\n')}\n\nFind what works best for your learning style!`;
+            }
+            
+            // Career guidance
+            else if (question.includes('career') || question.includes('job') || question.includes('work') || question.includes('after')) {
+                if (question.includes('mechanical')) {
+                    return `Career options after Mechanical Engineering:\n${knowledgeBase.careers.afterCourses.mechanical}\n\nGeneral Career Advice:\n${knowledgeBase.careers.advice.map((advice, index) => `${index + 1}. ${advice}`).join('\n')}`;
+                }
+                if (question.includes('business')) {
+                    return `Career options after Business Studies:\n${knowledgeBase.careers.afterCourses.business}\n\nGeneral Career Advice:\n${knowledgeBase.careers.advice.map((advice, index) => `${index + 1}. ${advice}`).join('\n')}`;
+                }
+                if (question.includes('computing') || question.includes('ict')) {
+                    return `Career options after Computing:\n${knowledgeBase.careers.afterCourses.computing}\n\nGeneral Career Advice:\n${knowledgeBase.careers.advice.map((advice, index) => `${index + 1}. ${advice}`).join('\n')}`;
+                }
+                if (question.includes('electrical')) {
+                    return `Career options after Electrical Engineering:\n${knowledgeBase.careers.afterCourses.electrical}\n\nGeneral Career Advice:\n${knowledgeBase.careers.advice.map((advice, index) => `${index + 1}. ${advice}`).join('\n')}`;
+                }
+                return `Career Guidance:\n\n${knowledgeBase.careers.advice.map((advice, index) => `${index + 1}. ${advice}`).join('\n')}\n\nTell me your course for more specific career options!`;
+            }
+            
+            // Stress management
+            else if (question.includes('stress') || question.includes('anxiety') || question.includes('pressure') || question.includes('mental')) {
+                return `Managing Academic Stress:\n\n${knowledgeBase.academic.stress.map((tip, index) => `${index + 1}. ${tip}`).join('\n')}\n\nRemember, it's okay to ask for help from counselors or mentors.`;
+            }
+            
+            // Academic policies
+            else if (question.includes('policy') || question.includes('rule') || question.includes('attendance') || question.includes('grading')) {
+                if (question.includes('attendance')) {
+                    return `Attendance Policy: ${knowledgeBase.academic.policies.attendance}`;
+                }
+                if (question.includes('grade') || question.includes('mark')) {
+                    return `Grading System: ${knowledgeBase.academic.policies.grading}`;
+                }
+                if (question.includes('appeal')) {
+                    return `Academic Appeals: ${knowledgeBase.academic.policies.appeals}`;
+                }
+                return `Academic Policies:\n- Attendance: ${knowledgeBase.academic.policies.attendance}\n- Grading: ${knowledgeBase.academic.policies.grading}\n- Appeals: ${knowledgeBase.academic.policies.appeals}`;
+            }
+            
+            // Original college information (kept for compatibility)
+            else if (question.includes('course') || question.includes('program')) {
+                return "We offer: Mechanical Engineering, Business & Entrepreneurship, Electrical Engineering, Applied Sciences, Agriculture, Hospitality, Computing, and Fashion Design. Visit 'Our Courses' section for details.";
+            }
+            else if (question.includes('admission') || question.includes('apply')) {
+                return "Apply online through our website: 1) Fill application form, 2) Submit documents, 3) Application review, 4) Admission notification.";
+            }
+            else if (question.includes('department')) {
+                return "Departments: Administration, Finance, HR, ICT, Library, Maintenance, Security, Transport, Catering, Health Services, Registry, Procurement.";
+            }
+            else if (question.includes('contact')) {
+                return "Contact: Phone: +254-XXX-XXXXXX, Email: info@ucst.ac.ke. Visit contacts page for department-specific contacts.";
+            }
+            
+            // Default response for comprehensive assistance
+            else {
+                return "I can help with: exam preparation, KNEC requirements, study techniques, career guidance, time management, stress management, academic policies, courses, admissions, and college information. Please ask specifically about what you need help with!";
+            }
+        }
+
+        // Initialize with enhanced welcome message
+        setTimeout(() => {
+            if (chatMessages.children.length === 1) {
+                addMessage('assistant', "I'm your enhanced education assistant! I can help with exam preparation, study techniques, career guidance, academic policies, and all college-related matters. What would you like to know about?");
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

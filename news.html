@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Latest News & Updates - United College of Science and Technology">
+    <title>UCST - Latest News & Updates</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inline Critical CSS -->
+    <style>
+        /* ===== CRITICAL ABOVE-THE-FOLD STYLES ===== */
+        :root {
+            --primary-blue: #003366;
+            --accent-blue: #007bff;
+            --accent-light-blue: #00a3e0;
+            --cta-blue: #83a6e7;
+            --cta-hover: rgb(106, 222, 240);
+            --bulletin-blue: #4271f5;
+            --wave-blue: #0044ff;
+            --text-dark: #000;
+            --text-light: #fff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1001;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #141212;
+            position: fixed;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .logo img {
+            height: 90px;
+            width: auto;
+            display: block;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 28px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 10px;
+            display: block;
+            position: relative;
+        }
+        
+        /* Bottom line hover effect */
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--accent-blue);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links li a:hover::after {
+            width: 80%;
+        }
+        
+        .cta-button {
+            background: var(--cta-blue);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: var(--cta-blue);
+        }
+        
+        .cta-button a {
+            background-color: var(--accent-blue);
+            color: var(--text-dark);
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .cta-button a:hover {
+            background: var(--cta-hover);
+            color: var(--text-light);
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            background-color: #fff;
+            top: 100%;
+            left: 0;
+            display: none;
+            min-width: 220px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 99;
+        }
+        
+        .dropdown-content li a {
+            padding: 10px 15px;
+            white-space: nowrap;
+            color: var(--text-dark);
+        }
+        
+        /* Show dropdown on hover (desktop only) */
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+        }
+        
+        /* MOBILE STYLES */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                background-color: #fff;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                display: none;
+                padding: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .dropdown-content {
+                position: static;
+                display: none;
+                box-shadow: none;
+                padding-left: 15px;
+                width: 100%;
+            }
+            
+            .dropdown-content.show {
+                display: block;
+            }
+            
+            .nav-links li {
+                width: 100%;
+            }
+            
+            .cta-button a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-bar {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+            
+            .navbar {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <span>Mon – Fri 8am to 5pm, Weekends & Holidays - CLOSED</span>
+        <span>📞 +254 700 334 477 ✉ info@ucst.ac.ke</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.jpg" alt="UCST Logo" loading="lazy">
+            </a>
+        </div>
+
+        <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
+
+            <li class="dropdown">
+                <a href="courses.html">Our Courses</a>
+                <ul class="dropdown-content">
+                    <li><a href="mechanical.html">Mechanical & Automotive Engineering</a></li>
+                    <li><a href="business.html">Business & Entrepreneurship</a></li>
+                    <li><a href="electrical.html">Electrical & Electronics Engineering</a></li>
+                    <li><a href="sciences.html">Applied Sciences & Mathematics</a></li>
+                    <li><a href="agriculture.html">Agriculture & Environmental Studies</a></li>
+                    <li><a href="hospitality.html">Hospitality & Institutional Management</a></li>
+                    <li><a href="computing.html">Computing & Informatics</a></li>
+                    <li><a href="fashion.html">Fashion & Design</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="background.html">About Us</a>
+                <ul class="dropdown-content">
+                    <li><a href="background.html">Background</a></li>
+                    <li><a href="mission.html">Mission & Vision</a></li>
+                    <li><a href="core-values.html">Core Values</a></li>
+                    <li><a href="mandate.html">Core Mandate</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="application.html">Online Application</a>
+                <ul class="dropdown-content">
+                    <li><a href="procedures.html">Application Procedures</a></li>
+                    <li><a href="courses.html">Our Courses</a></li>
+                    <li><a href="application.html">Apply Online</a></li>
+                    <li><a href="https://www.helb.co.ke" target="_blank" rel="noopener noreferrer">HELB application</a></li>
+                    <li><a href="https://students.kuccps.net" target="_blank" rel="noopener noreferrer">KUCCPS Portal</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="endterm.html">Examinations</a>
+                <ul class="dropdown-content">
+                    <li><a href="endterm.html">End Term Examinations</a></li>
+                    <li><a href="registration.html">KNEC Registration</a></li>
+                    <li><a href="results.html">KNEC Results</a></li>
+                </ul>
+            </li>
+
+            <li><a href="news.html">News</a></li>
+            <li><a href="contacts.html">Contacts</a></li>
+            <li class="cta-button"><a href="student-portal.html">Login to Portal</a></li>
+            <li class="cta-button"><a href="AI-assistant.html">Ask AI-Assistant</a></li>
+        </ul>
+    </nav>
+
+    <!-- Animated Background Elements -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="shape shape-5"></div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header" style="margin-top: 130px;">
+        <div class="header-content">
+            <div class="header-text">
+                <h1 class="animate-typing">Latest News & Updates</h1>
+                <p class="animate-slide-up">Stay informed with the latest happenings, events, and achievements at UCST</p>
+                <div class="header-search animate-slide-up" style="animation-delay: 0.2s">
+                    <input type="text" placeholder="Search news articles...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            <div class="header-wave">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+                    <path fill="#ffffff" fill-opacity="1" d="M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,69.3C672,64,768,64,864,74.7C960,85,1056,107,1152,112C1248,117,1344,107,1392,101.3L1440,96L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"></path>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured News -->
+    <section class="featured-news">
+        <div class="container">
+            <h2 class="section-title animate-slide-up">Featured News</h2>
+            <div class="featured-grid">
+                <div class="featured-card featured-main animate-float">
+                    <div class="news-image">
+                        <img src="images/beststudent.jpg" alt="Student Achievement" loading="lazy">
+                        <div class="news-badge pulse">HOT</div>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-date"><i class="far fa-calendar"></i> 15 Nov 2023</span>
+                        <h3>UCST Student Wins National Innovation Award</h3>
+                        <p>Our Computer Science student, John Omondi, has won the prestigious National Innovation Award for his groundbreaking project in renewable energy solutions...</p>
+                        <a href="#" class="read-more">Read Full Story <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="featured-secondary">
+                    <div class="news-card animate-slide-left" style="animation-delay: 0.1s">
+                        <div class="news-image">
+                            <img src="images/havard.jpg" alt="New Partnership" loading="lazy">
+                        </div>
+                        <div class="news-content">
+                            <span class="news-date"><i class="far fa-calendar"></i> 10 Nov 2023</span>
+                            <h4>UCST Partners with Leading Tech Companies</h4>
+                            <p>New partnerships provide students with internship opportunities and cutting-edge training.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="news-card animate-slide-left" style="animation-delay: 0.2s">
+                        <div class="news-image">
+                            <img src="images/agrix1.jpeg" alt="Agriculture News" loading="lazy">
+                        </div>
+                        <div class="news-content">
+                            <span class="news-date"><i class="far fa-calendar"></i> 5 Nov 2023</span>
+                            <h4>Agricultural Dept Launches Community Outreach Program</h4>
+                            <p>Students and faculty working together to support local farmers with modern techniques.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="news-card animate-slide-left" style="animation-delay: 0.3s">
+                        <div class="news-image">
+                            <img src="images/electrical1.jpg" alt="Engineering News" loading="lazy">
+                        </div>
+                        <div class="news-content">
+                            <span class="news-date"><i class="far fa-calendar"></i> 1 Nov 2023</span>
+                            <h4>New Engineering Lab Equipment Unveiled</h4>
+                            <p>State-of-the-art equipment donated to enhance practical learning experience.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Categories -->
+    <section class="news-categories">
+        <div class="container">
+            <h2 class="section-title animate-slide-up">News Categories</h2>
+            <div class="categories-grid">
+                <div class="category-card animate-scale" data-category="academic">
+                    <div class="category-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Academic</h3>
+                    <p>Updates on courses, programs, and academic achievements</p>
+                    <span class="category-count">12 Articles</span>
+                </div>
+                
+                <div class="category-card animate-scale" data-category="events" style="animation-delay: 0.1s">
+                    <div class="category-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Events</h3>
+                    <p>Upcoming workshops, seminars, and campus activities</p>
+                    <span class="category-count">8 Articles</span>
+                </div>
+                
+                <div class="category-card animate-scale" data-category="achievements" style="animation-delay: 0.2s">
+                    <div class="category-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Achievements</h3>
+                    <p>Student and faculty accomplishments and awards</p>
+                    <span class="category-count">15 Articles</span>
+                </div>
+                
+                <div class="category-card animate-scale" data-category="partnerships" style="animation-delay: 0.3s">
+                    <div class="category-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>Partnerships</h3>
+                    <p>Industry collaborations and community engagements</p>
+                    <span class="category-count">6 Articles</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All News Section -->
+    <section class="all-news">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title animate-slide-up">Latest News Articles</h2>
+                <div class="view-options">
+                    <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i> Grid</button>
+                    <button class="view-btn" data-view="list"><i class="fas fa-list"></i> List</button>
+                </div>
+            </div>
+            
+            <div class="news-grid" id="news-container">
+                <!-- News articles will be loaded here dynamically -->
+            </div>
+            
+            <div class="load-more animate-fade-in">
+                <button id="load-more-btn" class="bounce-in">Load More News <i class="fas fa-sync-alt"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upcoming Events -->
+    <section class="upcoming-events">
+        <div class="container">
+            <h2 class="section-title animate-slide-up">Upcoming Events</h2>
+            <div class="events-slider">
+                <div class="event-card animate-float" style="animation-delay: 0.1s">
+                    <div class="event-date">
+                        <span class="day">25</span>
+                        <span class="month">NOV</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Career Fair 2023</h3>
+                        <p><i class="far fa-clock"></i> 9:00 AM - 4:00 PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Main Campus Grounds</p>
+                        <p>Connect with top employers and explore career opportunities.</p>
+                    </div>
+                    <a href="#" class="event-register">Register</a>
+                </div>
+                
+                <div class="event-card animate-float" style="animation-delay: 0.2s">
+                    <div class="event-date">
+                        <span class="day">30</span>
+                        <span class="month">NOV</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Tech Innovation Summit</h3>
+                        <p><i class="far fa-clock"></i> 10:00 AM - 2:00 PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Computer Science Building</p>
+                        <p>Showcase of student tech projects and guest speakers from industry.</p>
+                    </div>
+                    <a href="#" class="event-register">Register</a>
+                </div>
+                
+                <div class="event-card animate-float" style="animation-delay: 0.3s">
+                    <div class="event-date">
+                        <span class="day">05</span>
+                        <span class="month">DEC</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Graduation Ceremony</h3>
+                        <p><i class="far fa-clock"></i> 8:00 AM - 1:00 PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> UCST Auditorium</p>
+                        <p>Celebrating the achievements of our graduating class of 2023.</p>
+                    </div>
+                    <a href="#" class="event-register">Register</a>
+                </div>
+                
+                <div class="event-card animate-float" style="animation-delay: 0.4s">
+                    <div class="event-date">
+                        <span class="day">12</span>
+                        <span class="month">DEC</span>
+                    </div>
+                    <div class="event-details">
+                        <h3>Open Day for Prospective Students</h3>
+                        <p><i class="far fa-clock"></i> 8:00 AM - 5:00 PM</p>
+                        <p><i class="fas fa-map-marker-alt"></i> All Campus Facilities</p>
+                        <p>Tour our facilities and learn about our programs and admission process.</p>
+                    </div>
+                    <a href="#" class="event-register">Register</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Subscription -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2 class="animate-slide-up">Never Miss an Update</h2>
+                <p class="animate-slide-up" style="animation-delay: 0.1s">Subscribe to our newsletter and get the latest news delivered directly to your inbox.</p>
+                <form class="newsletter-form animate-slide-up" style="animation-delay: 0.2s">
+                    <input type="email" placeholder="Enter your email address" required>
+                    <button type="submit" class="glow-effect">Subscribe <i class="fas fa-paper-plane"></i></button>
+                </form>
+                <p class="privacy-note animate-fade-in">We respect your privacy. Unsubscribe at any time.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Get In Touch -->
+            <div class="footer-column">
+                <h3>Get In Touch</h3>
+                <p><strong>Address:</strong><br>P.O Box 1264–60100 Kakamega–Shinyalu</p>
+                <p><strong>Phone:</strong><br>
+                    <a href="tel:+254700334477">(+254) 700 334 477</a><br>
+                    <a href="tel:+254700532399">(+254) 700 532 399</a>
+                </p>
+                <p><strong>Email:</strong><br>
+                    <a href="mailto:info@ucst.ac.ke">info@ucst.ac.ke</a>
+                </p>
+                <p><strong>Open:</strong><br>Mon – Fri / 9:00AM – 8:00PM</p>
+            </div>
+            
+            <!-- Sitemap -->
+            <div class="footer-column">
+                <h3>Sitemap</h3>
+                <ul>
+                    <li><a href="background.html">About Us</a></li>
+                    <li><a href="courses.html">Our Courses</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="mission.html">Mission and Vision</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="application.html">Online Application</a></li>
+                </ul>
+            </div>
+            
+            <!-- Subscribe Newsletter -->
+            <div class="footer-column">
+                <h3>Subscribe Newsletter</h3>
+                <form>
+                    <input type="email" placeholder="Your Email Address" required>
+                    <div class="recaptcha-box">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5264.295508297161!2d37.5032786467435!3d-0.6128239622134545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18263af3296bb427%3A0x45fed6d3d8fd874b!2sJeremiah%20Nyagah%20National%20Polytechnic!5e0!3m2!1sen!2ske!4v1754576743672!5m2!1sen!2ske" width="300" height="78" style="border:0;"></iframe>
+                    </div>
+                    <button type="submit">Subscribe</button>
+                </form>
+                
+                <!-- Social icons -->
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 United College of Science and Technology. All rights reserved.</p>
+            <p>Empowering Minds, Sharpening the Future</p>
+        </div>
+    </footer>
+
+    <!-- Main CSS -->
+    <style>
+        /* ===== MAIN CSS ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 60px 20px;
+        }
+        
+        /* Animated Background Shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shape {
+            position: absolute;
+            background: rgba(0, 51, 102, 0.05);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        .shape-1 {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+            background: rgba(0, 123, 255, 0.08);
+        }
+        
+        .shape-2 {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            right: 10%;
+            animation-delay: 3s;
+            background: rgba(0, 163, 224, 0.06);
+            animation-duration: 20s;
+        }
+        
+        .shape-3 {
+            width: 60px;
+            height: 60px;
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 5s;
+            background: rgba(66, 113, 245, 0.07);
+            animation-duration: 18s;
+        }
+        
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            bottom: 25%;
+            right: 5%;
+            animation-delay: 7s;
+            background: rgba(0, 68, 255, 0.05);
+            animation-duration: 22s;
+        }
+        
+        .shape-5 {
+            width: 70px;
+            height: 70px;
+            top: 50%;
+            left: 10%;
+            animation-delay: 10s;
+            background: rgba(131, 166, 231, 0.06);
+            animation-duration: 25s;
+        }
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-light-blue) 100%);
+            color: white;
+            padding: 70px 20px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-text h1 {
+            font-size: 2.8rem; /* Reduced from 3.5rem */
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .header-text h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+        
+        .header-text p {
+            font-size: 1.1rem; /* Reduced from 1.2rem */
+            margin: 25px auto 30px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+        
+        .header-search {
+            display: flex;
+            max-width: 500px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .header-search:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .header-search input {
+            flex: 1;
+            border: none;
+            padding: 14px 25px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .header-search button {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .header-search button:hover {
+            background: var(--primary-blue);
+            transform: scale(1.1);
+        }
+        
+        .header-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        
+        /* Featured News */
+        .featured-news {
+            background: #f8f9fa;
+            margin-top: -50px;
+            padding-top: 90px;
+        }
+        
+        .section-title {
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 2.2rem; /* Reduced from 2.5rem */
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+        
+        .featured-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 992px) {
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .featured-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.5s ease, box-shadow 0.5s ease;
+        }
+        
+        .featured-main .news-image {
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .featured-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .featured-main:hover img {
+            transform: scale(1.05);
+        }
+        
+        .news-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff4757;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+        
+        .news-content {
+            padding: 25px;
+        }
+        
+        .news-date {
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 12px;
+        }
+        
+        .featured-main h3 {
+            font-size: 1.6rem; /* Reduced from 1.8rem */
+            margin-bottom: 12px;
+            color: var(--primary-blue);
+            line-height: 1.4;
+        }
+        
+        .featured-main p {
+            color: #666;
+            margin-bottom: 18px;
+            line-height: 1.6;
+            font-size: 0.95rem; /* Reduced */
+        }
+        
+        .read-more {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .read-more:hover {
+            color: var(--primary-blue);
+            gap: 12px;
+        }
+        
+        .featured-secondary {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        
+        .news-card .news-image {
+            width: 40%;
+            min-height: 130px;
+            overflow: hidden;
+        }
+        
+        .news-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .news-card:hover img {
+            transform: scale(1.1);
+        }
+        
+        .news-card .news-content {
+            width: 60%;
+            padding: 18px;
+        }
+        
+        .news-card h4 {
+            font-size: 1.1rem; /* Reduced */
+            margin-bottom: 8px;
+            color: var(--primary-blue);
+            line-height: 1.3;
+        }
+        
+        .news-card p {
+            color: #666;
+            font-size: 0.85rem; /* Reduced */
+            line-height: 1.4;
+        }
+        
+        /* News Categories */
+        .news-categories {
+            background: white;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+        }
+        
+        .category-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            background: white;
+            border-color: var(--accent-blue);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .category-card:hover .category-icon {
+            background: var(--primary-blue);
+            transform: rotateY(180deg) scale(1.1);
+        }
+        
+        .category-icon {
+            width: 65px;
+            height: 65px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            font-size: 1.6rem;
+            color: white;
+            transition: all 0.5s ease;
+        }
+        
+        .category-card h3 {
+            margin-bottom: 8px;
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+        }
+        
+        .category-card p {
+            color: #666;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .category-count {
+            display: inline-block;
+            background: var(--accent-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+        
+        /* All News Section */
+        .all-news {
+            background: #f8f9fa;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .view-options {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .view-btn {
+            padding: 7px 12px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .view-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+        
+        .view-btn:hover:not(.active) {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        
+        .news-grid.list-view {
+            grid-template-columns: 1fr;
+        }
+        
+        .news-article {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .news-article:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .article-image {
+            height: 180px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .article-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 70%, rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .news-article:hover .article-image::after {
+            opacity: 1;
+        }
+        
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .news-article:hover .article-image img {
+            transform: scale(1.1);
+        }
+        
+        .article-content {
+            padding: 22px;
+        }
+        
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: #777;
+        }
+        
+        .article-category {
+            background: #eef7ff;
+            color: var(--accent-blue);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.75rem;
+        }
+        
+        .article-title {
+            font-size: 1.2rem; /* Reduced */
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+            line-height: 1.3;
+        }
+        
+        .article-excerpt {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+        }
+        
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .article-link {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .article-link:hover {
+            color: var(--primary-blue);
+            gap: 10px;
+        }
+        
+        .article-stats {
+            display: flex;
+            gap: 12px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+        
+        .load-more {
+            text-align: center;
+        }
+        
+        #load-more-btn {
+            padding: 12px 30px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+        }
+        
+        #load-more-btn:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        /* Upcoming Events */
+        .upcoming-events {
+            background: white;
+        }
+        
+        .events-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+        
+        .event-card {
+            background: white;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            border-left: 5px solid var(--accent-blue);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+        }
+        
+        .event-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 51, 102, 0.05) 0%, rgba(0, 163, 224, 0.05) 100%);
+            z-index: 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .event-card:hover::before {
+            opacity: 1;
+        }
+        
+        .event-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--accent-blue);
+            color: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 10px;
+            justify-content: center;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover .event-date {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .day {
+            font-size: 1.3rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .month {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .event-details {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .event-details h3 {
+            font-size: 1.2rem; /* Reduced */
+            margin-bottom: 12px;
+            color: var(--primary-blue);
+            line-height: 1.3;
+        }
+        
+        .event-details p {
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .event-register {
+            background: var(--accent-blue);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+            font-size: 0.9rem;
+        }
+        
+        .event-register:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+        }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-light-blue) 100%);
+            color: white;
+            text-align: center;
+            padding: 70px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="white" fill-opacity="0.05"/></svg>') repeat;
+            animation: pulse-background 20s infinite linear;
+        }
+        
+        .newsletter-content h2 {
+            font-size: 2.2rem; /* Reduced from 2.5rem */
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .newsletter-content p {
+            font-size: 1rem; /* Reduced */
+            margin-bottom: 25px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto 20px;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-form:focus-within {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            border: none;
+            padding: 14px 25px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        
+        .newsletter-form button {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .newsletter-form button:hover {
+            background: var(--primary-blue);
+            padding-right: 30px;
+        }
+        
+        .glow-effect {
+            position: relative;
+        }
+        
+        .glow-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .glow-effect:hover::after {
+            left: 100%;
+        }
+        
+        .privacy-note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* ANIMATIONS */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+            }
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1 }
+            50% { opacity: 0 }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideLeft {
+            from { 
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scale {
+            from { 
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes floatUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(100px);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05) translateY(-10px);
+            }
+            80% {
+                opacity: 1;
+                transform: scale(0.95) translateY(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
+        
+        @keyframes pulse-background {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(-100px) translateX(-100px); }
+        }
+        
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Animation Classes */
+        .animate-typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2.5s steps(30, end), blink 0.75s step-end infinite;
+            border-right: 3px solid var(--accent-blue);
+            width: 0;
+            animation-fill-mode: forwards;
+        }
+        
+        .animate-slide-up {
+            opacity: 0;
+            animation: slideUp 0.8s ease forwards;
+        }
+        
+        .animate-slide-left {
+            opacity: 0;
+            animation: slideLeft 0.8s ease forwards;
+        }
+        
+        .animate-scale {
+            opacity: 0;
+            animation: scale 0.6s ease forwards;
+        }
+        
+        .animate-float {
+            opacity: 0;
+            animation: floatUp 0.8s ease forwards;
+        }
+        
+        .animate-fade-in {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 1s ease forwards;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #000;
+            color: white;
+            padding: 40px 20px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .footer-column {
+            margin: 0;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+        
+        .footer-column p, .footer-column a {
+            color: #ccc;
+            font-size: 0.9rem;
+            text-decoration: none;
+            line-height: 1.5;
+        }
+        
+        .footer-column a:hover {
+            color: #00aaff;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .footer-column form input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border-radius: 5px;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .footer-column form button {
+            width: 100%;
+            padding: 10px;
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        
+        .footer-column form button:hover {
+            background: var(--primary-blue);
+        }
+        
+        .social-icons {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 35px;
+            height: 35px;
+            background: #333;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #ccc;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 50px 20px 80px;
+            }
+            
+            .header-text h1 {
+                font-size: 2.2rem;
+                white-space: normal;
+                animation: slideUp 0.8s ease forwards;
+                border-right: none;
+            }
+            
+            .header-text p {
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-main .news-image {
+                height: 250px;
+            }
+            
+            .news-card {
+                flex-direction: column;
+            }
+            
+            .news-card .news-image {
+                width: 100%;
+                height: 180px;
+            }
+            
+            .news-card .news-content {
+                width: 100%;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .events-slider {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-content h2 {
+                font-size: 1.8rem;
+            }
+            
+            .header-search, .newsletter-form {
+                flex-direction: column;
+                border-radius: 10px;
+            }
+            
+            .header-search input,
+            .header-search button,
+            .newsletter-form input,
+            .newsletter-form button {
+                width: 100%;
+                border-radius: 0;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-text h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            .featured-main h3 {
+                font-size: 1.4rem;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .view-options {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                    menuToggle.classList.toggle('active');
+                });
+            }
+            
+            // Mobile dropdown toggle
+            document.querySelectorAll('.dropdown > a').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        const dropdownContent = this.nextElementSibling;
+                        
+                        // Close all other dropdowns
+                        document.querySelectorAll('.dropdown-content').forEach(content => {
+                            if (content !== dropdownContent) {
+                                content.classList.remove('show');
+                            }
+                        });
+                        
+                        dropdownContent.classList.toggle('show');
+                    }
+                });
+            });
+            
+            // Close dropdowns if clicking outside
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth <= 768 && !e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-content').forEach(content => {
+                        content.classList.remove('show');
+                    });
+                }
+            });
+            
+            // Sample news data
+            const newsData = [
+                {
+                    id: 1,
+                    title: "New Engineering Workshop Opening Ceremony",
+                    excerpt: "The newly constructed engineering workshop was officially opened by the County Governor, providing students with state-of-the-art facilities.",
+                    category: "Academic",
+                    date: "Nov 20, 2023",
+                    image: "images/mechanical.jpg",
+                    views: 245,
+                    comments: 12
+                },
+                {
+                    id: 2,
+                    title: "UCST Hosts Regional Science Fair",
+                    excerpt: "Over 50 schools participated in the annual regional science fair held at our campus, showcasing innovative projects from young scientists.",
+                    category: "Events",
+                    date: "Nov 18, 2023",
+                    image: "images/sciences.jpg",
+                    views: 189,
+                    comments: 8
+                },
+                {
+                    id: 3,
+                    title: "Faculty Member Publishes Groundbreaking Research",
+                    excerpt: "Dr. Jane Mwangi's research on sustainable agriculture has been published in the International Journal of Environmental Science.",
+                    category: "Achievements",
+                    date: "Nov 15, 2023",
+                    image: "images/agriculture.jpg",
+                    views: 312,
+                    comments: 15
+                },
+                {
+                    id: 4,
+                    title: "Partnership with Local Industry for Internship Program",
+                    excerpt: "New agreement signed with local manufacturing companies to provide paid internship opportunities for our engineering students.",
+                    category: "Partnerships",
+                    date: "Nov 12, 2023",
+                    image: "images/business.jpg",
+                    views: 156,
+                    comments: 5
+                },
+                {
+                    id: 5,
+                    title: "Student Council Elections Results Announced",
+                    excerpt: "The newly elected student council representatives were announced after a week of peaceful and democratic elections.",
+                    category: "Campus Life",
+                    date: "Nov 10, 2023",
+                    image: "images/students.jpg",
+                    views: 278,
+                    comments: 23
+                },
+                {
+                    id: 6,
+                    title: "ICT Department Receives Equipment Donation",
+                    excerpt: "Leading tech company donates modern computers and networking equipment to enhance our ICT training facilities.",
+                    category: "Academic",
+                    date: "Nov 8, 2023",
+                    image: "images/computing.jpg",
+                    views: 201,
+                    comments: 9
+                },
+                {
+                    id: 7,
+                    title: "Annual Sports Day Breaks Attendance Records",
+                    excerpt: "This year's sports day attracted over 2000 participants and spectators, making it the most successful event in UCST history.",
+                    category: "Events",
+                    date: "Nov 5, 2023",
+                    image: "images/pex4.jpg",
+                    views: 189,
+                    comments: 14
+                },
+                {
+                    id: 8,
+                    title: "New Library Management System Implemented",
+                    excerpt: "Digital library system allows students to access over 10,000 e-books and academic journals from anywhere.",
+                    category: "Academic",
+                    date: "Nov 3, 2023",
+                    image: "images/ict3.jpg",
+                    views: 167,
+                    comments: 7
+                }
+            ];
+            
+            // Render news articles
+            const newsContainer = document.getElementById('news-container');
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            let currentPage = 1;
+            const itemsPerPage = 4;
+            let currentView = 'grid';
+            
+            function renderNews(viewType = currentView) {
+                currentView = viewType;
+                const startIndex = 0;
+                const endIndex = currentPage * itemsPerPage;
+                const currentNews = newsData.slice(startIndex, endIndex);
+                
+                newsContainer.innerHTML = '';
+                newsContainer.className = viewType === 'list' ? 'news-grid list-view' : 'news-grid';
+                
+                currentNews.forEach((news, index) => {
+                    const article = document.createElement('div');
+                    article.className = 'news-article';
+                    article.style.animationDelay = `${index * 0.1}s`;
+                    
+                    article.innerHTML = `
+                        <div class="article-image">
+                            <img src="${news.image}" alt="${news.title}" loading="lazy">
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="article-category">${news.category}</span>
+                                <span class="article-date">${news.date}</span>
+                            </div>
+                            <h3 class="article-title">${news.title}</h3>
+                            <p class="article-excerpt">${news.excerpt}</p>
+                            <div class="article-footer">
+                                <a href="#" class="article-link">Read More <i class="fas fa-arrow-right"></i></a>
+                                <div class="article-stats">
+                                    <span><i class="far fa-eye"></i> ${news.views}</span>
+                                    <span><i class="far fa-comment"></i> ${news.comments}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    newsContainer.appendChild(article);
+                });
+                
+                // Show/hide load more button
+                if (endIndex >= newsData.length) {
+                    loadMoreBtn.style.display = 'none';
+                } else {
+                    loadMoreBtn.style.display = 'inline-flex';
+                }
+                
+                // Initialize animations with delay
+                setTimeout(() => {
+                    document.querySelectorAll('.news-article').forEach((el, i) => {
+                        el.style.animation = 'floatUp 0.8s ease forwards';
+                        el.style.animationDelay = `${i * 0.1}s`;
+                        setTimeout(() => {
+                            el.style.opacity = '1';
+                            el.style.transform = 'translateY(0)';
+                        }, i * 100);
+                    });
+                }, 100);
+            }
+            
+            // View toggle
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const viewType = this.getAttribute('data-view');
+                    renderNews(viewType);
+                });
+            });
+            
+            // Load more functionality
+            loadMoreBtn.addEventListener('click', function() {
+                currentPage++;
+                renderNews(currentView);
+                
+                // Add bounce animation to button
+                this.style.animation = 'bounceIn 0.5s ease';
+                setTimeout(() => {
+                    this.style.animation = '';
+                }, 500);
+                
+                // Scroll to newly loaded content
+                setTimeout(() => {
+                    const newArticles = document.querySelectorAll('.news-article');
+                    if (newArticles.length > itemsPerPage) {
+                        newArticles[newArticles.length - itemsPerPage].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
+                    }
+                }, 300);
+            });
+            
+            // Initialize news
+            renderNews();
+            
+            // Category card hover effects
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    const category = this.getAttribute('data-category');
+                    this.style.borderColor = getCategoryColor(category);
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.borderColor = 'transparent';
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+                
+                card.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    alert(`Showing news from ${category} category`);
+                    // In a real app, you would filter news by category
+                });
+            });
+            
+            function getCategoryColor(category) {
+                const colors = {
+                    'academic': '#007bff',
+                    'events': '#28a745',
+                    'achievements': '#ffc107',
+                    'partnerships': '#17a2b8'
+                };
+                return colors[category] || '#007bff';
+            }
+            
+            // Newsletter form submission
+            document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = this.querySelector('input[type="email"]').value;
+                
+                // Show success animation
+                const button = this.querySelector('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
+                button.style.background = '#28a745';
+                
+                // Add checkmark animation
+                button.style.animation = 'bounceIn 0.5s ease';
+                
+                // Reset form
+                this.reset();
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = '';
+                    button.style.animation = '';
+                }, 3000);
+                
+                console.log(`Subscribed email: ${email}`);
+            });
+            
+            // Search functionality
+            document.querySelector('.header-search button').addEventListener('click', function() {
+                const searchTerm = document.querySelector('.header-search input').value;
+                if (searchTerm.trim()) {
+                    // Add search animation
+                    this.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 300);
+                    
+                    // Show search results
+                    alert(`Searching for: "${searchTerm}"\n\nIn a real application, this would filter news articles.`);
+                }
+            });
+            
+            // Event registration
+            document.querySelectorAll('.event-register').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const eventTitle = this.closest('.event-card').querySelector('h3').textContent;
+                    
+                    // Add click animation
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 300);
+                    
+                    // Show registration form/modal
+                    alert(`Registering for: ${eventTitle}\n\nRegistration form would appear here.`);
+                });
+            });
+            
+            // Read more links
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('.read-more') || e.target.closest('.article-link')) {
+                    e.preventDefault();
+                    const link = e.target.closest('.read-more') || e.target.closest('.article-link');
+                    
+                    // Add click animation
+                    link.style.transform = 'translateX(5px)';
+                    setTimeout(() => {
+                        link.style.transform = '';
+                    }, 300);
+                    
+                    // In real app, navigate to article page
+                    alert('Navigating to full article...');
+                }
+            });
+            
+            // Animate elements on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('news-article') || entry.target.classList.contains('event-card')) {
+                            entry.target.style.animation = 'floatUp 0.8s ease forwards';
+                            setTimeout(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.style.transform = 'translateY(0)';
+                            }, 100);
+                        } else if (entry.target.classList.contains('animate-slide-up')) {
+                            entry.target.style.animation = 'slideUp 0.8s ease forwards';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        } else if (entry.target.classList.contains('animate-slide-left')) {
+                            entry.target.style.animation = 'slideLeft 0.8s ease forwards';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateX(0)';
+                        } else if (entry.target.classList.contains('animate-scale')) {
+                            entry.target.style.animation = 'scale 0.6s ease forwards';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'scale(1)';
+                        } else if (entry.target.classList.contains('animate-float')) {
+                            entry.target.style.animation = 'floatUp 0.8s ease forwards';
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        } else if (entry.target.classList.contains('animate-fade-in')) {
+                            entry.target.style.animation = 'fadeIn 1s ease forwards';
+                            entry.target.style.opacity = '1';
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe elements with animation classes
+            document.querySelectorAll('.animate-slide-up, .animate-slide-left, .animate-scale, .animate-float, .animate-fade-in, .news-article, .event-card').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Add parallax effect to floating shapes
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const shapes = document.querySelectorAll('.shape');
+                
+                shapes.forEach((shape, index) => {
+                    const speed = 0.2 + (index * 0.05);
+                    shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
+                });
+            });
+            
+            // Add typing animation completion
+            setTimeout(() => {
+                const typingElement = document.querySelector('.animate-typing');
+                if (typingElement) {
+                    typingElement.style.borderRight = 'none';
+                    typingElement.style.animation = 'none';
+                    typingElement.style.width = 'auto';
+                }
+            }, 2500);
+            
+            // Add ripple effect to buttons
+            document.querySelectorAll('button, .event-register, .read-more, .article-link').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const ripple = document.createElement('span');
+                    ripple.style.position = 'absolute';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    
+                    this.style.position = 'relative';
+                    this.style.overflow = 'hidden';
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Add ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Initialize floating shapes animation
+            const shapes = document.querySelectorAll('.shape');
+            shapes.forEach((shape, index) => {
+                shape.style.animationDelay = `${index * 2}s`;
+            });
+        });
+    </script>
+</body>
+</html>

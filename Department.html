@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Departments Management — JNNP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background:#f9f9f9;
+    margin:0;
+    padding:20px;
+    transition: background 0.3s, color 0.3s;
+    color:#000;
+  }
+  h1 { text-align:center; margin-bottom:20px; color:#023e8a; }
+  table { width:100%; border-collapse:collapse; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin-bottom:20px; }
+  th, td { padding:12px; border:1px solid #ddd; text-align:left; }
+  th { background:#0077b6; color:#fff; }
+  tr:nth-child(even) { background:#f2f2f2; }
+
+  /* Buttons */
+  .btn { padding:6px 12px; border:none; border-radius:4px; cursor:pointer; font-size:14px; margin-right:6px; transition:0.3s; }
+  .btn:hover { opacity:0.8; transform:scale(1.05); }
+  .edit { background:#ffc107; color:#000; }
+  .add { background:#28a745; color:#fff; }
+  .delete { background:#dc3545; color:#fff; }
+
+  /* Search input */
+  #searchInput { width:100%; padding:10px; font-size:16px; margin-bottom:20px; border-radius:4px; border:1px solid #ccc; max-width:400px; }
+
+  /* Dark mode toggle */
+  #darkModeBtn { cursor:pointer; font-size:20px; margin-left:10px; }
+
+  /* Dark mode styles */
+  body.dark-mode { background:#212529; color:#f8f9fa; }
+  body.dark-mode table { background:#2c2c2c; color:#f8f9fa; }
+  body.dark-mode th { background:#343a40; color:#f8f9fa; }
+  body.dark-mode td { border-color:#555; }
+  body.dark-mode tr:nth-child(even) { background:#3a3a3a; }
+
+  /* Responsive */
+  @media(max-width:768px) { th, td { padding:8px; font-size:14px; } .btn { font-size:12px; padding:4px 8px; } }
+</style>
+</head>
+<body>
+
+<h1>🏛️ Departments Management</h1>
+
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+  <input type="text" id="searchInput" placeholder="Search departments...">
+  <span id="darkModeBtn">🌙</span>
+</div>
+
+<table id="departmentsTable">
+  <thead>
+    <tr>
+      <th>Department</th>
+      <th>HOD</th>
+      <th>Courses</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<!-- Add Department Button -->
+<div style="margin-bottom:40px;">
+  <button class="btn add" onclick="addDepartment()">➕ Add Department</button>
+</div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+  authDomain: "jnnp-system.firebaseapp.com",
+  databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+  projectId: "jnnp-system",
+  storageBucket: "jnnp-system.firebasestorage.app",
+  messagingSenderId: "769232855377",
+  appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const tableBody = document.querySelector("#departmentsTable tbody");
+const searchInput = document.getElementById("searchInput");
+
+// Initial departments data
+const initialDepartments = {
+  "Information Technology & Computing": { "hod":"", "courses":["Diploma in Computer Science","Diploma in Information Technology","Diploma in Software Development","Diploma in Networking & Security","Certificate in Computer Applications"] },
+  "Business & Management": { "hod":"", "courses":["Diploma in Business Management","Diploma in Accounting & Finance","Diploma in Human Resource Management","Diploma in Marketing","Certificate in Office Administration"] },
+  "Engineering & Applied Sciences": { "hod":"", "courses":["Diploma in Civil Engineering","Diploma in Electrical Engineering","Diploma in Mechanical Engineering","Certificate in Electrical Installation"] },
+  "Hospitality & Tourism": { "hod":"", "courses":["Diploma in Hospitality Management","Diploma in Tourism & Travel","Certificate in Food & Beverage Service"] },
+  "Health & Social Sciences": { "hod":"", "courses":["Diploma in Community Health","Diploma in Social Work","Certificate in Nursing Assistance"] },
+  "Creative & Design Studies": { "hod":"", "courses":["Diploma in Interior Design","Diploma in Graphic Design","Certificate in Fashion Design"] }
+};
+
+// Push initial data to Firebase (only if not exists)
+db.ref("departments").once("value").then(snapshot => {
+  if (!snapshot.exists()) {
+    db.ref("departments").set(initialDepartments);
+  }
+});
+
+// Fetch and render table
+function loadDepartments() {
+  db.ref("departments").on("value", snapshot => {
+    const data = snapshot.val() || {};
+    renderTable(data);
+  });
+}
+
+function renderTable(data) {
+  tableBody.innerHTML = "";
+  Object.keys(data).forEach(depName => {
+    const dep = data[depName];
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${depName}</td>
+      <td>${dep.hod || "-"}</td>
+      <td>${dep.courses.join(", ")}</td>
+      <td>
+        <button class="btn edit" onclick="editDepartment('${depName}')">Edit</button>
+        <button class="btn delete" onclick="deleteDepartment('${depName}')">Delete</button>
+      </td>
+    `;
+    tableBody.appendChild(tr);
+  });
+}
+
+// Edit Department
+function editDepartment(depName) {
+  const depRef = db.ref("departments/" + depName);
+  depRef.once("value").then(snapshot => {
+    const dep = snapshot.val();
+    const newHOD = prompt(`Edit HOD for ${depName}:`, dep.hod || "") || "";
+    const newCourses = prompt(`Edit courses for ${depName} (comma separated):`, dep.courses.join(", ")) || "";
+    const coursesArray = newCourses.split(",").map(c => c.trim()).filter(c => c);
+    if (coursesArray.length === 0) return alert("At least one course is required.");
+    depRef.update({ hod: newHOD, courses: coursesArray });
+  });
+}
+
+// Delete Department
+function deleteDepartment(depName) {
+  if (confirm(`Are you sure you want to delete "${depName}"?`)) {
+    db.ref("departments/" + depName).remove();
+  }
+}
+
+// Add new department
+function addDepartment() {
+  const depName = prompt("Enter new Department Name:");
+  if (!depName) return alert("Department name is required.");
+  const hodName = prompt(`Enter HOD for ${depName}:`) || "";
+  const coursesList = prompt(`Enter courses for ${depName} separated by commas:`) || "";
+  const courses = coursesList.split(",").map(c => c.trim()).filter(c => c);
+  if (courses.length === 0) return alert("At least one course is required.");
+
+  db.ref("departments/" + depName).set({ hod: hodName, courses })
+    .then(() => alert(`Department "${depName}" added successfully!`))
+    .catch(err => alert("Error adding department: " + err.message));
+}
+
+// Search filter
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+  Array.from(tableBody.rows).forEach(row => {
+    row.style.display = Array.from(row.cells).some(td => td.textContent.toLowerCase().includes(query)) ? "" : "none";
+  });
+});
+
+// Dark/light toggle
+const darkBtn = document.getElementById("darkModeBtn");
+darkBtn.addEventListener("click", () => {
+  document.body.classList.toggle("dark-mode");
+  darkBtn.textContent = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+});
+
+loadDepartments();
+</script>
+
+</body>
+</html>

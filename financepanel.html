@@ -1,0 +1,3329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance Management System — UCST</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --primary-blue: #007bff;
+    --primary-dark: #212529;
+    --primary-light: #f8f9fa;
+    --success-green: #28a745;
+    --warning-orange: #ffc107;
+    --danger-red: #dc3545;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+
+  body {
+    background: var(--primary-light);
+    color: #333;
+    transition: var(--transition);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  body.dark {
+    background: #121212;
+    color: #f0f0f0;
+  }
+
+  /* Login Page Styles */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, #0056b3 100%);
+    padding: 20px;
+  }
+
+  .login-box {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  .dark .login-box {
+    background: #1e1e1e;
+  }
+
+  .login-logo {
+    margin-bottom: 30px;
+  }
+
+  .login-logo i {
+    font-size: 48px;
+    color: var(--primary-blue);
+    margin-bottom: 15px;
+  }
+
+  .login-logo h1 {
+    color: var(--primary-blue);
+    font-size: 24px;
+  }
+
+  .login-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .login-form label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+  }
+
+  .dark .login-form label {
+    color: #ccc;
+  }
+
+  .login-form input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+    background: white;
+  }
+
+  .dark .login-form input {
+    background: #252525;
+    border-color: #444;
+    color: white;
+  }
+
+  .login-form input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+  }
+
+  .login-btn:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+  }
+
+  .login-error {
+    color: var(--danger-red);
+    font-size: 14px;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .login-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .dark .login-footer {
+    color: #aaa;
+  }
+
+  /* Hide dashboard initially */
+  .dashboard-content {
+    display: none;
+  }
+
+  /* Main dashboard styles */
+  .main-header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .logo i {
+    font-size: 24px;
+  }
+
+  .header-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .search-container {
+    position: relative;
+  }
+
+  #searchBox {
+    padding: 8px 15px 8px 35px;
+    border: none;
+    border-radius: 20px;
+    width: 250px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: var(--transition);
+  }
+
+  #searchBox:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.3);
+    width: 300px;
+  }
+
+  .search-container i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+  }
+
+  #toggleTheme {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #toggleTheme:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(30deg);
+  }
+
+  .dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .summary-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    border-top: 4px solid var(--primary-blue);
+  }
+
+  .dark .summary-card {
+    background: #1e1e1e;
+  }
+
+  .summary-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
+  }
+
+  .summary-card h3 {
+    color: #666;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .dark .summary-card h3 {
+    color: #aaa;
+  }
+
+  .summary-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 5px;
+  }
+
+  .summary-card .subtext {
+    font-size: 13px;
+    color: #777;
+  }
+
+  .dark .summary-card .subtext {
+    color: #aaa;
+  }
+
+  .main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+  }
+
+  @media (max-width: 1024px) {
+    .main-content {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .table-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    overflow: hidden;
+  }
+
+  .dark .table-section {
+    background: #1e1e1e;
+  }
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .section-header h2 {
+    color: var(--primary-blue);
+    font-size: 22px;
+  }
+
+  .filters-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .filter-group label {
+    font-weight: 600;
+    color: #555;
+  }
+
+  .dark .filter-group label {
+    color: #ccc;
+  }
+
+  .filter-group select {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    background: white;
+    min-width: 180px;
+  }
+
+  .dark .filter-group select {
+    background: #252525;
+    border-color: #444;
+    color: white;
+  }
+
+  .clear-filters {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--transition);
+  }
+
+  .clear-filters:hover {
+    background: #545b62;
+  }
+
+  .responsive-table {
+    overflow-x: auto;
+  }
+
+  #financeTable {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+  }
+
+  #financeTable thead {
+    background: var(--primary-blue);
+    color: white;
+  }
+
+  #financeTable th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  #financeTable tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: var(--transition);
+  }
+
+  .dark #financeTable tbody tr {
+    border-bottom-color: #333;
+  }
+
+  #financeTable tbody tr:hover {
+    background: rgba(0, 123, 255, 0.05);
+  }
+
+  .dark #financeTable tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  #financeTable td {
+    padding: 15px;
+    vertical-align: middle;
+  }
+
+  .module-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 250px;
+  }
+
+  .module-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 12px;
+    border-left: 3px solid var(--primary-blue);
+  }
+
+  .dark .module-row {
+    background: #2d3748;
+  }
+
+  .module-name {
+    font-weight: 600;
+    min-width: 70px;
+    color: #555;
+  }
+
+  .dark .module-name {
+    color: #ccc;
+  }
+
+  .module-amounts {
+    display: flex;
+    gap: 15px;
+  }
+
+  .module-total, .module-paid, .module-balance {
+    min-width: 70px;
+    text-align: right;
+    font-size: 11px;
+  }
+
+  .module-total {
+    color: #555;
+  }
+
+  .module-paid {
+    color: #28a745;
+    font-weight: 600;
+  }
+
+  .module-balance {
+    color: #dc3545;
+    font-weight: 600;
+  }
+
+  .module-status {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .module-status.paid {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .module-status.partial {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .module-status.unpaid {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+  }
+
+  .action-btn.record-payment {
+    background: var(--primary-blue);
+    color: white;
+  }
+
+  .action-btn.generate-receipt {
+    background: var(--success-green);
+    color: white;
+  }
+
+  .action-btn.view-statement {
+    background: #6c757d;
+    color: white;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .additional-fees-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    height: fit-content;
+  }
+
+  .dark .additional-fees-section {
+    background: #1e1e1e;
+  }
+
+  .additional-fees-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .additional-fees-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .fee-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-blue);
+    transition: var(--transition);
+  }
+
+  .dark .fee-item {
+    background: #252525;
+  }
+
+  .fee-item:hover {
+    transform: translateX(5px);
+    box-shadow: var(--box-shadow);
+  }
+
+  .fee-item h4 {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .dark .fee-item h4 {
+    color: #ccc;
+  }
+
+  .fee-item .fee-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--primary-blue);
+  }
+
+  .fee-item .fee-details {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  .dark .fee-item .fee-details {
+    color: #aaa;
+  }
+
+  .balance-status {
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+  }
+
+  .balance-status.paid {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .balance-status.partial {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  .balance-status.unpaid {
+    background: #f8d7da;
+    color: #721c24;
+  }
+
+  .reports-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    margin-top: 30px;
+  }
+
+  .dark .reports-section {
+    background: #1e1e1e;
+  }
+
+  .reports-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .report-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    border: 1px solid #dee2e6;
+  }
+
+  .dark .report-card {
+    background: #252525;
+    border-color: #444;
+  }
+
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .report-title {
+    font-weight: 600;
+    color: var(--primary-blue);
+  }
+
+  .export-btn {
+    background: var(--success-green);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: var(--transition);
+  }
+
+  .export-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+  }
+
+  .report-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .dark .report-item {
+    border-bottom-color: #444;
+  }
+
+  .report-item:last-child {
+    border-bottom: none;
+    font-weight: bold;
+    color: var(--primary-blue);
+  }
+
+  .additional-fees-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 200px;
+  }
+
+  .fee-detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 4px 0;
+    border-bottom: 1px dashed #eee;
+  }
+
+  .dark .fee-detail-row {
+    border-bottom-color: #444;
+  }
+
+  .fee-type {
+    color: #555;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .dark .fee-type {
+    color: #ccc;
+  }
+
+  .fee-amount-detail {
+    color: #007bff;
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: auto;
+    position: relative;
+    animation: slideUp 0.4s ease;
+  }
+
+  .dark .modal-content {
+    background: #1e1e1e;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal h2 {
+    color: var(--primary-blue);
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #eee;
+  }
+
+  .dark .modal h2 {
+    border-bottom-color: #333;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    transition: var(--transition);
+  }
+
+  .close-btn:hover {
+    color: var(--danger-red);
+    transform: rotate(90deg);
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+  }
+
+  .dark .form-group label {
+    color: #ccc;
+  }
+
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+    background: white;
+  }
+
+  .dark .form-group input, .dark .form-group select, .dark .form-group textarea {
+    background: #252525;
+    border-color: #444;
+    color: white;
+  }
+
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+  }
+
+  .form-group .readonly {
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  .dark .form-group .readonly {
+    background: #333;
+  }
+
+  .balance-display {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin-top: 10px;
+    border-left: 4px solid var(--primary-blue);
+  }
+
+  .dark .balance-display {
+    background: #252525;
+  }
+
+  .balance-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .balance-row.total {
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #ddd;
+  }
+
+  .dark .balance-row.total {
+    border-top-color: #444;
+  }
+
+  .module-breakdown {
+    margin-top: 15px;
+    padding: 10px;
+    background: #e9ecef;
+    border-radius: var(--border-radius);
+  }
+
+  .dark .module-breakdown {
+    background: #2d3748;
+  }
+
+  .module-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  .module-item.paid {
+    color: var(--success-green);
+  }
+
+  .module-item.partial {
+    color: var(--warning-orange);
+  }
+
+  .module-item.unpaid {
+    color: var(--danger-red);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+  }
+
+  .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: var(--primary-blue);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: #6c757d;
+    color: white;
+  }
+
+  .btn-secondary:hover {
+    background: #545b62;
+    transform: translateY(-2px);
+  }
+
+  .btn-success {
+    background: var(--success-green);
+    color: white;
+  }
+
+  .btn-success:hover {
+    background: #218838;
+    transform: translateY(-2px);
+  }
+
+  #statementModal .modal-content {
+    max-width: 800px;
+    max-height: 80vh;
+  }
+
+  .statement-header {
+    background: var(--primary-blue);
+    color: white;
+    padding: 20px;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    margin: -30px -30px 20px -30px;
+  }
+
+  .statement-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .statement-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .statement-table th, .statement-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .dark .statement-table th, .dark .statement-table td {
+    border-color: #444;
+  }
+
+  .statement-table th {
+    background: #f8f9fa;
+  }
+
+  .dark .statement-table th {
+    background: #252525;
+  }
+
+  .statement-total {
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+  }
+
+  .dark .statement-total {
+    border-top-color: #444;
+  }
+
+  #pdfPreviewModal .modal-content {
+    width: 95%;
+    max-width: 1200px;
+    height: 85vh;
+    padding: 20px;
+  }
+
+  #pdfIframe {
+    width: 100%;
+    height: calc(100% - 50px);
+    border: none;
+    border-radius: var(--border-radius);
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .main-header {
+      padding: 15px;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .header-content {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .header-controls {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    #searchBox {
+      width: 100%;
+    }
+
+    #searchBox:focus {
+      width: 100%;
+    }
+
+    .dashboard-container {
+      padding: 15px;
+    }
+
+    .summary-cards {
+      grid-template-columns: 1fr;
+    }
+
+    .table-section, .additional-fees-section, .reports-section {
+      padding: 20px;
+    }
+
+    .section-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .filters-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .filter-group {
+      width: 100%;
+    }
+
+    .filter-group select {
+      width: 100%;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .action-btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .reports-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+      width: 95%;
+      padding: 20px;
+    }
+
+    .form-actions {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .logo h1 {
+      font-size: 18px;
+    }
+
+    .summary-card {
+      padding: 20px;
+    }
+
+    .additional-fees-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .statement-details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Login Page -->
+<div class="login-container" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">
+      <i class="fas fa-university"></i>
+      <h1>UCST Finance System</h1>
+    </div>
+    <form class="login-form" id="loginForm">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" required>
+      </div>
+      <div class="login-error" id="loginError">
+        Invalid username or password
+      </div>
+      <button type="submit" class="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+    </form>
+    <div class="login-footer">
+      <p>Finance Management System</p>
+    </div>
+  </div>
+</div>
+
+<!-- Dashboard Content (Hidden Initially) -->
+<div class="dashboard-content" id="dashboardContent">
+  <header class="main-header">
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-university"></i>
+        <h1>UCST Finance Management</h1>
+      </div>
+      <div class="header-controls">
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchBox" placeholder="Search by name, admission number...">
+        </div>
+        <button id="toggleTheme" title="Toggle theme">🌙</button>
+        <button id="logoutBtn" title="Logout" style="background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center;">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-container">
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h3>Total Students</h3>
+        <div class="value" id="totalStudents">0</div>
+        <div class="subtext">Enrolled students</div>
+      </div>
+      <div class="summary-card">
+        <h3>Total Revenue</h3>
+        <div class="value" id="totalRevenue">KES 0</div>
+        <div class="subtext">From all fees</div>
+      </div>
+      <div class="summary-card">
+        <h3>Total Balance</h3>
+        <div class="value" id="totalBalance">KES 0</div>
+        <div class="subtext">Outstanding amount</div>
+      </div>
+      <div class="summary-card">
+        <h3>Collection Rate</h3>
+        <div class="value" id="collectionRate">0%</div>
+        <div class="subtext">Fees collected vs total</div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Main Student Table -->
+      <section class="table-section">
+        <div class="section-header">
+          <h2><i class="fas fa-users"></i> Student Financial Records</h2>
+          <div>
+            <button class="btn btn-primary" onclick="openAddStudentModal()">
+              <i class="fas fa-plus"></i> Add Student
+            </button>
+            <button class="btn btn-success" onclick="exportToExcel('students')">
+              <i class="fas fa-file-excel"></i> Export Students
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters Section -->
+        <div class="filters-container">
+          <div class="filter-group">
+            <label for="courseFilter">Filter by Course:</label>
+            <select id="courseFilter" onchange="filterTable()">
+              <option value="">All Courses</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="statusFilter">Filter by Status:</label>
+            <select id="statusFilter" onchange="filterTable()">
+              <option value="">All Statuses</option>
+              <option value="paid">Paid</option>
+              <option value="partial">Partial</option>
+              <option value="unpaid">Unpaid</option>
+            </select>
+          </div>
+          <button class="clear-filters" onclick="clearFilters()">
+            <i class="fas fa-times"></i> Clear Filters
+          </button>
+        </div>
+
+        <div class="responsive-table">
+          <table id="financeTable">
+            <thead>
+              <tr>
+                <th>Adm No</th>
+                <th>Full Name</th>
+                <th>Course</th>
+                <th>Annual Fee</th>
+                <th>Module Payments</th>
+                <th>Additional Fees</th>
+                <th>Balance</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody">
+              <tr><td colspan="9" style="text-align: center; padding: 40px;">Loading student data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Additional Fees Section -->
+      <section class="additional-fees-section">
+        <div class="additional-fees-header">
+          <h2><i class="fas fa-receipt"></i> Additional Fees</h2>
+          <div>
+            <button class="btn btn-success" onclick="openAddAdditionalFeeModal()">
+              <i class="fas fa-plus"></i> Add Fee
+            </button>
+            <button class="btn btn-primary" onclick="exportToExcel('additionalFees')">
+              <i class="fas fa-file-excel"></i> Export
+            </button>
+          </div>
+        </div>
+        <div class="additional-fees-grid">
+          <div class="fee-item">
+            <h4>Examination Fees</h4>
+            <div class="fee-amount" id="examTotal">KES 0</div>
+            <div class="fee-details" id="examDetails">0 students</div>
+          </div>
+          <div class="fee-item">
+            <h4>Hostel Fees</h4>
+            <div class="fee-amount" id="hostelTotal">KES 0</div>
+            <div class="fee-details" id="hostelDetails">0 students</div>
+          </div>
+          <div class="fee-item">
+            <h4>Meals Fees</h4>
+            <div class="fee-amount" id="mealsTotal">KES 0</div>
+            <div class="fee-details" id="mealsDetails">0 students</div>
+          </div>
+          <div class="fee-item">
+            <h4>Other Fees</h4>
+            <div class="fee-amount" id="otherTotal">KES 0</div>
+            <div class="fee-details" id="otherDetails">0 students</div>
+          </div>
+        </div>
+        <div class="balance-display" style="margin-top: 20px;">
+          <div class="balance-row">
+            <span>Total Additional Fees:</span>
+            <span id="totalAdditionalFees">KES 0</span>
+          </div>
+          <div class="balance-row">
+            <span>Total Paid:</span>
+            <span id="additionalFeesPaid">KES 0</span>
+          </div>
+          <div class="balance-row total">
+            <span>Outstanding Balance:</span>
+            <span id="additionalFeesBalance">KES 0</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Reports Section -->
+    <section class="reports-section">
+      <div class="section-header">
+        <h2><i class="fas fa-chart-bar"></i> Financial Reports</h2>
+        <button class="btn btn-primary" onclick="exportToExcel('reports')">
+          <i class="fas fa-file-excel"></i> Export All Reports
+        </button>
+      </div>
+      
+      <div class="reports-grid">
+        <div class="report-card">
+          <div class="report-header">
+            <div class="report-title">Gender-Based Fees Report</div>
+            <button class="export-btn" onclick="exportToExcel('genderReport')">
+              <i class="fas fa-download"></i> Export
+            </button>
+          </div>
+          <div id="genderReport">
+            <div class="report-item">
+              <span>Male Students:</span>
+              <span id="maleCount">0</span>
+            </div>
+            <div class="report-item">
+              <span>Male Total Fees:</span>
+              <span id="maleTotalFees">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Male Fees Paid:</span>
+              <span id="maleFeesPaid">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Male Balance:</span>
+              <span id="maleBalance">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Female Students:</span>
+              <span id="femaleCount">0</span>
+            </div>
+            <div class="report-item">
+              <span>Female Total Fees:</span>
+              <span id="femaleTotalFees">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Female Fees Paid:</span>
+              <span id="femaleFeesPaid">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Female Balance:</span>
+              <span id="femaleBalance">KES 0</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="report-card">
+          <div class="report-header">
+            <div class="report-title">Course-Level Report</div>
+            <button class="export-btn" onclick="exportToExcel('courseLevelReport')">
+              <i class="fas fa-download"></i> Export
+            </button>
+          </div>
+          <div id="courseLevelReport">
+            <div class="report-item">
+              <span>Diploma Students:</span>
+              <span id="diplomaCount">0</span>
+            </div>
+            <div class="report-item">
+              <span>Diploma Total Fees:</span>
+              <span id="diplomaTotalFees">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Diploma Fees Paid:</span>
+              <span id="diplomaFeesPaid">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Diploma Balance:</span>
+              <span id="diplomaBalance">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Certificate Students:</span>
+              <span id="certificateCount">0</span>
+            </div>
+            <div class="report-item">
+              <span>Certificate Total Fees:</span>
+              <span id="certificateTotalFees">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Certificate Fees Paid:</span>
+              <span id="certificateFeesPaid">KES 0</span>
+            </div>
+            <div class="report-item">
+              <span>Certificate Balance:</span>
+              <span id="certificateBalance">KES 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- Modals (Same as before) -->
+<!-- Add Student Modal -->
+<div class="modal" id="addStudentModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeAddStudentModal()">×</span>
+    <h2><i class="fas fa-user-plus"></i> Add New Student</h2>
+    <form id="studentForm" onsubmit="addNewStudent(event)">
+      <div class="form-group">
+        <label for="admNo">Admission Number *</label>
+        <input type="text" id="admNo" required>
+      </div>
+      <div class="form-group">
+        <label for="fullName">Full Name *</label>
+        <input type="text" id="fullName" required>
+      </div>
+      <div class="form-group">
+        <label for="courseSelect">Select Course *</label>
+        <select id="courseSelect" required onchange="updateCourseDetails()">
+          <option value="">Select Course</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender *</label>
+        <select id="gender" required>
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="sponsorship">Sponsorship *</label>
+        <select id="sponsorship" required>
+          <option value="">Select Sponsorship</option>
+          <option value="NYS">NYS</option>
+          <option value="Self Sponsored">Self Sponsored</option>
+          <option value="HELB">HELB</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="annualTuition">Annual Tuition Fee (KES) *</label>
+        <input type="number" id="annualTuition" required min="0" step="1000" placeholder="Enter annual tuition fee">
+      </div>
+      
+      <div class="balance-display">
+        <h4>Course Fee Division into Modules</h4>
+        <div class="balance-row">
+          <span>Annual Tuition:</span>
+          <span id="displayAnnualFee">KES 0</span>
+        </div>
+        <div class="balance-row">
+          <span>Module 1 (33%):</span>
+          <span id="displayModule1Fee">KES 0</span>
+        </div>
+        <div class="balance-row">
+          <span>Module 2 (33%):</span>
+          <span id="displayModule2Fee">KES 0</span>
+        </div>
+        <div class="balance-row">
+          <span>Module 3 (34%):</span>
+          <span id="displayModule3Fee">KES 0</span>
+        </div>
+        <div class="balance-row total">
+          <span>Total Verified:</span>
+          <span id="displayTotalVerified">KES 0</span>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeAddStudentModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Student</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Record Payment Modal -->
+<div class="modal" id="recordPaymentModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeRecordPaymentModal()">×</span>
+    <h2><i class="fas fa-money-bill-wave"></i> Record Payment</h2>
+    <form id="paymentForm" onsubmit="recordPayment(event)">
+      <input type="hidden" id="paymentAdmNo">
+      
+      <div class="form-group">
+        <label for="paymentStudentName">Student Name</label>
+        <input type="text" id="paymentStudentName" class="readonly" readonly>
+      </div>
+      
+      <div class="form-group">
+        <label for="paymentType">Payment Type *</label>
+        <select id="paymentType" required onchange="updateModuleAmount()">
+          <option value="">Select payment type</option>
+          <option value="module1">Module 1 Fee</option>
+          <option value="module2">Module 2 Fee</option>
+          <option value="module3">Module 3 Fee</option>
+          <option value="Examination">Examination Fee</option>
+          <option value="Hostel">Hostel Fee</option>
+          <option value="Meals">Meals Fee</option>
+          <option value="Other">Other Fee</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="paymentAmount">Amount Paid (KES) *</label>
+        <input type="number" id="paymentAmount" required min="0" step="100" oninput="validatePaymentAmount()">
+      </div>
+      
+      <div class="form-group">
+        <label for="paymentDescription">Description</label>
+        <textarea id="paymentDescription" rows="3" placeholder="Optional: Enter payment description"></textarea>
+      </div>
+      
+      <div id="balanceDisplay" class="balance-display">
+        <h4>Balance Information</h4>
+        <div id="moduleBreakdown" class="module-breakdown"></div>
+        <div class="balance-row">
+          <span>Total Course Fee:</span>
+          <span id="displayTotalFee">KES 0</span>
+        </div>
+        <div class="balance-row">
+          <span>Additional Fees:</span>
+          <span id="displayAdditionalFees">KES 0</span>
+        </div>
+        <div class="balance-row">
+          <span>Total Paid:</span>
+          <span id="displayTotalPaid">KES 0</span>
+        </div>
+        <div class="balance-row total">
+          <span>Remaining Balance:</span>
+          <span id="displayRemainingBalance">KES 0</span>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeRecordPaymentModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Record Payment</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Additional Fee Modal -->
+<div class="modal" id="addAdditionalFeeModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeAddAdditionalFeeModal()">×</span>
+    <h2><i class="fas fa-file-invoice-dollar"></i> Add Additional Fee</h2>
+    <form id="additionalFeeForm" onsubmit="addAdditionalFee(event)">
+      <div class="form-group">
+        <label for="feeAdmNo">Admission Number *</label>
+        <select id="feeAdmNo" required onchange="updateFeeStudentInfo()">
+          <option value="">Select student</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="feeStudentName">Student Name</label>
+        <input type="text" id="feeStudentName" class="readonly" readonly>
+      </div>
+      
+      <div class="form-group">
+        <label for="feeType">Fee Type *</label>
+        <select id="feeType" required>
+          <option value="">Select fee type</option>
+          <option value="Examination">Examination Fee</option>
+          <option value="Hostel">Hostel Fee</option>
+          <option value="Meals">Meals Fee</option>
+          <option value="Other">Other Fee</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="feeTotalAmount">Total Amount (KES) *</label>
+        <input type="number" id="feeTotalAmount" required min="0" step="100" oninput="calculateFeeBalance()">
+      </div>
+      
+      <div class="form-group">
+        <label for="feeAmountPaid">Amount Paid Now (KES)</label>
+        <input type="number" id="feeAmountPaid" min="0" step="100" oninput="calculateFeeBalance()">
+      </div>
+      
+      <div id="feeBalanceDisplay" class="balance-display">
+        <h4>Balance Calculation</h4>
+        <div class="balance-row">
+          <span>Total Amount:</span>
+          <span id="displayFeeTotal">KES 0</span>
+        </div>
+        <div class="balance-row">
+          <span>Amount Paid:</span>
+          <span id="displayFeePaid">KES 0</span>
+        </div>
+        <div class="balance-row total">
+          <span>Remaining Balance:</span>
+          <span id="displayFeeBalance">KES 0</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="feeDescription">Description</label>
+        <textarea id="feeDescription" rows="3" placeholder="Optional: Enter fee description"></textarea>
+      </div>
+      
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" onclick="closeAddAdditionalFeeModal()">Cancel</button>
+        <button type="submit" class="btn btn-success">Save Fee</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Statement Modal -->
+<div class="modal" id="statementModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeStatementModal()">×</span>
+    <div class="statement-header">
+      <h2><i class="fas fa-file-alt"></i> Student Statement</h2>
+      <div id="statementStudentInfo"></div>
+    </div>
+    
+    <div class="statement-details" id="statementSummary"></div>
+    
+    <h3>Payment History</h3>
+    <div class="responsive-table">
+      <table class="statement-table" id="statementTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Amount (KES)</th>
+            <th>Balance (KES)</th>
+          </tr>
+        </thead>
+        <tbody id="statementBody"></tbody>
+      </table>
+    </div>
+    
+    <div class="statement-total" id="statementTotal"></div>
+    
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="generateStatementPDF()">
+        <i class="fas fa-file-pdf"></i> Download Statement
+      </button>
+      <button class="btn btn-secondary" onclick="closeStatementModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Preview Modal -->
+<div class="modal" id="pdfPreviewModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closePDFPreview()">✖ Close</span>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="printPDF()"><i class="fas fa-print"></i> Print</button>
+      <button class="btn btn-secondary" onclick="downloadPDF()"><i class="fas fa-download"></i> Download PDF</button>
+    </div>
+    <iframe id="pdfIframe"></iframe>
+  </div>
+</div>
+
+<!-- Firebase & Libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+  authDomain: "jnnp-system.firebaseapp.com",
+  databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+  projectId: "jnnp-system",
+  storageBucket: "jnnp-system.firebasestorage.app",
+  messagingSenderId: "769232855377",
+  appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Login credentials
+const VALID_USERNAME = 'finance';
+const VALID_PASSWORD = '1234';
+
+// Global variables
+let admissions = {};
+let payments = {};
+let additionalFees = {};
+let courses = {};
+let currentStudent = null;
+let currentDoc = null;
+
+// MODULE STRUCTURE: Each student has 3 modules (33%, 33%, 34% of annual fee)
+const MODULES = [
+  { id: 'module1', name: 'Module 1', percentage: 33 },
+  { id: 'module2', name: 'Module 2', percentage: 33 },
+  { id: 'module3', name: 'Module 3', percentage: 34 }
+];
+
+// ========== LOGIN FUNCTIONALITY ==========
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const errorElement = document.getElementById('loginError');
+  
+  if (username === VALID_USERNAME && password === VALID_PASSWORD) {
+    // Hide login, show dashboard
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('dashboardContent').style.display = 'block';
+    
+    // Store login state
+    sessionStorage.setItem('isLoggedIn', 'true');
+    
+    // Initialize dashboard
+    initializeDashboard();
+  } else {
+    errorElement.style.display = 'block';
+    document.getElementById('password').value = '';
+    document.getElementById('password').focus();
+  }
+});
+
+// Check if already logged in
+if (sessionStorage.getItem('isLoggedIn') === 'true') {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('dashboardContent').style.display = 'block';
+  initializeDashboard();
+}
+
+// Logout functionality
+document.getElementById('logoutBtn').addEventListener('click', function() {
+  sessionStorage.removeItem('isLoggedIn');
+  document.getElementById('dashboardContent').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('loginForm').reset();
+  document.getElementById('loginError').style.display = 'none';
+});
+
+// ========== DATA LOADING ==========
+function initializeDashboard() {
+  db.ref("courses").on("value", snap => {
+    console.log("Courses loaded:", snap.val());
+    courses = snap.val() || {};
+    
+    if (Object.keys(courses).length === 0) {
+      console.warn("No courses found in database. Table will show course names if available in admissions.");
+    }
+    
+    populateCourseFilter();
+    populateCourseSelect();
+  });
+
+  db.ref("admissions").on("value", snap => {
+    console.log("Admissions loaded:", snap.val());
+    admissions = snap.val() || {};
+    
+    // Debug: Log admission structure
+    Object.entries(admissions).forEach(([key, student], index) => {
+      console.log(`Student ${index + 1} (Key: ${key}):`, {
+        admNo: student.admNo || 'Missing admNo',
+        fullName: student.fullName || 'No name',
+        courseName: student.courseName || 'No course',
+        hasAnnualTuition: 'annualTuition' in student,
+        annualTuition: student.annualTuition || student.semesterFee * 2 || 0
+      });
+    });
+    
+    updateSummaryCards();
+    renderTable();
+    populateStudentDropdown();
+    generateReports();
+  });
+
+  db.ref("payments").on("value", snap => {
+    console.log("Payments loaded:", snap.val());
+    payments = snap.val() || {};
+    updateSummaryCards();
+    renderTable();
+    generateReports();
+  });
+
+  db.ref("additionalFees").on("value", snap => {
+    console.log("Additional Fees loaded:", snap.val());
+    additionalFees = snap.val() || {};
+    updateAdditionalFeesSummary();
+    renderTable();
+    generateReports();
+  });
+}
+
+// ========== UPDATED RECEIPT FUNCTION ==========
+function generateReceipt(admNo, paymentData = null) {
+  const student = findStudentByAdmNo(admNo);
+  if (!student) {
+    alert('Student not found!');
+    return;
+  }
+  
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'mm', 'a4');
+  
+  // Set font to Times New Roman
+  doc.setFont("times", "normal");
+  
+  // Try to load the logo image
+  try {
+    const logo = new Image();
+    logo.src = 'images/logo.jpg';
+    
+    // Add logo to PDF (centered, above heading)
+    doc.addImage(logo, 'JPEG', 85, 10, 40, 40);
+    
+    // College name with logo
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 139);
+    doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 105, 55, null, null, 'center');
+  } catch (error) {
+    // If logo fails to load, just show text
+    console.log('Logo not found, using text only');
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 139);
+    doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 105, 20, null, null, 'center');
+  }
+  
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text('OFFICIAL RECEIPT', 105, 65, null, null, 'center');
+  
+  // College details
+  doc.setFontSize(9);
+  doc.text('Uthiru, Nairobi, Kenya', 105, 71, null, null, 'center');
+  doc.text('Phone: +254 704244993 | Email: info@ucst.ac.ke', 105, 76, null, null, 'center');
+  
+  // Line separator
+  doc.setLineWidth(0.5);
+  doc.line(20, 82, 190, 82);
+  
+  // Receipt details
+  doc.setFontSize(10);
+  doc.text(`Receipt No: RC${Date.now().toString().slice(-8)}`, 20, 90);
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 150, 90);
+  
+  doc.setFontSize(14);
+  doc.text('PAYMENT RECEIPT', 105, 100, null, null, 'center');
+  
+  // Student details
+  doc.setFontSize(9);
+  let currentY = 110;
+  
+  // Column 1
+  doc.text(`Admission No: ${student.admNo}`, 20, currentY);
+  doc.text(`Student Name: ${student.fullName}`, 20, currentY + 6);
+  doc.text(`Course: ${student.courseName || 'N/A'}`, 20, currentY + 12);
+  
+  // Column 2
+  doc.text(`Level: ${student.courseLevel || 'N/A'}`, 100, currentY);
+  doc.text(`Gender: ${student.gender || 'N/A'}`, 100, currentY + 6);
+  doc.text(`Sponsorship: ${student.sponsor || 'N/A'}`, 100, currentY + 12);
+  
+  currentY += 20;
+  
+  // Get payment data if not provided
+  if (!paymentData) {
+    const studentPayments = Object.values(payments)
+      .filter(p => String(p.admNo) === String(admNo))
+      .sort((a, b) => b.timestamp - a.timestamp);
+    
+    if (studentPayments.length === 0) {
+      // Create a generic receipt if no payments exist
+      paymentData = {
+        type: 'General',
+        amountPaid: 0,
+        description: 'Balance statement receipt',
+        timestamp: Date.now()
+      };
+    } else {
+      paymentData = studentPayments[0];
+    }
+  }
+  
+  // Calculate all financial data
+  const modules = calculateModulePayments(student);
+  const additionalFeesData = calculateStudentAdditionalFees(student.admNo);
+  const totalPayments = calculateTotalPayments(student);
+  const annualFee = parseFloat(
+    student.annualTuition || 
+    (student.semesterFee ? student.semesterFee * 2 : 0) || 
+    0
+  );
+  const totalFees = annualFee + additionalFeesData.totalFees;
+  const totalBalance = totalFees - totalPayments.totalPaid;
+  
+  // Payment details
+  doc.setFontSize(10);
+  doc.text('PAYMENT DETAILS', 20, currentY);
+  currentY += 10;
+  
+  doc.setFontSize(9);
+  let paymentDescription = '';
+  if (paymentData.type && paymentData.type.startsWith('module')) {
+    const moduleName = paymentData.type === 'module1' ? 'Module 1' : 
+                      paymentData.type === 'module2' ? 'Module 2' : 'Module 3';
+    paymentDescription = `${moduleName} Fee Payment`;
+  } else {
+    paymentDescription = `${paymentData.type || 'Payment'} Fee`;
+  }
+  
+  doc.text(`Payment Type: ${paymentDescription}`, 20, currentY);
+  doc.text(`Amount Paid: KES ${parseFloat(paymentData.amountPaid || 0).toLocaleString()}`, 100, currentY);
+  currentY += 6;
+  
+  doc.text(`Payment Date: ${new Date(paymentData.timestamp || Date.now()).toLocaleDateString()}`, 20, currentY);
+  currentY += 8;
+  
+  if (paymentData.description) {
+    doc.text(`Description: ${paymentData.description.substring(0, 50)}${paymentData.description.length > 50 ? '...' : ''}`, 20, currentY);
+    currentY += 10;
+  }
+  
+  // Module Breakdown
+  doc.setFontSize(10);
+  doc.text('MODULE BREAKDOWN', 20, currentY);
+  currentY += 8;
+  
+  modules.forEach(module => {
+    doc.setFontSize(8);
+    doc.text(`${module.name}:`, 25, currentY);
+    doc.text(`Total: ${module.moduleFee.toLocaleString()}`, 60, currentY);
+    doc.text(`Paid: ${module.paidAmount.toLocaleString()}`, 100, currentY);
+    doc.text(`Balance: ${module.balance.toLocaleString()}`, 140, currentY);
+    doc.text(`Status: ${module.status}`, 170, currentY);
+    currentY += 5;
+  });
+  
+  currentY += 5;
+  
+  // Additional Fees Breakdown
+  if (additionalFeesData.totalFees > 0) {
+    doc.setFontSize(10);
+    doc.text('ADDITIONAL FEES', 20, currentY);
+    currentY += 8;
+    
+    Object.entries(additionalFeesData.feesByType).forEach(([type, data]) => {
+      if (data.total > 0) {
+        doc.setFontSize(8);
+        doc.text(`${type}:`, 25, currentY);
+        doc.text(`Total: ${data.total.toLocaleString()}`, 60, currentY);
+        doc.text(`Paid: ${data.paid.toLocaleString()}`, 100, currentY);
+        doc.text(`Balance: ${data.balance.toLocaleString()}`, 140, currentY);
+        currentY += 5;
+      }
+    });
+    currentY += 5;
+  }
+  
+  // Balance summary - smaller font to fit
+  doc.setFontSize(10);
+  doc.text('BALANCE SUMMARY', 20, currentY);
+  currentY += 8;
+  
+  doc.setFontSize(9);
+  doc.text(`Annual Course Fee: KES ${annualFee.toLocaleString()}`, 25, currentY);
+  currentY += 5;
+  
+  if (additionalFeesData.totalFees > 0) {
+    doc.text(`Additional Fees: KES ${additionalFeesData.totalFees.toLocaleString()}`, 25, currentY);
+    currentY += 5;
+  }
+  
+  doc.text(`Total Fees: KES ${totalFees.toLocaleString()}`, 25, currentY);
+  currentY += 5;
+  doc.text(`Total Paid to Date: KES ${totalPayments.totalPaid.toLocaleString()}`, 25, currentY);
+  currentY += 7;
+  
+  // Remaining balance with emphasis
+  doc.setFontSize(10);
+  doc.setFont("times", "bold");
+  doc.text(`REMAINING BALANCE: KES ${totalBalance.toLocaleString()}`, 25, currentY);
+  doc.setFont("times", "normal");
+  
+  // Footer
+  currentY += 15;
+  doc.setLineWidth(0.5);
+  doc.line(20, currentY, 190, currentY);
+  currentY += 10;
+  
+  doc.setFontSize(8);
+  doc.text('Thank you for your payment', 105, currentY, null, null, 'center');
+  currentY += 5;
+  doc.text('This is an official receipt from UCST', 105, currentY, null, null, 'center');
+  currentY += 5;
+  doc.text('For inquiries contact: finance@ucst.ac.ke', 105, currentY, null, null, 'center');
+  
+  // Receipt ID at bottom
+  currentY += 10;
+  doc.text('Receipt ID:', 20, currentY);
+  doc.text(`RC${Date.now().toString().slice(-8)}`, 60, currentY);
+  doc.text(`Generated on: ${new Date().toLocaleString()}`, 120, currentY);
+  
+  // Show PDF preview
+  openPDFPreview(doc);
+}
+
+// ========== REST OF THE FUNCTIONS (SAME AS BEFORE) ==========
+
+function findStudentByAdmNo(admNo) {
+  for (const [key, student] of Object.entries(admissions)) {
+    if (String(student.admNo) === String(admNo)) {
+      return { ...student, firebaseKey: key };
+    }
+  }
+  return null;
+}
+
+function calculateModulePayments(student) {
+  const studentPayments = Object.values(payments).filter(p => 
+    String(p.admNo) === String(student.admNo) && p.type && p.type.startsWith('module')
+  );
+  
+  const annualFee = parseFloat(
+    student.annualTuition || 
+    (student.semesterFee ? student.semesterFee * 2 : 0) || 
+    0
+  );
+  
+  const modules = MODULES.map(module => {
+    const moduleFee = module.id === 'module1' ? student.module1Fee || Math.round(annualFee * 0.33) :
+                     module.id === 'module2' ? student.module2Fee || Math.round(annualFee * 0.33) :
+                     student.module3Fee || (annualFee - Math.round(annualFee * 0.33) - Math.round(annualFee * 0.33));
+    
+    const modulePayments = studentPayments.filter(p => p.type === module.id);
+    const paidAmount = modulePayments.reduce((sum, p) => sum + (parseFloat(p.amountPaid) || 0), 0);
+    const balance = moduleFee - paidAmount;
+    
+    let status = 'unpaid';
+    if (paidAmount >= moduleFee) {
+      status = 'paid';
+    } else if (paidAmount > 0) {
+      status = 'partial';
+    }
+    
+    return {
+      ...module,
+      paidAmount,
+      balance,
+      status,
+      moduleFee
+    };
+  });
+  
+  return modules;
+}
+
+function calculateStudentAdditionalFees(admNo) {
+  const studentFees = Object.values(additionalFees).filter(f => 
+    f && String(f.admNo) === String(admNo)
+  );
+  
+  let totalFees = 0;
+  let totalPaid = 0;
+  const feesByType = {};
+  
+  studentFees.forEach(fee => {
+    if (!fee) return;
+    
+    totalFees += parseFloat(fee.totalAmount || 0);
+    totalPaid += parseFloat(fee.amountPaid || 0);
+    
+    const type = fee.type || 'Other';
+    if (!feesByType[type]) {
+      feesByType[type] = {
+        total: 0,
+        paid: 0,
+        balance: 0
+      };
+    }
+    feesByType[type].total += parseFloat(fee.totalAmount || 0);
+    feesByType[type].paid += parseFloat(fee.amountPaid || 0);
+    feesByType[type].balance += (parseFloat(fee.totalAmount || 0) - parseFloat(fee.amountPaid || 0));
+  });
+  
+  return {
+    totalFees,
+    totalPaid,
+    feesByType,
+    balance: totalFees - totalPaid
+  };
+}
+
+function calculateTotalPayments(student) {
+  const studentPayments = Object.values(payments).filter(p => 
+    p && String(p.admNo) === String(student.admNo)
+  );
+  const additionalFeesData = calculateStudentAdditionalFees(student.admNo);
+  
+  const modulePayments = studentPayments
+    .filter(p => p.type && p.type.startsWith('module'))
+    .reduce((sum, p) => sum + (parseFloat(p.amountPaid) || 0), 0);
+    
+  const otherPayments = studentPayments
+    .filter(p => !p.type || !p.type.startsWith('module'))
+    .reduce((sum, p) => sum + (parseFloat(p.amountPaid) || 0), 0);
+    
+  const totalPaid = modulePayments + otherPayments + additionalFeesData.totalPaid;
+  
+  return {
+    modulePayments,
+    otherPayments,
+    additionalFeesPaid: additionalFeesData.totalPaid,
+    totalPaid
+  };
+}
+
+function renderTable() {
+  const body = document.getElementById("tableBody");
+  
+  if (Object.keys(admissions).length === 0) {
+    body.innerHTML = `
+      <tr>
+        <td colspan="9" style="text-align: center; padding: 40px;">
+          <i class="fas fa-users" style="font-size: 48px; color: #ccc; margin-bottom: 20px; display: block;"></i>
+          <p>No student records found.</p>
+          <button class="btn btn-primary" onclick="openAddStudentModal()" style="margin-top: 15px;">
+            <i class="fas fa-plus"></i> Add First Student
+          </button>
+        </td>
+      </tr>`;
+    return;
+  }
+  
+  body.innerHTML = "";
+  
+  // Convert admissions to array
+  const studentsArray = Object.entries(admissions)
+    .map(([key, value]) => ({
+      firebaseKey: key,
+      ...value
+    }))
+    .filter(student => student.fullName || student.admNo);
+  
+  studentsArray.forEach(student => {
+    // Get student data with fallbacks
+    const studentName = student.fullName || "Unknown Student";
+    const admNo = student.admNo || `N/A-${student.firebaseKey}`;
+    const courseName = student.courseName || "No Course";
+    
+    // Calculate annual fee - check multiple possible fields
+    const annualFee = parseFloat(
+      student.annualTuition || 
+      (student.semesterFee ? student.semesterFee * 2 : 0) || 
+      0
+    );
+    
+    // Calculate financial data
+    const modules = calculateModulePayments(student);
+    const additionalFeesData = calculateStudentAdditionalFees(student.admNo);
+    const totalPayments = calculateTotalPayments(student);
+    
+    const totalFees = annualFee + additionalFeesData.totalFees;
+    const totalBalance = totalFees - totalPayments.totalPaid;
+    
+    const overallStatus = totalBalance <= 0 ? 'paid' : (totalPayments.totalPaid > 0 ? 'partial' : 'unpaid');
+    
+    // Create module details
+    const moduleDetails = modules.map(module => `
+      <div class="module-row">
+        <div class="module-name">${module.name}</div>
+        <div class="module-amounts">
+          <div class="module-total">KSh ${module.moduleFee.toLocaleString()}</div>
+          <div class="module-paid">KSh ${module.paidAmount.toLocaleString()}</div>
+          <div class="module-balance">KSh ${module.balance.toLocaleString()}</div>
+        </div>
+        <div class="module-status ${module.status}">${module.status}</div>
+      </div>
+    `).join('');
+    
+    // Create additional fees display with types
+    const additionalFeesDisplay = Object.entries(additionalFeesData.feesByType)
+      .filter(([type, data]) => data.total > 0)
+      .map(([type, data]) => `
+        <div class="fee-detail-row">
+          <div class="fee-type">${type}</div>
+          <div class="fee-amount-detail">KSh ${data.total.toLocaleString()}</div>
+        </div>
+      `).join('');
+    
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><strong>${admNo}</strong></td>
+      <td>${studentName}<br><small>${student.gender || 'N/A'} | ${student.sponsor || 'N/A'}</small></td>
+      <td>${courseName}</td>
+      <td>KES ${annualFee.toLocaleString()}</td>
+      <td>
+        <div class="module-details">
+          ${moduleDetails}
+          <div style="font-size: 12px; color: #666; margin-top: 8px; text-align: center; background: #f1f3f4; padding: 4px; border-radius: 4px;">
+            Total Module Payments: <strong>KES ${totalPayments.modulePayments.toLocaleString()}</strong>
+          </div>
+        </div>
+      </td>
+      <td>
+        <div class="additional-fees-details">
+          ${additionalFeesDisplay || '<div style="color: #999; font-size: 12px; text-align: center; padding: 10px;">No additional fees</div>'}
+          ${additionalFeesData.totalFees > 0 ? 
+            `<div class="fee-detail-row" style="border-top: 2px solid #007bff; margin-top: 5px; padding-top: 8px; font-weight: 600;">
+              <div>TOTAL</div>
+              <div>KES ${additionalFeesData.totalFees.toLocaleString()}</div>
+            </div>` : ''}
+        </div>
+      </td>
+      <td><strong style="color: ${totalBalance > 0 ? '#dc3545' : '#28a745'}">KES ${totalBalance.toLocaleString()}</strong></td>
+      <td><span class="balance-status ${overallStatus}">${overallStatus.toUpperCase()}</span></td>
+      <td>
+        <div class="action-buttons">
+          <button class="action-btn record-payment" onclick="openRecordPaymentModal('${admNo}')">
+            <i class="fas fa-money-bill-wave"></i> Pay
+          </button>
+          <button class="action-btn generate-receipt" onclick="generateReceipt('${admNo}')">
+            <i class="fas fa-receipt"></i> Receipt
+          </button>
+          <button class="action-btn view-statement" onclick="viewStatement('${admNo}')">
+            <i class="fas fa-file-alt"></i> Statement
+          </button>
+        </div>
+      </td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function updateSummaryCards() {
+  const students = Object.values(admissions);
+  const totalStudents = students.length;
+  
+  // Calculate total revenue from course fees
+  let totalCourseFees = 0;
+  students.forEach(student => {
+    totalCourseFees += parseFloat(
+      student.annualTuition || 
+      (student.semesterFee ? student.semesterFee * 2 : 0) || 
+      0
+    );
+  });
+  
+  // Calculate additional fees total
+  let totalAdditionalFees = 0;
+  Object.values(additionalFees).forEach(fee => {
+    if (fee) {
+      totalAdditionalFees += parseFloat(fee.totalAmount) || 0;
+    }
+  });
+  
+  const totalRevenue = totalCourseFees + totalAdditionalFees;
+  
+  // Calculate total paid
+  let totalPaid = 0;
+  Object.values(payments).forEach(payment => {
+    if (payment) {
+      totalPaid += parseFloat(payment.amountPaid) || 0;
+    }
+  });
+  
+  Object.values(additionalFees).forEach(fee => {
+    if (fee) {
+      totalPaid += parseFloat(fee.amountPaid) || 0;
+    }
+  });
+  
+  const totalBalance = totalRevenue - totalPaid;
+  const collectionRate = totalRevenue > 0 ? Math.round((totalPaid / totalRevenue) * 100) : 0;
+  
+  document.getElementById('totalStudents').textContent = totalStudents;
+  document.getElementById('totalRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
+  document.getElementById('totalBalance').textContent = `KES ${totalBalance.toLocaleString()}`;
+  document.getElementById('collectionRate').textContent = `${collectionRate}%`;
+}
+
+// ========== MODAL FUNCTIONS ==========
+function openAddStudentModal() {
+  document.getElementById('addStudentModal').style.display = 'flex';
+  document.getElementById('admNo').focus();
+  // Update module calculations based on entered annual tuition
+  document.getElementById('annualTuition').addEventListener('input', updateModuleCalculations);
+}
+
+function updateModuleCalculations() {
+  const annualTuition = parseFloat(document.getElementById('annualTuition').value) || 0;
+  const module1Fee = Math.round(annualTuition * 0.33);
+  const module2Fee = Math.round(annualTuition * 0.33);
+  const module3Fee = annualTuition - module1Fee - module2Fee;
+  
+  document.getElementById('displayAnnualFee').textContent = `KES ${annualTuition.toLocaleString()}`;
+  document.getElementById('displayModule1Fee').textContent = `KES ${module1Fee.toLocaleString()}`;
+  document.getElementById('displayModule2Fee').textContent = `KES ${module2Fee.toLocaleString()}`;
+  document.getElementById('displayModule3Fee').textContent = `KES ${module3Fee.toLocaleString()}`;
+  document.getElementById('displayTotalVerified').textContent = `KES ${(module1Fee + module2Fee + module3Fee).toLocaleString()}`;
+}
+
+function closeAddStudentModal() {
+  document.getElementById('addStudentModal').style.display = 'none';
+  document.getElementById('studentForm').reset();
+}
+
+function openRecordPaymentModal(admNo) {
+  const student = findStudentByAdmNo(admNo);
+  if (!student) {
+    alert('Student not found! AdmNo: ' + admNo);
+    return;
+  }
+  
+  currentStudent = student;
+  
+  document.getElementById('paymentAdmNo').value = student.admNo || '';
+  document.getElementById('paymentStudentName').value = student.fullName || '';
+  
+  // Clear form
+  document.getElementById('paymentType').value = '';
+  document.getElementById('paymentAmount').value = '';
+  document.getElementById('paymentDescription').value = '';
+  
+  // Update balance display
+  updateBalanceDisplay();
+  
+  // Show modal
+  document.getElementById('recordPaymentModal').style.display = 'flex';
+}
+
+function closeRecordPaymentModal() {
+  document.getElementById('recordPaymentModal').style.display = 'none';
+  currentStudent = null;
+}
+
+function openAddAdditionalFeeModal() {
+  document.getElementById('addAdditionalFeeModal').style.display = 'flex';
+  calculateFeeBalance();
+}
+
+function closeAddAdditionalFeeModal() {
+  document.getElementById('addAdditionalFeeModal').style.display = 'none';
+  document.getElementById('additionalFeeForm').reset();
+  document.getElementById('feeStudentName').value = '';
+}
+
+function viewStatement(admNo) {
+  const student = findStudentByAdmNo(admNo);
+  if (!student) {
+    alert('Student not found!');
+    return;
+  }
+  
+  // Set student info
+  document.getElementById('statementStudentInfo').innerHTML = `
+    <p><strong>${student.fullName || 'N/A'}</strong> | Adm No: ${student.admNo}</p>
+    <p>Course: ${student.courseName || 'N/A'} | Gender: ${student.gender || 'N/A'} | Sponsor: ${student.sponsor || 'N/A'}</p>
+    <p>Annual Fee: KES ${parseFloat(student.annualTuition || student.semesterFee * 2 || 0).toLocaleString()}</p>
+  `;
+  
+  // Calculate all financial data
+  const modules = calculateModulePayments(student);
+  const additionalFeesData = calculateStudentAdditionalFees(student.admNo);
+  const totalPayments = calculateTotalPayments(student);
+  
+  const annualFee = parseFloat(student.annualTuition || student.semesterFee * 2 || 0);
+  const totalFee = annualFee + additionalFeesData.totalFees;
+  const totalBalance = totalFee - totalPayments.totalPaid;
+  
+  // Update summary
+  document.getElementById('statementSummary').innerHTML = `
+    <div>
+      <strong>Course Fee:</strong><br>
+      KES ${annualFee.toLocaleString()}
+    </div>
+    <div>
+      <strong>Additional Fees:</strong><br>
+      KES ${additionalFeesData.totalFees.toLocaleString()}
+    </div>
+    <div>
+      <strong>Total Paid:</strong><br>
+      KES ${totalPayments.totalPaid.toLocaleString()}
+    </div>
+    <div>
+      <strong>Balance:</strong><br>
+      KES ${totalBalance.toLocaleString()}
+    </div>
+  `;
+  
+  // Get all payments for this student
+  const studentPayments = Object.values(payments)
+    .filter(p => String(p.admNo) === String(admNo))
+    .sort((a, b) => b.timestamp - a.timestamp);
+  
+  // Get all additional fees for this student
+  const studentAdditionalFees = Object.values(additionalFees)
+    .filter(f => String(f.admNo) === String(admNo))
+    .sort((a, b) => b.timestamp - a.timestamp);
+  
+  // Build statement table
+  const statementBody = document.getElementById('statementBody');
+  statementBody.innerHTML = '';
+  
+  let runningBalance = totalFee;
+  
+  // Add course fee as initial transaction
+  const initialRow = document.createElement('tr');
+  initialRow.innerHTML = `
+    <td>${new Date(student.timestamp || Date.now()).toLocaleDateString()}</td>
+    <td>Course Fee</td>
+    <td>${student.courseName || 'N/A'} - Annual Fee</td>
+    <td style="color: red;">-KES ${annualFee.toLocaleString()}</td>
+    <td>KES ${runningBalance.toLocaleString()}</td>
+  `;
+  statementBody.appendChild(initialRow);
+  
+  // Add additional fees
+  studentAdditionalFees.forEach(fee => {
+    runningBalance -= parseFloat(fee.totalAmount || 0);
+    
+    const feeRow = document.createElement('tr');
+    feeRow.innerHTML = `
+      <td>${new Date(fee.timestamp).toLocaleDateString()}</td>
+      <td>Additional Fee</td>
+      <td>${fee.type} - ${fee.description || 'No description'}</td>
+      <td style="color: red;">-KES ${parseFloat(fee.totalAmount || 0).toLocaleString()}</td>
+      <td>KES ${runningBalance.toLocaleString()}</td>
+    `;
+    statementBody.appendChild(feeRow);
+    
+    // Add payment if any
+    if (parseFloat(fee.amountPaid || 0) > 0) {
+      runningBalance += parseFloat(fee.amountPaid || 0);
+      
+      const paymentRow = document.createElement('tr');
+      paymentRow.innerHTML = `
+        <td>${new Date(fee.timestamp).toLocaleDateString()}</td>
+        <td>Payment</td>
+        <td>${fee.type} Payment</td>
+        <td style="color: green;">+KES ${parseFloat(fee.amountPaid || 0).toLocaleString()}</td>
+        <td>KES ${runningBalance.toLocaleString()}</td>
+      `;
+      statementBody.appendChild(paymentRow);
+    }
+  });
+  
+  // Add module payments
+  studentPayments.forEach(payment => {
+    runningBalance += parseFloat(payment.amountPaid || 0);
+    
+    const description = payment.type && payment.type.startsWith('module') 
+      ? `${getModuleName(payment.type)} - ${payment.description || 'No description'}`
+      : `${payment.type || 'Payment'} - ${payment.description || 'No description'}`;
+    
+    const paymentRow = document.createElement('tr');
+    paymentRow.innerHTML = `
+      <td>${new Date(payment.timestamp || payment.paymentDate || Date.now()).toLocaleDateString()}</td>
+      <td>Payment</td>
+      <td>${description}</td>
+      <td style="color: green;">+KES ${parseFloat(payment.amountPaid || 0).toLocaleString()}</td>
+      <td>KES ${runningBalance.toLocaleString()}</td>
+    `;
+    statementBody.appendChild(paymentRow);
+  });
+  
+  // Update total
+  document.getElementById('statementTotal').innerHTML = `
+    <div style="display: flex; justify-content: space-between;">
+      <span>Current Balance:</span>
+      <span style="color: ${totalBalance >= 0 ? 'green' : 'red'}; font-weight: bold;">
+        KES ${totalBalance.toLocaleString()}
+      </span>
+    </div>
+  `;
+  
+  // Show modal
+  document.getElementById('statementModal').style.display = 'flex';
+}
+
+function getModuleName(moduleType) {
+  switch(moduleType) {
+    case 'module1': return 'Module 1';
+    case 'module2': return 'Module 2';
+    case 'module3': return 'Module 3';
+    default: return moduleType;
+  }
+}
+
+function closeStatementModal() {
+  document.getElementById('statementModal').style.display = 'none';
+}
+
+function addNewStudent(event) {
+  event.preventDefault();
+  
+  const admNo = document.getElementById('admNo').value.trim();
+  const fullName = document.getElementById('fullName').value.trim();
+  const courseId = document.getElementById('courseSelect').value;
+  const gender = document.getElementById('gender').value;
+  const sponsorship = document.getElementById('sponsorship').value;
+  const annualTuition = parseFloat(document.getElementById('annualTuition').value) || 0;
+  
+  if (!admNo || !fullName || !gender || !sponsorship || annualTuition <= 0) {
+    alert('Please fill in all required fields with valid amounts');
+    return;
+  }
+  
+  // Calculate module fees (33%, 33%, 34% of annual fee)
+  const module1Fee = Math.round(annualTuition * 0.33);
+  const module2Fee = Math.round(annualTuition * 0.33);
+  const module3Fee = annualTuition - module1Fee - module2Fee; // Remaining 34%
+  
+  const course = courses[courseId] || {};
+  
+  const newStudent = {
+    admNo,
+    fullName,
+    courseId: courseId || '',
+    courseName: course.courseName || 'General Course',
+    courseCode: course.courseCode || '',
+    courseLevel: course.courseLevel || 'Diploma',
+    annualTuition,
+    module1Fee,
+    module2Fee,
+    module3Fee,
+    gender,
+    sponsor: sponsorship,
+    status: 'Active',
+    timestamp: Date.now(),
+    updatedAt: new Date().toISOString()
+  };
+  
+  const newStudentRef = db.ref('admissions').push();
+  newStudentRef.set(newStudent)
+    .then(() => {
+      alert('Student added successfully!');
+      closeAddStudentModal();
+    })
+    .catch(error => {
+      console.error('Error adding student:', error);
+      alert('Error adding student. Please try again.');
+    });
+}
+
+function recordPayment(event) {
+  event.preventDefault();
+  
+  const admNo = document.getElementById('paymentAdmNo').value;
+  const paymentType = document.getElementById('paymentType').value;
+  const amountPaid = parseFloat(document.getElementById('paymentAmount').value) || 0;
+  const description = document.getElementById('paymentDescription').value;
+  
+  if (!admNo || !paymentType || amountPaid <= 0) {
+    alert('Please fill in all required fields with valid amounts');
+    return;
+  }
+  
+  const paymentData = {
+    admNo,
+    type: paymentType,
+    amountPaid,
+    description: description || '',
+    timestamp: Date.now(),
+    paymentDate: new Date().toISOString().split('T')[0]
+  };
+  
+  // Add to Firebase
+  const newPaymentRef = db.ref('payments').push();
+  newPaymentRef.set(paymentData)
+    .then(() => {
+      alert('Payment recorded successfully!');
+      
+      // Generate receipt automatically
+      generateReceipt(admNo, paymentData);
+      
+      closeRecordPaymentModal();
+    })
+    .catch(error => {
+      console.error('Error recording payment:', error);
+      alert('Error recording payment. Please try again.');
+    });
+}
+
+function addAdditionalFee(event) {
+  event.preventDefault();
+  
+  const admNo = document.getElementById('feeAdmNo').value;
+  const feeType = document.getElementById('feeType').value;
+  const totalAmount = parseFloat(document.getElementById('feeTotalAmount').value) || 0;
+  const amountPaid = parseFloat(document.getElementById('feeAmountPaid').value) || 0;
+  const description = document.getElementById('feeDescription').value;
+  
+  if (!admNo || !feeType || totalAmount <= 0) {
+    alert('Please fill in all required fields with valid amounts');
+    return;
+  }
+  
+  if (amountPaid > totalAmount) {
+    alert('Amount paid cannot exceed total amount');
+    return;
+  }
+  
+  const feeData = {
+    admNo,
+    type: feeType,
+    totalAmount,
+    amountPaid,
+    balance: totalAmount - amountPaid,
+    description: description || '',
+    timestamp: Date.now(),
+    date: new Date().toISOString().split('T')[0]
+  };
+  
+  // Add to Firebase
+  const newFeeRef = db.ref('additionalFees').push();
+  newFeeRef.set(feeData)
+    .then(() => {
+      alert('Additional fee added successfully!');
+      closeAddAdditionalFeeModal();
+    })
+    .catch(error => {
+      console.error('Error adding fee:', error);
+      alert('Error adding fee. Please try again.');
+    });
+}
+
+function updateModuleAmount() {
+  if (!currentStudent) return;
+  
+  const paymentType = document.getElementById('paymentType').value;
+  
+  if (paymentType.startsWith('module')) {
+    const modules = calculateModulePayments(currentStudent);
+    const module = modules.find(m => m.id === paymentType);
+    
+    if (module) {
+      document.getElementById('paymentAmount').value = module.balance > 0 ? module.balance : '';
+      document.getElementById('paymentAmount').setAttribute('max', module.balance);
+      document.getElementById('paymentAmount').setAttribute('placeholder', `Max: KES ${module.balance.toLocaleString()}`);
+    }
+  } else {
+    document.getElementById('paymentAmount').value = '';
+    document.getElementById('paymentAmount').removeAttribute('max');
+    document.getElementById('paymentAmount').setAttribute('placeholder', 'Enter amount');
+  }
+}
+
+function validatePaymentAmount() {
+  const paymentType = document.getElementById('paymentType').value;
+  const amount = parseFloat(document.getElementById('paymentAmount').value) || 0;
+  
+  if (paymentType.startsWith('module') && currentStudent) {
+    const modules = calculateModulePayments(currentStudent);
+    const module = modules.find(m => m.id === paymentType);
+    
+    if (module && amount > module.balance) {
+      document.getElementById('paymentAmount').value = module.balance;
+      alert(`Amount cannot exceed module balance of KES ${module.balance.toLocaleString()}`);
+    }
+  }
+}
+
+function updateBalanceDisplay() {
+  if (!currentStudent) return;
+  
+  const annualFee = parseFloat(
+    currentStudent.annualTuition || 
+    (currentStudent.semesterFee ? currentStudent.semesterFee * 2 : 0) || 
+    0
+  );
+  const modules = calculateModulePayments(currentStudent);
+  const additionalFeesData = calculateStudentAdditionalFees(currentStudent.admNo);
+  const totalPayments = calculateTotalPayments(currentStudent);
+  
+  // Update module breakdown
+  const moduleBreakdown = document.getElementById('moduleBreakdown');
+  moduleBreakdown.innerHTML = modules.map(module => 
+    `<div class="module-item ${module.status}">
+      <span>${module.name}:</span>
+      <span>KES ${module.paidAmount.toLocaleString()} / KES ${module.moduleFee.toLocaleString()}</span>
+    </div>`
+  ).join('');
+  
+  const totalFees = annualFee + additionalFeesData.totalFees;
+  const totalPaid = totalPayments.totalPaid;
+  const remainingBalance = totalFees - totalPaid;
+  
+  // Update totals
+  document.getElementById('displayTotalFee').textContent = `KES ${annualFee.toLocaleString()}`;
+  document.getElementById('displayAdditionalFees').textContent = `KES ${additionalFeesData.totalFees.toLocaleString()}`;
+  document.getElementById('displayTotalPaid').textContent = `KES ${totalPaid.toLocaleString()}`;
+  document.getElementById('displayRemainingBalance').textContent = `KES ${remainingBalance.toLocaleString()}`;
+}
+
+function populateCourseFilter() {
+  const courseFilter = document.getElementById('courseFilter');
+  const coursesSet = new Set();
+  
+  // Add "All Courses" option
+  courseFilter.innerHTML = '<option value="">All Courses</option>';
+  
+  // Get unique courses from admissions
+  Object.values(admissions).forEach(student => {
+    if (student.courseName) {
+      coursesSet.add(student.courseName);
+    }
+  });
+  
+  // Add course options
+  coursesSet.forEach(course => {
+    const option = document.createElement('option');
+    option.value = course;
+    option.textContent = course;
+    courseFilter.appendChild(option);
+  });
+}
+
+function populateCourseSelect() {
+  const courseSelect = document.getElementById('courseSelect');
+  if (!courseSelect) return;
+  
+  courseSelect.innerHTML = '<option value="">Select Course</option>';
+  
+  Object.keys(courses).forEach(key => {
+    const course = courses[key];
+    if (course && course.courseStatus !== 'inactive') {
+      const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = `${course.courseName || 'Course'} - ${course.courseLevel || 'Level'} - KES ${annualFee.toLocaleString()}/year`;
+      courseSelect.appendChild(option);
+    }
+  });
+}
+
+function updateCourseDetails() {
+  const courseId = document.getElementById('courseSelect').value;
+  if (courses[courseId]) {
+    const course = courses[courseId];
+    const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+    
+    // Calculate module fees (33%, 33%, 34% of annual fee)
+    const module1Fee = Math.round(annualFee * 0.33);
+    const module2Fee = Math.round(annualFee * 0.33);
+    const module3Fee = annualFee - module1Fee - module2Fee; // Remaining 34%
+    
+    document.getElementById('displayCourseName').textContent = course.courseName || '-';
+    document.getElementById('displayCourseLevel').textContent = course.courseLevel || '-';
+    document.getElementById('displayAnnualFee').textContent = `KES ${annualFee.toLocaleString()}`;
+    document.getElementById('displayModule1Fee').textContent = `KES ${module1Fee.toLocaleString()}`;
+    document.getElementById('displayModule2Fee').textContent = `KES ${module2Fee.toLocaleString()}`;
+    document.getElementById('displayModule3Fee').textContent = `KES ${module3Fee.toLocaleString()}`;
+    document.getElementById('displayExamBody').textContent = course.examBody || '-';
+  } else {
+    // Clear fields if no course selected
+    document.getElementById('displayCourseName').textContent = '-';
+    document.getElementById('displayCourseLevel').textContent = '-';
+    document.getElementById('displayAnnualFee').textContent = 'KES 0';
+    document.getElementById('displayModule1Fee').textContent = 'KES 0';
+    document.getElementById('displayModule2Fee').textContent = 'KES 0';
+    document.getElementById('displayModule3Fee').textContent = 'KES 0';
+    document.getElementById('displayExamBody').textContent = '-';
+  }
+}
+
+function populateStudentDropdown() {
+  const select = document.getElementById('feeAdmNo');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="">Select student</option>';
+  
+  Object.values(admissions).forEach(student => {
+    if (student.admNo && student.fullName) {
+      const option = document.createElement('option');
+      option.value = student.admNo;
+      option.textContent = `${student.admNo} - ${student.fullName}`;
+      select.appendChild(option);
+    }
+  });
+}
+
+function updateFeeStudentInfo() {
+  const admNo = document.getElementById('feeAdmNo').value;
+  const student = Object.values(admissions).find(s => String(s.admNo) === String(admNo));
+  
+  if (student) {
+    document.getElementById('feeStudentName').value = student.fullName || '';
+    calculateFeeBalance();
+  } else {
+    document.getElementById('feeStudentName').value = '';
+  }
+}
+
+function calculateFeeBalance() {
+  const totalAmount = parseFloat(document.getElementById('feeTotalAmount').value) || 0;
+  const amountPaid = parseFloat(document.getElementById('feeAmountPaid').value) || 0;
+  const balance = totalAmount - amountPaid;
+  
+  document.getElementById('displayFeeTotal').textContent = `KES ${totalAmount.toLocaleString()}`;
+  document.getElementById('displayFeePaid').textContent = `KES ${amountPaid.toLocaleString()}`;
+  document.getElementById('displayFeeBalance').textContent = `KES ${balance.toLocaleString()}`;
+}
+
+function updateAdditionalFeesSummary() {
+  let examTotal = 0, examCount = 0, examPaid = 0;
+  let hostelTotal = 0, hostelCount = 0, hostelPaid = 0;
+  let mealsTotal = 0, mealsCount = 0, mealsPaid = 0;
+  let otherTotal = 0, otherCount = 0, otherPaid = 0;
+  
+  Object.values(additionalFees).forEach(fee => {
+    if (!fee) return;
+    
+    const totalAmount = parseFloat(fee.totalAmount) || 0;
+    const amountPaid = parseFloat(fee.amountPaid) || 0;
+    
+    switch(fee.type) {
+      case 'Examination': 
+        examTotal += totalAmount;
+        examPaid += amountPaid;
+        examCount++;
+        break;
+      case 'Hostel': 
+        hostelTotal += totalAmount;
+        hostelPaid += amountPaid;
+        hostelCount++;
+        break;
+      case 'Meals': 
+        mealsTotal += totalAmount;
+        mealsPaid += amountPaid;
+        mealsCount++;
+        break;
+      default: 
+        otherTotal += totalAmount;
+        otherPaid += amountPaid;
+        otherCount++;
+        break;
+    }
+  });
+  
+  document.getElementById('examTotal').textContent = `KES ${examTotal.toLocaleString()}`;
+  document.getElementById('examDetails').textContent = `${examCount} students | Paid: KES ${examPaid.toLocaleString()}`;
+  
+  document.getElementById('hostelTotal').textContent = `KES ${hostelTotal.toLocaleString()}`;
+  document.getElementById('hostelDetails').textContent = `${hostelCount} students | Paid: KES ${hostelPaid.toLocaleString()}`;
+  
+  document.getElementById('mealsTotal').textContent = `KES ${mealsTotal.toLocaleString()}`;
+  document.getElementById('mealsDetails').textContent = `${mealsCount} students | Paid: KES ${mealsPaid.toLocaleString()}`;
+  
+  document.getElementById('otherTotal').textContent = `KES ${otherTotal.toLocaleString()}`;
+  document.getElementById('otherDetails').textContent = `${otherCount} students | Paid: KES ${otherPaid.toLocaleString()}`;
+  
+  const totalAdditional = examTotal + hostelTotal + mealsTotal + otherTotal;
+  const totalAdditionalPaid = examPaid + hostelPaid + mealsPaid + otherPaid;
+  const totalAdditionalBalance = totalAdditional - totalAdditionalPaid;
+  
+  document.getElementById('totalAdditionalFees').textContent = `KES ${totalAdditional.toLocaleString()}`;
+  document.getElementById('additionalFeesPaid').textContent = `KES ${totalAdditionalPaid.toLocaleString()}`;
+  document.getElementById('additionalFeesBalance').textContent = `KES ${totalAdditionalBalance.toLocaleString()}`;
+}
+
+function generateReports() {
+  const students = Object.values(admissions);
+  
+  // Gender report
+  let maleCount = 0, maleTotalFees = 0, maleFeesPaid = 0;
+  let femaleCount = 0, femaleTotalFees = 0, femaleFeesPaid = 0;
+  
+  // Course level report
+  let diplomaCount = 0, diplomaTotalFees = 0, diplomaFeesPaid = 0;
+  let certificateCount = 0, certificateTotalFees = 0, certificateFeesPaid = 0;
+  
+  students.forEach(student => {
+    const annualFee = parseFloat(
+      student.annualTuition || 
+      (student.semesterFee ? student.semesterFee * 2 : 0) || 
+      0
+    );
+    const studentPayments = calculateTotalPayments(student);
+    const additionalFeesData = calculateStudentAdditionalFees(student.admNo);
+    
+    const totalFees = annualFee + additionalFeesData.totalFees;
+    const totalPaid = studentPayments.totalPaid;
+    
+    // Gender statistics
+    if (student.gender === 'Male') {
+      maleCount++;
+      maleTotalFees += totalFees;
+      maleFeesPaid += totalPaid;
+    } else if (student.gender === 'Female') {
+      femaleCount++;
+      femaleTotalFees += totalFees;
+      femaleFeesPaid += totalPaid;
+    }
+    
+    // Course level statistics
+    if (student.courseLevel === 'Diploma') {
+      diplomaCount++;
+      diplomaTotalFees += totalFees;
+      diplomaFeesPaid += totalPaid;
+    } else if (student.courseLevel === 'Certificate') {
+      certificateCount++;
+      certificateTotalFees += totalFees;
+      certificateFeesPaid += totalPaid;
+    }
+  });
+  
+  // Update gender report
+  document.getElementById('maleCount').textContent = maleCount;
+  document.getElementById('maleTotalFees').textContent = `KES ${maleTotalFees.toLocaleString()}`;
+  document.getElementById('maleFeesPaid').textContent = `KES ${maleFeesPaid.toLocaleString()}`;
+  document.getElementById('maleBalance').textContent = `KES ${(maleTotalFees - maleFeesPaid).toLocaleString()}`;
+  
+  document.getElementById('femaleCount').textContent = femaleCount;
+  document.getElementById('femaleTotalFees').textContent = `KES ${femaleTotalFees.toLocaleString()}`;
+  document.getElementById('femaleFeesPaid').textContent = `KES ${femaleFeesPaid.toLocaleString()}`;
+  document.getElementById('femaleBalance').textContent = `KES ${(femaleTotalFees - femaleFeesPaid).toLocaleString()}`;
+  
+  // Update course level report
+  document.getElementById('diplomaCount').textContent = diplomaCount;
+  document.getElementById('diplomaTotalFees').textContent = `KES ${diplomaTotalFees.toLocaleString()}`;
+  document.getElementById('diplomaFeesPaid').textContent = `KES ${diplomaFeesPaid.toLocaleString()}`;
+  document.getElementById('diplomaBalance').textContent = `KES ${(diplomaTotalFees - diplomaFeesPaid).toLocaleString()}`;
+  
+  document.getElementById('certificateCount').textContent = certificateCount;
+  document.getElementById('certificateTotalFees').textContent = `KES ${certificateTotalFees.toLocaleString()}`;
+  document.getElementById('certificateFeesPaid').textContent = `KES ${certificateFeesPaid.toLocaleString()}`;
+  document.getElementById('certificateBalance').textContent = `KES ${(certificateTotalFees - certificateFeesPaid).toLocaleString()}`;
+}
+
+function filterTable() {
+  const courseFilter = document.getElementById('courseFilter').value.toLowerCase();
+  const statusFilter = document.getElementById('statusFilter').value;
+  const rows = document.querySelectorAll("#tableBody tr");
+  
+  rows.forEach(row => {
+    const course = row.cells[2]?.textContent.toLowerCase() || '';
+    const statusElement = row.querySelector('.balance-status');
+    const status = statusElement ? statusElement.textContent.toLowerCase() : '';
+    
+    let showRow = true;
+    
+    // Filter by course
+    if (courseFilter && !course.includes(courseFilter)) {
+      showRow = false;
+    }
+    
+    // Filter by status
+    if (statusFilter && status !== statusFilter) {
+      showRow = false;
+    }
+    
+    row.style.display = showRow ? "" : "none";
+  });
+}
+
+function clearFilters() {
+  document.getElementById('courseFilter').value = '';
+  document.getElementById('statusFilter').value = '';
+  
+  const rows = document.querySelectorAll("#tableBody tr");
+  rows.forEach(row => {
+    row.style.display = "";
+  });
+}
+
+function generateStatementPDF() {
+  const studentInfo = document.getElementById('statementStudentInfo').textContent;
+  const statementBody = document.getElementById('statementBody');
+  
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  // Set font to Times New Roman
+  doc.setFont("times", "normal");
+  
+  // Try to load the logo image
+  try {
+    const logo = new Image();
+    logo.src = 'images/logo.jpg';
+    
+    // Add logo to PDF (centered, above heading)
+    doc.addImage(logo, 'JPEG', 85, 10, 40, 40);
+    
+    // College name with logo
+    doc.setFontSize(20);
+    doc.setTextColor(0, 0, 139);
+    doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 105, 55, null, null, 'center');
+  } catch (error) {
+    // If logo fails to load, just show text
+    doc.setFontSize(20);
+    doc.setTextColor(0, 0, 139);
+    doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 105, 20, null, null, 'center');
+  }
+  
+  doc.setFontSize(16);
+  doc.setTextColor(0, 0, 0);
+  doc.text('STUDENT FINANCIAL STATEMENT', 105, 65, null, null, 'center');
+  
+  // Student info
+  doc.setFontSize(11);
+  const lines = studentInfo.split('\n');
+  let lineY = 80;
+  lines.forEach((line) => {
+    doc.text(line.trim(), 20, lineY);
+    lineY += 7;
+  });
+  
+  // Statement date
+  doc.text(`Statement Date: ${new Date().toLocaleDateString()}`, 150, 80);
+  
+  // Table
+  const tableData = [];
+  const rows = statementBody.querySelectorAll('tr');
+  
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    if (cells.length >= 5) {
+      tableData.push([
+        cells[0].textContent,
+        cells[1].textContent,
+        cells[2].textContent,
+        cells[3].textContent,
+        cells[4].textContent
+      ]);
+    }
+  });
+  
+  doc.autoTable({
+    startY: lineY + 10,
+    head: [['Date', 'Type', 'Description', 'Amount', 'Balance']],
+    body: tableData,
+    theme: 'striped',
+    headStyles: { fillColor: [0, 123, 255] }
+  });
+  
+  // Total
+  const finalY = doc.lastAutoTable.finalY + 10;
+  const totalText = document.getElementById('statementTotal').textContent;
+  doc.setFontSize(12);
+  doc.text(totalText, 20, finalY);
+  
+  // Footer
+  doc.setFontSize(10);
+  doc.text('Generated by UCST Finance Management System', 105, 280, null, null, 'center');
+  doc.text(`Date: ${new Date().toLocaleDateString()}`, 105, 285, null, null, 'center');
+  
+  // Show PDF preview
+  openPDFPreview(doc);
+}
+
+// PDF Functions
+function openPDFPreview(doc) {
+  currentDoc = doc;
+  const pdfDataUri = doc.output('datauristring');
+  document.getElementById("pdfIframe").src = pdfDataUri;
+  document.getElementById("pdfPreviewModal").style.display = "flex";
+}
+
+function closePDFPreview() { 
+  document.getElementById("pdfPreviewModal").style.display = "none"; 
+}
+
+function printPDF() { 
+  if(currentDoc) document.getElementById("pdfIframe").contentWindow.print(); 
+}
+
+function downloadPDF() { 
+  if(currentDoc) currentDoc.save(`ucst_receipt_${new Date().toISOString().split('T')[0]}.pdf`); 
+}
+
+function exportToExcel(type) {
+  let data = [];
+  let fileName = '';
+  
+  switch(type) {
+    case 'students':
+      data = Object.values(admissions).map(student => {
+        const modules = calculateModulePayments(student);
+        const additionalFeesData = calculateStudentAdditionalFees(student.admNo);
+        const totalPayments = calculateTotalPayments(student);
+        const annualFee = parseFloat(
+          student.annualTuition || 
+          (student.semesterFee ? student.semesterFee * 2 : 0) || 
+          0
+        );
+        const totalFees = annualFee + additionalFeesData.totalFees;
+        const totalBalance = totalFees - totalPayments.totalPaid;
+        
+        const module1 = modules.find(m => m.id === 'module1');
+        const module2 = modules.find(m => m.id === 'module2');
+        const module3 = modules.find(m => m.id === 'module3');
+        
+        return {
+          'Admission No': student.admNo || 'N/A',
+          'Full Name': student.fullName || 'N/A',
+          'Course': student.courseName || 'N/A',
+          'Course Code': student.courseCode || 'N/A',
+          'Level': student.courseLevel || 'N/A',
+          'Gender': student.gender || 'N/A',
+          'Sponsorship': student.sponsor || 'N/A',
+          'Annual Fee': annualFee,
+          'Module 1 Total': module1?.moduleFee || 0,
+          'Module 1 Paid': module1?.paidAmount || 0,
+          'Module 1 Balance': module1?.balance || 0,
+          'Module 2 Total': module2?.moduleFee || 0,
+          'Module 2 Paid': module2?.paidAmount || 0,
+          'Module 2 Balance': module2?.balance || 0,
+          'Module 3 Total': module3?.moduleFee || 0,
+          'Module 3 Paid': module3?.paidAmount || 0,
+          'Module 3 Balance': module3?.balance || 0,
+          'Additional Fees': additionalFeesData.totalFees,
+          'Total Paid': totalPayments.totalPaid,
+          'Balance': totalBalance,
+          'Status': totalBalance <= 0 ? 'Paid' : (totalPayments.totalPaid > 0 ? 'Partial' : 'Unpaid')
+        };
+      });
+      fileName = 'students_module_report.xlsx';
+      break;
+      
+    case 'additionalFees':
+      data = Object.values(additionalFees).filter(fee => fee).map(fee => {
+        const student = findStudentByAdmNo(fee.admNo);
+        return {
+          'Admission No': fee.admNo || 'N/A',
+          'Student Name': student?.fullName || 'N/A',
+          'Fee Type': fee.type || 'N/A',
+          'Total Amount': parseFloat(fee.totalAmount) || 0,
+          'Amount Paid': parseFloat(fee.amountPaid) || 0,
+          'Balance': parseFloat(fee.balance) || 0,
+          'Description': fee.description || '',
+          'Date': new Date(fee.timestamp).toLocaleDateString()
+        };
+      });
+      fileName = 'additional_fees_report.xlsx';
+      break;
+      
+    case 'genderReport':
+      const maleCount = parseInt(document.getElementById('maleCount').textContent);
+      const maleTotalFees = parseFloat(document.getElementById('maleTotalFees').textContent.replace('KES ', '').replace(/,/g, ''));
+      const maleFeesPaid = parseFloat(document.getElementById('maleFeesPaid').textContent.replace('KES ', '').replace(/,/g, ''));
+      const maleBalance = parseFloat(document.getElementById('maleBalance').textContent.replace('KES ', '').replace(/,/g, ''));
+      
+      const femaleCount = parseInt(document.getElementById('femaleCount').textContent);
+      const femaleTotalFees = parseFloat(document.getElementById('femaleTotalFees').textContent.replace('KES ', '').replace(/,/g, ''));
+      const femaleFeesPaid = parseFloat(document.getElementById('femaleFeesPaid').textContent.replace('KES ', '').replace(/,/g, ''));
+      const femaleBalance = parseFloat(document.getElementById('femaleBalance').textContent.replace('KES ', '').replace(/,/g, ''));
+      
+      data = [
+        {
+          'Category': 'Male Students',
+          'Count': maleCount,
+          'Total Fees': maleTotalFees,
+          'Fees Paid': maleFeesPaid,
+          'Balance': maleBalance
+        },
+        {
+          'Category': 'Female Students',
+          'Count': femaleCount,
+          'Total Fees': femaleTotalFees,
+          'Fees Paid': femaleFeesPaid,
+          'Balance': femaleBalance
+        }
+      ];
+      fileName = 'gender_financial_report.xlsx';
+      break;
+      
+    case 'courseLevelReport':
+      const diplomaCount = parseInt(document.getElementById('diplomaCount').textContent);
+      const diplomaTotalFees = parseFloat(document.getElementById('diplomaTotalFees').textContent.replace('KES ', '').replace(/,/g, ''));
+      const diplomaFeesPaid = parseFloat(document.getElementById('diplomaFeesPaid').textContent.replace('KES ', '').replace(/,/g, ''));
+      const diplomaBalance = parseFloat(document.getElementById('diplomaBalance').textContent.replace('KES ', '').replace(/,/g, ''));
+      
+      const certificateCount = parseInt(document.getElementById('certificateCount').textContent);
+      const certificateTotalFees = parseFloat(document.getElementById('certificateTotalFees').textContent.replace('KES ', '').replace(/,/g, ''));
+      const certificateFeesPaid = parseFloat(document.getElementById('certificateFeesPaid').textContent.replace('KES ', '').replace(/,/g, ''));
+      const certificateBalance = parseFloat(document.getElementById('certificateBalance').textContent.replace('KES ', '').replace(/,/g, ''));
+      
+      data = [
+        {
+          'Category': 'Diploma Students',
+          'Count': diplomaCount,
+          'Total Fees': diplomaTotalFees,
+          'Fees Paid': diplomaFeesPaid,
+          'Balance': diplomaBalance
+        },
+        {
+          'Category': 'Certificate Students',
+          'Count': certificateCount,
+          'Total Fees': certificateTotalFees,
+          'Fees Paid': certificateFeesPaid,
+          'Balance': certificateBalance
+        }
+      ];
+      fileName = 'course_level_report.xlsx';
+      break;
+      
+    case 'reports':
+      // Combine all reports
+      data = [];
+      
+      // Gender report data
+      data.push({ 'Report': 'GENDER BASED FINANCIAL REPORT' });
+      data.push({ 'Category': 'Male Students', 'Count': document.getElementById('maleCount').textContent, 'Total Fees': document.getElementById('maleTotalFees').textContent, 'Fees Paid': document.getElementById('maleFeesPaid').textContent, 'Balance': document.getElementById('maleBalance').textContent });
+      data.push({ 'Category': 'Female Students', 'Count': document.getElementById('femaleCount').textContent, 'Total Fees': document.getElementById('femaleTotalFees').textContent, 'Fees Paid': document.getElementById('femaleFeesPaid').textContent, 'Balance': document.getElementById('femaleBalance').textContent });
+      data.push({});
+      
+      // Course level report data
+      data.push({ 'Report': 'COURSE LEVEL FINANCIAL REPORT' });
+      data.push({ 'Category': 'Diploma Students', 'Count': document.getElementById('diplomaCount').textContent, 'Total Fees': document.getElementById('diplomaTotalFees').textContent, 'Fees Paid': document.getElementById('diplomaFeesPaid').textContent, 'Balance': document.getElementById('diplomaBalance').textContent });
+      data.push({ 'Category': 'Certificate Students', 'Count': document.getElementById('certificateCount').textContent, 'Total Fees': document.getElementById('certificateTotalFees').textContent, 'Fees Paid': document.getElementById('certificateFeesPaid').textContent, 'Balance': document.getElementById('certificateBalance').textContent });
+      
+      fileName = 'comprehensive_financial_report.xlsx';
+      break;
+  }
+  
+  if (data.length === 0) {
+    alert('No data to export');
+    return;
+  }
+  
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  XLSX.writeFile(wb, fileName);
+}
+
+// ========== UTILITY FUNCTIONS ==========
+// Search functionality
+document.getElementById("searchBox").addEventListener("keyup", function(e) {
+  const searchTerm = e.target.value.toLowerCase();
+  const rows = document.querySelectorAll("#tableBody tr");
+  
+  rows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(searchTerm) ? "" : "none";
+  });
+});
+
+// Theme toggle
+document.getElementById("toggleTheme").addEventListener("click", function() {
+  document.body.classList.toggle("dark");
+  this.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+  localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('toggleTheme').textContent = '☀️';
+  }
+  
+  console.log("Finance Management System Loaded");
+  console.log("3-Module payment system is active (33%, 33%, 34% of annual fee)");
+  console.log("All buttons are fully functional and mobile responsive");
+});
+
+// Close modals when clicking outside
+window.addEventListener('click', function(event) {
+  const modals = ['addStudentModal', 'recordPaymentModal', 'addAdditionalFeeModal', 'statementModal', 'pdfPreviewModal'];
+  modals.forEach(modalId => {
+    const modal = document.getElementById(modalId);
+    if (event.target === modal) {
+      if (modalId === 'addStudentModal') closeAddStudentModal();
+      if (modalId === 'recordPaymentModal') closeRecordPaymentModal();
+      if (modalId === 'addAdditionalFeeModal') closeAddAdditionalFeeModal();
+      if (modalId === 'statementModal') closeStatementModal();
+      if (modalId === 'pdfPreviewModal') closePDFPreview();
+    }
+  });
+});
+</script>
+</body>
+</html>

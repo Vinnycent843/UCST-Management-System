@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admitted Students by Sponsor</title>
+  <style>
+    body { font-family: Georgia, 'Times New Roman', Times, serif; background:#f9f9f9; margin:0; padding:20px; transition: background 0.5s, color 0.5s; }
+    h1 { text-align:center; margin-bottom:20px; color:#023e8a; }
+    h2 { color:#0077b6; margin-top:40px; }
+    table { width:100%; border-collapse:collapse; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin-bottom:40px; transition: background 0.5s, color 0.5s; }
+    th, td { padding:12px; border:1px solid #ddd; text-align:left; }
+    th { background:#0077b6; color:#fff; }
+    tr:nth-child(even) { background:#f2f2f2; }
+
+    /* Action buttons */
+    .action-btns { display:flex; gap:6px; }
+    .btn { padding:6px 12px; border:none; border-radius:4px; cursor:pointer; font-size:14px; transition:0.3s; }
+    .btn:hover { opacity:0.8; transform:scale(1.05); }
+    .approve { background:#28a745; color:#fff; }
+    .pending { background:#ffc107; color:#000; }
+    .delete { background:#dc3545; color:#fff; }
+    .export { background:#0d6efd; color:#fff; }
+
+    /* Search input */
+    #searchInput { width:100%; padding:10px; font-size:16px; margin-bottom:20px; border-radius:4px; border:1px solid #ccc; }
+
+    /* Dark mode toggle */
+    #darkModeBtn {
+      position:fixed;
+      top:20px;
+      right:-60px;
+      background:#0077b6;
+      color:#fff;
+      border:none;
+      border-radius:4px;
+      padding:6px 10px;
+      cursor:pointer;
+      font-size:16px;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      transition: right 0.5s ease, transform 0.3s, opacity 0.3s;
+      opacity:0;
+    }
+    #darkModeBtn.show { right:20px; opacity:1; }
+    #darkModeBtn:hover { transform:scale(1.1); }
+
+    /* Dark mode styles */
+    body.dark-mode { background:#121212; color:#fff; }
+    body.dark-mode table { background:#1e1e1e; color:#fff; }
+    body.dark-mode th { background:#0d6efd; color:#fff; }
+    body.dark-mode tr:nth-child(even) { background:#2c2c2c; }
+
+    /* Button container */
+    .btn-container { text-align:center; margin-bottom:20px; }
+  </style>
+</head>
+<body>
+  <h1>🎓 Admitted Students by Sponsor</h1>
+
+  <!-- Buttons -->
+  <div class="btn-container">
+    <button id="printBtn" class="btn export">🖨️ Print / Save as PDF</button>
+    <button id="exportPdfBtn" class="btn export">⬇️ Export PDF</button>
+  </div>
+
+  <!-- Search -->
+  <input type="text" id="searchInput" placeholder="Search by Name, Email, or Admission No...">
+
+  <!-- Dark/Light Mode Button -->
+  <button id="darkModeBtn">🌙</button>
+
+  <div id="sponsorContainer"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <!-- PDF Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+      authDomain: "jnnp-system.firebaseapp.com",
+      databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+      projectId: "jnnp-system",
+      storageBucket: "jnnp-system.firebasestorage.app",
+      messagingSenderId: "769232855377",
+      appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const sponsorContainer = document.getElementById("sponsorContainer");
+    const searchInput = document.getElementById("searchInput");
+    const darkModeBtn = document.getElementById("darkModeBtn");
+
+    // Slide in dark mode button after page load
+    window.addEventListener("load", () => { 
+      setTimeout(() => darkModeBtn.classList.add("show"), 300); 
+    });
+
+    function escapeHtml(text) {
+      if (text === undefined || text === null) return "";
+      return String(text).replace(/&/g, "&amp;")
+                        .replace(/</g, "&lt;")
+                        .replace(/>/g, "&gt;")
+                        .replace(/"/g, "&quot;")
+                        .replace(/'/g, "&#039;");
+    }
+
+    let latestData = {};
+
+    db.ref("admissions").on("value", snapshot => {
+      latestData = snapshot.val() || {};
+      renderTables(latestData);
+    });
+
+    // Search filter
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.toLowerCase();
+      const filteredData = {};
+      Object.keys(latestData).forEach(key => {
+        const s = latestData[key];
+        if ((s.fullName && s.fullName.toLowerCase().includes(query)) ||
+            (s.email && s.email.toLowerCase().includes(query)) ||
+            (s.admNo && s.admNo.toLowerCase().includes(query))) {
+          filteredData[key] = s;
+        }
+      });
+      renderTables(filteredData);
+    });
+
+    function renderTables(data) {
+      const sponsors = { NYS: [], SELF: [] };
+      Object.values(data).forEach(student => {
+        const sp = (student.sponsor || "SELF").toUpperCase();
+        if (sp === "NYS") sponsors.NYS.push(student);
+        else sponsors.SELF.push(student);
+      });
+
+      sponsorContainer.innerHTML = "";
+
+      Object.keys(sponsors).forEach(sp => {
+        const students = sponsors[sp];
+        if (students.length === 0) return;
+
+        const div = document.createElement("div");
+        div.innerHTML = `
+          <h2>${sp} Sponsored Students</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Admission No</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Course</th>
+                <th>Level</th>
+                <th>Duration</th>
+                <th>Exam Body</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${students.map(s => `
+                <tr>
+                  <td>${escapeHtml(s.admNo || "-")}</td>
+                  <td>${escapeHtml(s.fullName || "")}</td>
+                  <td>${escapeHtml(s.email || "")}</td>
+                  <td>${escapeHtml(s.phone || "")}</td>
+                  <td>${escapeHtml(s.courseName || s.course || "")}</td>
+                  <td>${escapeHtml(s.courseLevel || "")}</td>
+                  <td>${escapeHtml(s.courseDuration || "")}</td>
+                  <td>${escapeHtml(s.examBody || "")}</td>
+                  <td>${escapeHtml(s.courseFee || "")}</td>
+                  <td>${escapeHtml(s.status || "")}</td>
+                  <td class="action-btns">
+                    <button class="btn approve" onclick="alert('Approved ${escapeHtml(s.fullName)}')">Approve</button>
+                    <button class="btn pending" onclick="alert('Set Pending ${escapeHtml(s.fullName)}')">Pending</button>
+                    <button class="btn delete" onclick="alert('Deleted ${escapeHtml(s.fullName)}')">Delete</button>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        `;
+        sponsorContainer.appendChild(div);
+      });
+    }
+
+    // Dark/Light mode toggle
+    darkModeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      darkModeBtn.textContent = document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
+    });
+
+    // Print option
+    document.getElementById("printBtn").addEventListener("click", () => {
+      window.print();
+    });
+
+    // Export PDF option
+    document.getElementById("exportPdfBtn").addEventListener("click", () => {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF("p", "pt", "a4");
+
+      html2canvas(document.body).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = 595; // A4 width
+        const pageHeight = 842;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        pdf.save("admitted_students.pdf");
+      });
+    });
+  </script>
+</body>
+</html>

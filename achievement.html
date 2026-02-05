@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UCST College - Our Achievements</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #141212;
+    position: fixed; /* Always stays on top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.logo img {
+    height: 90px;
+    width: auto;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #000;
+    padding: 10px;
+    display: block;
+    position: relative; /* Added for bottom line */
+}
+
+/* ADDED: Bottom line hover effect */
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #007bff;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-links li a:hover::after {
+    width: 80%;
+}
+
+.nav-links .cta-button a {
+    background-color: #007bff;
+    color:black;
+    padding: 8px 15px;
+    border-radius: 6px;
+}
+.cta-button{
+    background:#83a6e7;
+    border-radius: 6px;
+
+}
+.cta-button:hover{
+    background: #83a6e7;
+    transition: all 0.3s ease;
+}
+.cta-button a:hover{
+    background: rgb(106, 222, 240);
+    color: white;
+}
+
+/* REMOVED: The background color hover effect */
+/* a:hover{
+    background-color: rgb(106, 222, 240);
+    border-radius: 6px;
+} */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: #fff;
+    top: 100%;
+    left: 0;
+    display: none;
+    min-width: 220px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+}
+
+.dropdown-content li a {
+    padding: 10px 15px;
+    white-space: nowrap;
+    color: #000;
+}
+
+/* Show dropdown on hover (desktop only) */
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+}
+
+/* MOBILE STYLES */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        display: none;
+        padding: 20px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        padding-left: 15px;
+        width: 100%;
+    }
+
+    .dropdown-content.show {
+        display: block;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .cta-button a {
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* REMOVED: The mobile background color hover effect */
+    /* a:hover{
+        background-color: #83b1e6;
+    } */
+}
+    /* Achievements Page Styles */
+    .achievements-hero {
+      background: linear-gradient(135deg, #2062f0 0%, #4a86f8 100%);
+      color: white;
+      padding: 150px 20px 80px;
+      text-align: center;
+      margin-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .achievements-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+      background-size: cover;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .achievements-hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      animation: fadeInUp 1s ease;
+    }
+
+    .achievements-hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      animation: fadeInUp 1s ease 0.2s both;
+    }
+
+    .stats-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-top: 40px;
+      animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    .stat-item {
+      background: rgba(255,255,255,0.2);
+      padding: 20px;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      min-width: 150px;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+    }
+
+    /* Achievements Section */
+    .achievements-section {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      color: #2062f0;
+      margin-bottom: 15px;
+      display: inline-block;
+    }
+
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: #8be683;
+      border-radius: 2px;
+    }
+
+    .achievements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .achievement-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .achievement-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .achievement-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+      padding: 25px 25px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .achievement-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #2062f0, #4a86f8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .achievement-title {
+      font-size: 1.4rem;
+      color: #2062f0;
+      margin: 0;
+    }
+
+    .card-body {
+      padding: 20px 25px 25px;
+    }
+
+    .achievement-description {
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .achievement-date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    /* Timeline Section */
+    .timeline-section {
+      padding: 80px 20px;
+      background: #f1f5ff;
+    }
+
+    .timeline-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      background: #2062f0;
+      border-radius: 2px;
+    }
+
+    .timeline-item {
+      margin-bottom: 50px;
+      position: relative;
+      width: 45%;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.5s ease;
+    }
+
+    .timeline-item.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-item:nth-child(odd) {
+      left: 0;
+    }
+
+    .timeline-item:nth-child(even) {
+      left: 55%;
+    }
+
+    .timeline-content {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      position: relative;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      right: -10px;
+      width: 0;
+      height: 0;
+      border-left: 10px solid white;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content::after {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: -10px;
+      width: 0;
+      height: 0;
+      border-right: 10px solid white;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+    }
+
+    .timeline-date {
+      position: absolute;
+      top: 15px;
+      width: 120px;
+      text-align: center;
+      padding: 8px;
+      background: #2062f0;
+      color: white;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-date {
+      right: -140px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-date {
+      left: -140px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 20px;
+      width: 20px;
+      height: 20px;
+      background: #8be683;
+      border: 4px solid #2062f0;
+      border-radius: 50%;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-dot {
+      right: -52px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-dot {
+      left: -52px;
+    }
+
+    /* Awards Section */
+    .awards-section {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .awards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .award-card {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    .award-card.visible {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .award-card:hover {
+      transform: translateY(-10px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+
+    .award-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #2062f0, #4a86f8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      margin: 0 auto 20px;
+    }
+
+    .award-title {
+      font-size: 1.3rem;
+      color: #2062f0;
+      margin-bottom: 15px;
+    }
+
+    .award-description {
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .award-year {
+      display: inline-block;
+      background: #8be683;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+
+    /* Footer */
+    .footer {
+      background: #2062f0;
+      color: white;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .achievements-hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .timeline-container::before {
+        left: 30px;
+      }
+      
+      .timeline-item {
+        width: 100%;
+        left: 0 !important;
+        padding-left: 70px;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-date,
+      .timeline-item:nth-child(even) .timeline-date {
+        left: -15px;
+        right: auto;
+        width: 100px;
+        text-align: left;
+        padding-left: 15px;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-dot,
+      .timeline-item:nth-child(even) .timeline-dot {
+        left: 21px;
+        right: auto;
+      }
+      
+      .timeline-item:nth-child(odd) .timeline-content::after,
+      .timeline-item:nth-child(even) .timeline-content::after {
+        left: -10px;
+        right: auto;
+        border-right: 10px solid white;
+        border-left: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="index.html">
+          <!-- Replace with your actual logo path -->
+          <img src="images/logo.jpg" alt="UCST College Logo" />
+        </a>
+      </div>
+
+      <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+
+        <li class="dropdown">
+          <a href="#">Our Courses</a>
+          <ul class="dropdown-content">
+            <li><a href="mechanical.html">Mechanical & Automotive Engineering</a></li>
+            <li><a href="business.html">Business & Entrepreneurship</a></li>
+            <li><a href="electrical.html">Electrical & Electronics Engineering</a></li>
+            <li><a href="sciences.html">Applied Sciences & Mathematics</a></li>
+            <li><a href="agriculture.html">Agriculture & Environmental Studies</a></li>
+            <li><a href="hospitality.html">Hospitality & Institutional Management</a></li>
+            <li><a href="computing.html">Computing & Informatics</a></li>
+            <li><a href="fashion.html">Fashion & Design</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">About Us</a>
+          <ul class="dropdown-content">
+            <li><a href="background.html">Background</a></li>
+            <li><a href="mission.html">Mission & Vision</a></li>
+            <li><a href="core-values.html">Core Values</a></li>
+            <li><a href="mandate.html">Core Mandate</a></li>
+            <li><a href="achievements.html">Our Achievements</a></li>
+          </ul>
+        </li>
+        
+        <li class="dropdown">
+          <a href="application.html">Online Application</a>
+          <ul class="dropdown-content">
+            <li><a href="procedures.html">Application Procedures</a></li>
+            <li><a href="courses.html">Our Courses</a></li>
+            <li><a href="application.html">Apply Online</a></li>
+            <li><a href="https://www.helb.co.ke" target="_blank">HELB application</a></li>
+            <li><a href="https://students.kuccps.net" target="_blank">KUCCPS Portal</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">Examinations</a>
+          <ul class="dropdown-content">
+            <li><a href="endterm.html">End Term Examinations</a></li>
+            <li><a href="registration.html">KNEC Registration</a></li>
+            <li><a href="results.html">KNEC Results</a></li>
+          </ul>
+        </li>
+
+        <li><a href="news.html">News</a></li>
+        <li><a href="contacts.html">Contacts</a></li>
+        <li class="cta-button"><a href="student-portal.html">Login to Portal</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="achievements-hero">
+    <div class="hero-content">
+      <h1>Our Achievements</h1>
+      <p>Celebrating excellence, innovation, and success at UCST College</p>
+      
+      <div class="stats-container">
+        <div class="stat-item">
+          <span class="stat-number" id="yearsCounter">0</span>
+          <span class="stat-label">Years of Excellence</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="studentsCounter">0</span>
+          <span class="stat-label">Successful Graduates</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="awardsCounter">0</span>
+          <span class="stat-label">Awards & Recognitions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-number" id="programsCounter">0</span>
+          <span class="stat-label">Academic Programs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Achievements Section -->
+  <section class="achievements-section">
+    <div class="section-title">
+      <h2>Key Achievements</h2>
+      <p>Milestones that define our journey of excellence</p>
+    </div>
+    
+    <div class="achievements-grid">
+      <div class="achievement-card">
+        <div class="card-header">
+          <div class="achievement-icon">
+            <i class="fas fa-graduation-cap"></i>
+          </div>
+          <h3 class="achievement-title">Academic Excellence</h3>
+        </div>
+        <div class="card-body">
+          <p class="achievement-description">Consistently ranked among top technical institutions with 95% graduation rate and exceptional KNEC exam performance.</p>
+          <div class="achievement-date">
+            <i class="far fa-calendar-alt"></i>
+            <span>Ongoing</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="achievement-card">
+        <div class="card-header">
+          <div class="achievement-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h3 class="achievement-title">National Skills Competition</h3>
+        </div>
+        <div class="card-body">
+          <p class="achievement-description">First place in National Technical Skills Competition in Automotive Engineering and Computing categories.</p>
+          <div class="achievement-date">
+            <i class="far fa-calendar-alt"></i>
+            <span>2023</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="achievement-card">
+        <div class="card-header">
+          <div class="achievement-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <h3 class="achievement-title">Industry Partnerships</h3>
+        </div>
+        <div class="card-body">
+          <p class="achievement-description">Established partnerships with 25+ leading companies for student internships and employment opportunities.</p>
+          <div class="achievement-date">
+            <i class="far fa-calendar-alt"></i>
+            <span>2022-Present</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="achievement-card">
+        <div class="card-header">
+          <div class="achievement-icon">
+            <i class="fas fa-expand-arrows-alt"></i>
+          </div>
+          <h3 class="achievement-title">Campus Expansion</h3>
+        </div>
+        <div class="card-body">
+          <p class="achievement-description">Completed state-of-the-art engineering labs and expanded hostel facilities to accommodate growing student population.</p>
+          <div class="achievement-date">
+            <i class="far fa-calendar-alt"></i>
+            <span>2021-2023</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="achievement-card">
+        <div class="card-header">
+          <div class="achievement-icon">
+            <i class="fas fa-laptop-code"></i>
+          </div>
+          <h3 class="achievement-title">Digital Transformation</h3>
+        </div>
+        <div class="card-body">
+          <p class="achievement-description">Implemented comprehensive digital learning platforms and management systems enhancing educational delivery.</p>
+          <div class="achievement-date">
+            <i class="far fa-calendar-alt"></i>
+            <span>2020-2023</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="achievement-card">
+        <div class="card-header">
+          <div class="achievement-icon">
+            <i class="fas fa-seedling"></i>
+          </div>
+          <h3 class="achievement-title">Sustainability Initiatives</h3>
+        </div>
+        <div class="card-body">
+          <p class="achievement-description">Awarded Green Campus certification for environmental sustainability programs and renewable energy initiatives.</p>
+          <div class="achievement-date">
+            <i class="far fa-calendar-alt"></i>
+            <span>2022</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="timeline-section">
+    <div class="section-title">
+      <h2>Our Journey</h2>
+      <p>Milestones through the years</p>
+    </div>
+    
+    <div class="timeline-container">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2015</div>
+        <div class="timeline-content">
+          <h3>College Establishment</h3>
+          <p>UCST College was founded with a vision to provide quality technical education in the region.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2017</div>
+        <div class="timeline-content">
+          <h3>First Accreditation</h3>
+          <p>Received full accreditation from the Technical and Vocational Education and Training Authority.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2019</div>
+        <div class="timeline-content">
+          <h3>Program Expansion</h3>
+          <p>Launched four new diploma programs in emerging technical fields, doubling student enrollment.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2021</div>
+        <div class="timeline-content">
+          <h3>Infrastructure Development</h3>
+          <p>Completed construction of new engineering workshops and computer laboratories.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2023</div>
+        <div class="timeline-content">
+          <h3>National Recognition</h3>
+          <p>Awarded "Best Technical College" in the regional education excellence awards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Awards Section -->
+  <section class="awards-section">
+    <div class="section-title">
+      <h2>Awards & Recognitions</h2>
+      <p>Celebrating our accomplishments</p>
+    </div>
+    
+    <div class="awards-grid">
+      <div class="award-card">
+        <div class="award-icon">
+          <i class="fas fa-award"></i>
+        </div>
+        <h3 class="award-title">Excellence in Technical Education</h3>
+        <p class="award-description">Recognized for outstanding contribution to technical skills development.</p>
+        <span class="award-year">2023</span>
+      </div>
+      
+      <div class="award-card">
+        <div class="award-icon">
+          <i class="fas fa-medal"></i>
+        </div>
+        <h3 class="award-title">Innovation in Curriculum Design</h3>
+        <p class="award-description">Awarded for developing industry-relevant technical programs.</p>
+        <span class="award-year">2022</span>
+      </div>
+      
+      <div class="award-card">
+        <div class="award-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <h3 class="award-title">Student Support Services</h3>
+        <p class="award-description">Recognized for exceptional student mentorship and support programs.</p>
+        <span class="award-year">2022</span>
+      </div>
+      
+      <div class="award-card">
+        <div class="award-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h3 class="award-title">Community Engagement</h3>
+        <p class="award-description">Awarded for outstanding community outreach and development initiatives.</p>
+        <span class="award-year">2021</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>&copy; 2024 UCST College. All Rights Reserved.</p>
+      <p>Celebrating Excellence in Technical Education</p>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar functionality
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Mobile dropdown toggle
+    document.querySelectorAll('.dropdown > a').forEach(link => {
+      link.addEventListener('click', function (e) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          const dropdownContent = this.nextElementSibling;
+
+          // Close all other dropdowns
+          document.querySelectorAll('.dropdown-content').forEach(content => {
+            if (content !== dropdownContent) {
+              content.classList.remove('show');
+            }
+          });
+
+          dropdownContent.classList.toggle('show');
+        }
+      });
+    });
+
+    // Close dropdowns if clicking outside
+    document.addEventListener('click', function (e) {
+      if (window.innerWidth <= 768 && !e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(content => {
+          content.classList.remove('show');
+        });
+      }
+    });
+
+    // Counter animation
+    function animateCounter(element, target, duration) {
+      let start = 0;
+      const increment = target / (duration / 16); // 60fps
+      const timer = setInterval(() => {
+        start += increment;
+        if (start >= target) {
+          element.textContent = target;
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.floor(start);
+        }
+      }, 16);
+    }
+
+    // Scroll animations
+    function checkVisibility() {
+      const cards = document.querySelectorAll('.achievement-card, .timeline-item, .award-card');
+      
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const isVisible = (rect.top <= window.innerHeight * 0.85 && rect.bottom >= 0);
+        
+        if (isVisible) {
+          card.classList.add('visible');
+        }
+      });
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', () => {
+      // Start counters
+      animateCounter(document.getElementById('yearsCounter'), 9, 2000);
+      animateCounter(document.getElementById('studentsCounter'), 2500, 2500);
+      animateCounter(document.getElementById('awardsCounter'), 15, 1800);
+      animateCounter(document.getElementById('programsCounter'), 12, 2200);
+      
+      // Check initial visibility
+      checkVisibility();
+    });
+
+    // Check visibility on scroll
+    window.addEventListener('scroll', checkVisibility);
+  </script>
+</body>
+</html>

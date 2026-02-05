@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>United College of Science and Technology - Student Portal</title>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- DataTables for enhanced tables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
+    
+    <!-- Chart.js for financial charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #2c5aa0;
+            --secondary: #1e3a5f;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --body-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #dee2e6;
+            --sidebar-bg: #1e3a5f;
+            --sidebar-hover: #2c5aa0;
+        }
+
+        [data-theme="dark"] {
+            --primary: #3a7bd5;
+            --secondary: #2d4a6e;
+            --body-bg: #1a1d23;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --border-color: #4a5568;
+            --light: #2d3748;
+            --sidebar-bg: #1a202c;
+            --sidebar-hover: #2d3748;
+        }
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            transition: all 0.3s ease;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 0;
+            margin-bottom: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .college-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            color: white;
+            min-height: calc(100vh - 70px);
+            padding: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-sticky {
+            position: sticky;
+            top: 0;
+            padding-top: 15px;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 10px 15px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: var(--sidebar-hover);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: var(--sidebar-hover);
+            border-left: 3px solid white;
+        }
+        
+        .sidebar .nav-link i {
+            width: 18px;
+            margin-right: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            padding: 15px;
+            background-color: var(--body-bg);
+            min-height: calc(100vh - 70px);
+        }
+        
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            background-color: var(--light);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .stat-card i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .stat-card .label {
+            font-size: 0.85rem;
+        }
+        
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+        
+        .module-section {
+            display: none;
+        }
+        
+        .module-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .table {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--light);
+            font-size: 0.85rem;
+            padding: 10px 12px;
+        }
+        
+        .table td {
+            padding: 8px 12px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .bg-primary { background: var(--primary) !important; }
+        .bg-success { background: var(--success) !important; }
+        .bg-warning { background: var(--warning) !important; }
+        .bg-danger { background: var(--danger) !important; }
+        .bg-info { background: var(--info) !important; }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading-spinner.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .dataTables_wrapper {
+            margin-bottom: 15px;
+        }
+        
+        /* Module Progress Bars */
+        .module-progress {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        
+        .module-progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .module-progress-fill.paid { background-color: var(--success); }
+        .module-progress-fill.partial { background-color: var(--warning); }
+        .module-progress-fill.unpaid { background-color: var(--danger); }
+        
+        /* Additional Fee Items */
+        .fee-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+        
+        .fee-item:last-child {
+            border-bottom: none;
+        }
+        
+        .fee-item .fee-type {
+            font-weight: 600;
+        }
+        
+        .fee-item .fee-amount {
+            font-weight: 600;
+        }
+        
+        .fee-item.paid .fee-amount { color: var(--success); }
+        .fee-item.partial .fee-amount { color: var(--warning); }
+        .fee-item.unpaid .fee-amount { color: var(--danger); }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.active { background-color: #d4edda; color: #155724; }
+        .status-badge.inactive { background-color: #f8d7da; color: #721c24; }
+        .status-badge.paid { background-color: #d4edda; color: #155724; }
+        .status-badge.partial { background-color: #fff3cd; color: #856404; }
+        .status-badge.unpaid { background-color: #f8d7da; color: #721c24; }
+        .status-badge.pending { background-color: #fff3cd; color: #856404; }
+        .status-badge.completed { background-color: #d4edda; color: #155724; }
+        .status-badge.reported { background-color: #cce5ff; color: #004085; }
+        
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* Module Details */
+        .module-details {
+            background-color: var(--light);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .module-details h6 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .module-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+        
+        .action-btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .action-btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .action-btn-warning {
+            background-color: var(--warning);
+            color: #000;
+        }
+        
+        .action-btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        /* Modal Styles */
+        .modal-content {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .modal-title {
+            font-size: 1rem;
+        }
+        
+        /* Statement Table */
+        .statement-table {
+            font-size: 0.85rem;
+        }
+        
+        .statement-table th {
+            background-color: var(--light);
+            font-weight: 600;
+        }
+        
+        /* Reporting Form */
+        .reporting-form .form-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .reporting-form .form-control,
+        .reporting-form .form-select {
+            font-size: 0.9rem;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* DataTables Export Buttons */
+        .dt-buttons {
+            margin-bottom: 10px;
+        }
+        
+        .dt-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            cursor: pointer;
+        }
+        
+        .dt-button:hover {
+            background-color: var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 50px auto;
+                padding: 20px;
+            }
+            
+            .dashboard-header h3 {
+                font-size: 1.2rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 70px;
+                left: -250px;
+                width: 250px;
+                height: calc(100vh - 70px);
+                z-index: 1000;
+                transition: left 0.3s;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .main-content {
+                padding: 10px;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="loginSection">
+        <div class="login-container">
+            <div class="text-center mb-4">
+                <i class="fas fa-graduation-cap fa-2x text-primary mb-3"></i>
+                <h2 style="font-size: 1.5rem;">United College of Science and Technology</h2>
+                <p class="text-muted" style="font-size: 0.9rem;">Student Portal Login</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label" style="font-size: 0.9rem;">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required style="font-size: 0.9rem;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" style="font-size: 0.9rem;">Admission Number</label>
+                    <input type="text" class="form-control" id="admNo" placeholder="Enter admission number" required style="font-size: 0.9rem;">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3" style="font-size: 0.9rem;">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Portal
+                </button>
+            </form>
+            
+            <div id="loginMessage" class="alert alert-danger mt-3 d-none" style="font-size: 0.85rem;"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="d-none">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <button class="mobile-menu-btn me-3" id="mobileMenuBtn">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h3 class="college-title mb-0"><i class="fas fa-graduation-cap me-2"></i>UNITED COLLEGE OF SCIENCE AND TECHNOLOGY</h3>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="theme-toggle me-3" id="themeToggle" title="Toggle Dark Mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-size: 0.9rem;">
+                                <img src="https://ui-avatars.com/api/?name=Student&background=3498db&color=fff" class="profile-pic me-2" style="width: 30px; height: 30px;">
+                                <span id="studentNameHeader">Student</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" data-module="profile" style="font-size: 0.85rem;"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn" style="font-size: 0.85rem;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar Navigation -->
+                <div class="col-md-3 col-lg-2 sidebar" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-module="overview">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="academics">
+                                    <i class="fas fa-book"></i> Academics
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="finance">
+                                    <i class="fas fa-money-bill"></i> Finance
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="statement">
+                                    <i class="fas fa-file-invoice-dollar"></i> Statement
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="hostel">
+                                    <i class="fas fa-bed"></i> Hostel
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="classes">
+                                    <i class="fas fa-chalkboard-teacher"></i> Classes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="exams">
+                                    <i class="fas fa-clipboard-check"></i> Exams
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="results">
+                                    <i class="fas fa-award"></i> Results
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="reporting">
+                                    <i class="fas fa-calendar-check"></i> Holiday Reporting
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 main-content">
+                    <!-- Loading Spinner -->
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <div class="spinner"></div>
+                        <p class="mt-2" style="font-size: 0.9rem;">Loading data...</p>
+                    </div>
+
+                    <!-- Overview Section -->
+                    <div id="overview" class="module-section active">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <div class="profile-pic mb-3" id="mainProfilePic" style="background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold;">SM</div>
+                                        <h5 id="studentFullName" style="font-size: 1.1rem;">Loading...</h5>
+                                        <p class="text-muted" id="studentCourse" style="font-size: 0.85rem;">Loading...</p>
+                                        <p style="font-size: 0.9rem;"><strong>Admission No:</strong> <span id="studentAdmNo">--</span></p>
+                                        <p style="font-size: 0.9rem;"><strong>Class:</strong> <span id="studentClass">--</span></p>
+                                        <p style="font-size: 0.9rem;"><strong>Level:</strong> <span id="studentLevel">--</span></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card stat-card bg-primary">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <div class="value" id="feeBalance">Ksh --</div>
+                                            <div class="label">Fee Balance</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card stat-card bg-success">
+                                            <i class="fas fa-chart-line"></i>
+                                            <div class="value" id="latestGrade">--</div>
+                                            <div class="label">Latest Grade</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card stat-card bg-info">
+                                            <i class="fas fa-graduation-cap"></i>
+                                            <div class="value" id="unitsCount">--</div>
+                                            <div class="label">Total Units</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Financial Progress Chart -->
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h6 class="mb-0" style="font-size: 0.95rem;"><i class="fas fa-chart-pie me-2"></i>Financial Progress</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-container">
+                                            <canvas id="financeChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div id="profile" class="module-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-user-edit me-2"></i>Personal Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" style="font-size: 0.9rem;">Full Name</label>
+                                                    <input type="text" class="form-control" id="profileFullName" readonly style="font-size: 0.9rem;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" style="font-size: 0.9rem;">Admission No</label>
+                                                    <input type="text" class="form-control" id="profileAdmNo" readonly style="font-size: 0.9rem;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" style="font-size: 0.9rem;">Course</label>
+                                                    <input type="text" class="form-control" id="profileCourse" readonly style="font-size: 0.9rem;">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label" style="font-size: 0.9rem;">Level</label>
+                                                    <input type="text" class="form-control" id="profileLevel" readonly style="font-size: 0.9rem;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Academics Section -->
+                    <div id="academics" class="module-section">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-book me-2"></i>Academic Overview</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h6 class="mb-0" style="font-size: 0.9rem;"><i class="fas fa-book-open me-2"></i>Current Course</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p style="font-size: 0.85rem;"><strong>Course Code:</strong> <span id="academicCourseCode">--</span></p>
+                                                        <p style="font-size: 0.85rem;"><strong>Course Name:</strong> <span id="academicCourseName">--</span></p>
+                                                        <p style="font-size: 0.85rem;"><strong>Department:</strong> <span id="academicDepartment">--</span></p>
+                                                        <p style="font-size: 0.85rem;"><strong>Exam Body:</strong> <span id="academicExamBody">--</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h6 class="mb-0" style="font-size: 0.9rem;"><i class="fas fa-calendar-alt me-2"></i>Academic Calendar</h6>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p style="font-size: 0.85rem;"><strong>Intake:</strong> <span id="academicIntake">--</span></p>
+                                                        <p style="font-size: 0.85rem;"><strong>Year:</strong> <span id="academicYear">--</span></p>
+                                                        <p style="font-size: 0.85rem;"><strong>Module:</strong> <span id="academicModule">--</span></p>
+                                                        <p style="font-size: 0.85rem;"><strong>Status:</strong> <span id="academicStatus" class="status-badge active">Active</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Finance Section - Enhanced -->
+                    <div id="finance" class="module-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-chart-pie me-2"></i>Financial Summary</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center mb-4">
+                                            <div class="col-6">
+                                                <h4 id="totalFee" class="currency" style="font-size: 1.2rem;">Ksh --</h4>
+                                                <p class="text-muted" style="font-size: 0.85rem;">Total Fees</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <h4 id="totalPaid" class="currency" style="font-size: 1.2rem;">Ksh --</h4>
+                                                <p class="text-muted" style="font-size: 0.85rem;">Total Paid</p>
+                                            </div>
+                                        </div>
+                                        <div class="progress mt-3" style="height: 18px;">
+                                            <div class="progress-bar bg-success" id="feeProgress" style="width: 0%; font-size: 0.8rem;">0%</div>
+                                        </div>
+                                        <div class="mt-3 text-center">
+                                            <h4 id="outstandingBalance" class="currency" style="font-size: 1.3rem;">Ksh --</h4>
+                                            <p class="text-muted" style="font-size: 0.85rem;">Outstanding Balance</p>
+                                        </div>
+                                        
+                                        <!-- Module Breakdown -->
+                                        <div class="mt-4">
+                                            <h6 style="font-size: 0.9rem;"><i class="fas fa-layer-group me-2"></i>Module Fee Breakdown</h6>
+                                            <div class="module-details">
+                                                <h6>Module 1 (33%)</h6>
+                                                <div class="module-info">
+                                                    <span>Amount: <strong id="module1Amount">Ksh --</strong></span>
+                                                    <span>Status: <span class="status-badge" id="module1Status">--</span></span>
+                                                </div>
+                                                <div class="module-progress">
+                                                    <div class="module-progress-fill" id="module1Progress"></div>
+                                                </div>
+                                            </div>
+                                            <div class="module-details">
+                                                <h6>Module 2 (33%)</h6>
+                                                <div class="module-info">
+                                                    <span>Amount: <strong id="module2Amount">Ksh --</strong></span>
+                                                    <span>Status: <span class="status-badge" id="module2Status">--</span></span>
+                                                </div>
+                                                <div class="module-progress">
+                                                    <div class="module-progress-fill" id="module2Progress"></div>
+                                                </div>
+                                            </div>
+                                            <div class="module-details">
+                                                <h6>Module 3 (34%)</h6>
+                                                <div class="module-info">
+                                                    <span>Amount: <strong id="module3Amount">Ksh --</strong></span>
+                                                    <span>Status: <span class="status-badge" id="module3Status">--</span></span>
+                                                </div>
+                                                <div class="module-progress">
+                                                    <div class="module-progress-fill" id="module3Progress"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Additional Fees -->
+                                        <div class="mt-4">
+                                            <h6 style="font-size: 0.9rem;"><i class="fas fa-receipt me-2"></i>Additional Fees</h6>
+                                            <div id="additionalFeesList">
+                                                <!-- Additional fees will be loaded here -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <!-- Payment History -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-history me-2"></i>Recent Payments</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="recentPayments">
+                                            <p class="text-muted" style="font-size: 0.85rem;">No payment history found.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Quick Actions -->
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-primary" onclick="switchModule('statement')">
+                                                <i class="fas fa-file-invoice-dollar me-2"></i>View Full Statement
+                                            </button>
+                                            <button class="btn btn-success" onclick="generateStatementPDF()">
+                                                <i class="fas fa-file-pdf me-2"></i>Download Statement (PDF)
+                                            </button>
+                                            <button class="btn btn-warning" onclick="exportStatementExcel()">
+                                                <i class="fas fa-file-excel me-2"></i>Export Statement (Excel)
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statement Section -->
+                    <div id="statement" class="module-section">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-file-invoice-dollar me-2"></i>Payment Statement</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Action Buttons -->
+                                        <div class="action-buttons">
+                                            <button class="action-btn action-btn-primary" onclick="printStatement()">
+                                                <i class="fas fa-print"></i> Print
+                                            </button>
+                                            <button class="action-btn action-btn-success" onclick="downloadStatementPDF()">
+                                                <i class="fas fa-file-pdf"></i> Download PDF
+                                            </button>
+                                            <button class="action-btn action-btn-warning" onclick="exportStatementExcel()">
+                                                <i class="fas fa-file-excel"></i> Export Excel
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Student Info -->
+                                        <div class="row mb-4">
+                                            <div class="col-md-6">
+                                                <p style="font-size: 0.9rem;"><strong>Student Name:</strong> <span id="statementStudentName">--</span></p>
+                                                <p style="font-size: 0.9rem;"><strong>Admission No:</strong> <span id="statementAdmNo">--</span></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p style="font-size: 0.9rem;"><strong>Course:</strong> <span id="statementCourse">--</span></p>
+                                                <p style="font-size: 0.9rem;"><strong>Statement Date:</strong> <span id="statementDate">--</span></p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Statement Summary -->
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <div class="row text-center">
+                                                    <div class="col-md-3">
+                                                        <h5 id="statementTotalFees" style="font-size: 1.1rem;">Ksh --</h5>
+                                                        <p class="text-muted" style="font-size: 0.85rem;">Total Fees</p>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h5 id="statementTotalPaid" style="font-size: 1.1rem;">Ksh --</h5>
+                                                        <p class="text-muted" style="font-size: 0.85rem;">Total Paid</p>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h5 id="statementBalance" style="font-size: 1.1rem;">Ksh --</h5>
+                                                        <p class="text-muted" style="font-size: 0.85rem;">Balance</p>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h5 id="statementProgress" style="font-size: 1.1rem;">--%</h5>
+                                                        <p class="text-muted" style="font-size: 0.85rem;">Payment Progress</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Payment History Table -->
+                                        <div class="table-responsive">
+                                            <table class="table table-striped statement-table" id="statementTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Payment Type</th>
+                                                        <th>Description</th>
+                                                        <th>Payment Method</th>
+                                                        <th>Amount (Ksh)</th>
+                                                        <th>Balance (Ksh)</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="statementTableBody">
+                                                    <!-- Payment records will be loaded here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hostel Section - Enhanced -->
+                    <div id="hostel" class="module-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-bed me-2"></i>Hostel Allocation</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="hostelInfo">
+                                            <p class="text-muted" style="font-size: 0.85rem;">Loading hostel information...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Classes Section -->
+                    <div id="classes" class="module-section">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-chalkboard-teacher me-2"></i>My Classes</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="classesTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Class Name</th>
+                                                        <th>Course</th>
+                                                        <th>Module</th>
+                                                        <th>Intake</th>
+                                                        <th>Capacity</th>
+                                                        <th>Schedule</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="classesTableBody">
+                                                    <!-- Will be populated dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exams Section -->
+                    <div id="exams" class="module-section">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-clipboard-check me-2"></i>Examination Schedule</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="examsTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Exam ID</th>
+                                                        <th>Exam Name</th>
+                                                        <th>Type</th>
+                                                        <th>Date</th>
+                                                        <th>Max Marks</th>
+                                                        <th>Semester</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="examsTableBody">
+                                                    <!-- Will be populated dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div id="results" class="module-section">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-award me-2"></i>Exam Results</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Action Buttons -->
+                                        <div class="action-buttons">
+                                            <button class="action-btn action-btn-primary" onclick="printResults()">
+                                                <i class="fas fa-print"></i> Print Results
+                                            </button>
+                                            <button class="action-btn action-btn-success" onclick="downloadResultsPDF()">
+                                                <i class="fas fa-file-pdf"></i> Download PDF
+                                            </button>
+                                            <button class="action-btn action-btn-warning" onclick="exportResultsExcel()">
+                                                <i class="fas fa-file-excel"></i> Export Excel
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" id="resultsTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Exam</th>
+                                                        <th>Marks</th>
+                                                        <th>Grade</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="examResultsBody">
+                                                    <!-- Will be populated dynamically -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reporting Section -->
+                    <div id="reporting" class="module-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-calendar-check me-2"></i>Holiday Reporting</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="reportingMessage" class="alert d-none" style="font-size: 0.85rem;"></div>
+                                        
+                                        <!-- Reporting Form -->
+                                        <form id="reportingForm" class="reporting-form">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Term/Module *</label>
+                                                    <select class="form-select" id="reportTerm" required>
+                                                        <option value="">Select Term/Module</option>
+                                                        <option value="Term 1">Term 1</option>
+                                                        <option value="Term 2">Term 2</option>
+                                                        <option value="Term 3">Term 3</option>
+                                                        <option value="Module 1">Module 1</option>
+                                                        <option value="Module 2">Module 2</option>
+                                                        <option value="Module 3">Module 3</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Academic Year *</label>
+                                                    <select class="form-select" id="reportYear" required>
+                                                        <option value="">Select Year</option>
+                                                        <!-- Years will be populated dynamically -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Reporting Date *</label>
+                                                    <input type="date" class="form-control" id="reportDate" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Expected Return Date *</label>
+                                                    <input type="date" class="form-control" id="returnDate" required>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Reporting Reason</label>
+                                                <textarea class="form-control" id="reportReason" rows="3" placeholder="Optional: Briefly explain your reporting reason"></textarea>
+                                            </div>
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label">Additional Notes</label>
+                                                <textarea class="form-control" id="reportNotes" rows="2" placeholder="Any additional information"></textarea>
+                                            </div>
+                                            
+                                            <div class="d-grid gap-2">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-paper-plane me-2"></i>Submit Reporting
+                                                </button>
+                                            </div>
+                                        </form>
+                                        
+                                        <!-- Previous Reports -->
+                                        <div class="mt-4">
+                                            <h6 style="font-size: 0.95rem;"><i class="fas fa-history me-2"></i>Previous Reports</h6>
+                                            <div id="previousReports">
+                                                <p class="text-muted" style="font-size: 0.85rem;">No previous reports found.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <!-- Reporting Guidelines -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-info-circle me-2"></i>Reporting Guidelines</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-unstyled" style="font-size: 0.85rem;">
+                                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Report within 48 hours of holiday ending</li>
+                                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Select correct term/module</li>
+                                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Provide accurate dates</li>
+                                            <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Keep a copy of your report</li>
+                                            <li><i class="fas fa-check-circle text-success me-2"></i>Contact administration for issues</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- Quick Stats -->
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-chart-bar me-2"></i>Reporting Stats</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <h4 id="totalReports" style="font-size: 1.2rem;">0</h4>
+                                            <p class="text-muted" style="font-size: 0.85rem;">Total Reports Submitted</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- DataTables with Buttons -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    
+    <script>
+    // ================= FIREBASE CONFIGURATION =================
+    const firebaseConfig = {
+        apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+        authDomain: "jnnp-system.firebaseapp.com",
+        databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+        projectId: "jnnp-system",
+        storageBucket: "jnnp-system.firebasestorage.app",
+        messagingSenderId: "769232855377",
+        appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+    };
+
+    // Initialize Firebase
+    let database;
+    try {
+        firebase.initializeApp(firebaseConfig);
+        database = firebase.database();
+        console.log('Firebase initialized successfully');
+    } catch (error) {
+        console.error('Firebase initialization failed:', error);
+    }
+
+    // ================= GLOBAL VARIABLES =================
+    let currentStudent = null;
+    let currentStudentKey = null;
+    let isDarkMode = false;
+    let financeChart = null;
+    let resultsDataTable = null;
+    let statementDataTable = null;
+    
+    let studentData = {
+        admissions: {},
+        courses: {},
+        classes: [],
+        exams: [],
+        results: [],
+        payments: [],
+        additionalFees: [],
+        hostelAllocations: [],
+        hostels: [],
+        reports: []
+    };
+
+    // ================= EVENT LISTENERS =================
+    document.addEventListener('DOMContentLoaded', function() {
+        // Login form
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                studentLogin();
+            });
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-link[data-module]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const module = this.getAttribute('data-module');
+                switchModule(module);
+            });
+        });
+
+        // Mobile menu
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Logout
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
+
+        // Reporting form
+        const reportingForm = document.getElementById('reportingForm');
+        if (reportingForm) {
+            reportingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitReporting();
+            });
+        }
+
+        // Set current date for reporting
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('reportDate').value = today;
+        
+        // Set return date to tomorrow
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('returnDate').value = tomorrow.toISOString().split('T')[0];
+        
+        // Populate year dropdown for reporting (up to 2100)
+        populateYearDropdown();
+
+        // Load theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            isDarkMode = true;
+            document.body.setAttribute('data-theme', 'dark');
+            const themeIcon = document.getElementById('themeToggle');
+            if (themeIcon) {
+                themeIcon.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+    });
+
+    // ================= MAIN FUNCTIONS =================
+    async function studentLogin() {
+        const fullName = document.getElementById('fullName').value.trim();
+        const admNo = document.getElementById('admNo').value.trim();
+        
+        if (!fullName || !admNo) {
+            showLoginMessage('Please enter both Full Name and Admission Number.', 'danger');
+            return;
+        }
+
+        showLoading(true);
+        
+        try {
+            if (!database) {
+                throw new Error('Firebase not initialized');
+            }
+            
+            const admissionsRef = database.ref('admissions');
+            const snapshot = await admissionsRef.once('value');
+            
+            if (!snapshot.exists()) {
+                showLoginMessage('No student records found.', 'danger');
+                showLoading(false);
+                return;
+            }
+            
+            const allData = snapshot.val();
+            let studentFound = false;
+            let matchDetails = null;
+            
+            for (const [key, studentData] of Object.entries(allData)) {
+                if (studentData.admNo && studentData.admNo.toString() === admNo) {
+                    studentFound = true;
+                    matchDetails = { key, studentData };
+                    break;
+                }
+            }
+            
+            if (!studentFound) {
+                showLoginMessage('Admission Number not found.', 'danger');
+                showLoading(false);
+                return;
+            }
+            
+            const { key, studentData } = matchDetails;
+            
+            // Check name match (case insensitive, allow partial matches)
+            const enteredName = fullName.toLowerCase();
+            const storedName = (studentData.fullName || '').toLowerCase();
+            
+            if (storedName.includes(enteredName) || enteredName.includes(storedName)) {
+                currentStudent = studentData;
+                currentStudentKey = key;
+                
+                showLoginMessage('Login successful! Loading dashboard...', 'success');
+                
+                setTimeout(() => {
+                    loadStudentDashboard();
+                }, 1000);
+                
+            } else {
+                showLoginMessage('Full Name does not match Admission Number.', 'danger');
+                showLoading(false);
+            }
+            
+        } catch (error) {
+            console.error('Login process failed:', error);
+            showLoginMessage('Database connection failed. Please try again.', 'danger');
+            showLoading(false);
+        }
+    }
+
+    function showLoading(show) {
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        if (loadingSpinner) {
+            loadingSpinner.classList.toggle('active', show);
+        }
+    }
+
+    function showLoginMessage(message, type) {
+        const loginMessage = document.getElementById('loginMessage');
+        if (loginMessage) {
+            loginMessage.textContent = message;
+            loginMessage.className = `alert alert-${type} mt-3`;
+            loginMessage.classList.remove('d-none');
+        }
+    }
+
+    function showReportingMessage(message, type) {
+        const reportingMessage = document.getElementById('reportingMessage');
+        if (reportingMessage) {
+            reportingMessage.textContent = message;
+            reportingMessage.className = `alert alert-${type}`;
+            reportingMessage.classList.remove('d-none');
+            
+            setTimeout(() => {
+                reportingMessage.classList.add('d-none');
+            }, 5000);
+        }
+    }
+
+    function loadStudentDashboard() {
+        document.getElementById('loginSection').classList.add('d-none');
+        document.getElementById('dashboardSection').classList.remove('d-none');
+        
+        loadAllStudentData();
+    }
+
+    async function loadAllStudentData() {
+        showLoading(true);
+        
+        try {
+            await Promise.all([
+                loadStudentProfile(),
+                loadStudentCourses(),
+                loadStudentClasses(),
+                loadStudentExams(),
+                loadStudentResults(),
+                loadStudentPayments(),
+                loadStudentAdditionalFees(),
+                loadStudentHostelAllocations(),
+                loadHostels(),
+                loadStudentReports()
+            ]);
+            
+            updateDashboard();
+            
+        } catch (error) {
+            console.error('Error loading student data:', error);
+            alert('Error loading student data. Please try again.');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    async function loadStudentProfile() {
+        if (!currentStudent) return;
+        
+        // Update profile picture initials
+        const initials = currentStudent.fullName ? 
+            currentStudent.fullName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'SM';
+        
+        document.querySelectorAll('.profile-pic').forEach(pic => {
+            pic.textContent = initials;
+        });
+        
+        // Update header name
+        const studentNameHeader = document.getElementById('studentNameHeader');
+        if (studentNameHeader) {
+            studentNameHeader.textContent = currentStudent.fullName || 'Student';
+        }
+    }
+
+    async function loadStudentCourses() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const coursesRef = database.ref('courses');
+            const snapshot = await coursesRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allCourses = Object.values(snapshot.val());
+                // Find course for current student
+                studentData.courses = allCourses.find(course => 
+                    course.courseName === currentStudent.courseName
+                ) || {};
+            } else {
+                studentData.courses = {};
+            }
+        } catch (error) {
+            console.error('Error loading courses:', error);
+            studentData.courses = {};
+        }
+    }
+
+    async function loadStudentClasses() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const classesRef = database.ref('classes');
+            const snapshot = await classesRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allClasses = Object.values(snapshot.val());
+                // Filter classes for current student
+                studentData.classes = allClasses.filter(cls => 
+                    cls.courseName === currentStudent.courseName
+                );
+            } else {
+                studentData.classes = [];
+            }
+        } catch (error) {
+            console.error('Error loading classes:', error);
+            studentData.classes = [];
+        }
+    }
+
+    async function loadStudentExams() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const examsRef = database.ref('exams');
+            const snapshot = await examsRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allExams = Object.values(snapshot.val());
+                // Filter exams for current student's course
+                studentData.exams = allExams.filter(exam => 
+                    exam.courseName === currentStudent.courseName
+                );
+            } else {
+                studentData.exams = [];
+            }
+        } catch (error) {
+            console.error('Error loading exams:', error);
+            studentData.exams = [];
+        }
+    }
+
+    async function loadStudentResults() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const resultsRef = database.ref('results');
+            const snapshot = await resultsRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allResults = Object.values(snapshot.val());
+                // Filter results for current student
+                studentData.results = allResults.filter(result => 
+                    result.studentAdmNo && result.studentAdmNo.toString() === currentStudent.admNo.toString()
+                );
+            } else {
+                studentData.results = [];
+            }
+        } catch (error) {
+            console.error('Error loading results:', error);
+            studentData.results = [];
+        }
+    }
+
+    async function loadStudentPayments() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const paymentsRef = database.ref('payments');
+            const snapshot = await paymentsRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allPayments = Object.values(snapshot.val());
+                // Filter payments for current student
+                studentData.payments = allPayments.filter(payment => 
+                    payment.admNo && payment.admNo.toString() === currentStudent.admNo.toString()
+                );
+                // Sort by date descending
+                studentData.payments.sort((a, b) => {
+                    const dateA = a.timestamp || a.date || 0;
+                    const dateB = b.timestamp || b.date || 0;
+                    return dateB - dateA;
+                });
+            } else {
+                studentData.payments = [];
+            }
+        } catch (error) {
+            console.error('Error loading payments:', error);
+            studentData.payments = [];
+        }
+    }
+
+    async function loadStudentAdditionalFees() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const additionalFeesRef = database.ref('additionalFees');
+            const snapshot = await additionalFeesRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allFees = Object.values(snapshot.val());
+                // Filter additional fees for current student
+                studentData.additionalFees = allFees.filter(fee => 
+                    fee.admNo && fee.admNo.toString() === currentStudent.admNo.toString()
+                );
+            } else {
+                studentData.additionalFees = [];
+            }
+        } catch (error) {
+            console.error('Error loading additional fees:', error);
+            studentData.additionalFees = [];
+        }
+    }
+
+    async function loadStudentHostelAllocations() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            // Try different node names
+            const nodeNames = ['hostel_allocations', 'hostelAllocations', 'hostel'];
+            
+            for (const nodeName of nodeNames) {
+                const hostelAllocRef = database.ref(nodeName);
+                const snapshot = await hostelAllocRef.once('value');
+                
+                if (snapshot.exists()) {
+                    const allAllocations = Object.values(snapshot.val());
+                    // Find hostel allocation for current student
+                    const allocations = allAllocations.filter(allocation => 
+                        (allocation.studentAdmNo && allocation.studentAdmNo.toString() === currentStudent.admNo.toString()) ||
+                        (allocation.admNo && allocation.admNo.toString() === currentStudent.admNo.toString())
+                    );
+                    
+                    if (allocations.length > 0) {
+                        studentData.hostelAllocations = allocations;
+                        break;
+                    }
+                }
+            }
+            
+            if (studentData.hostelAllocations.length === 0) {
+                console.log('No hostel allocations found');
+                studentData.hostelAllocations = [];
+            }
+        } catch (error) {
+            console.error('Error loading hostel allocations:', error);
+            studentData.hostelAllocations = [];
+        }
+    }
+
+    async function loadHostels() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const hostelsRef = database.ref('hostels');
+            const snapshot = await hostelsRef.once('value');
+            
+            if (snapshot.exists()) {
+                studentData.hostels = Object.values(snapshot.val());
+            } else {
+                studentData.hostels = [];
+            }
+        } catch (error) {
+            console.error('Error loading hostels:', error);
+            studentData.hostels = [];
+        }
+    }
+
+    async function loadStudentReports() {
+        try {
+            if (!database) throw new Error('Firebase not initialized');
+            
+            const reportsRef = database.ref('student_reports');
+            const snapshot = await reportsRef.once('value');
+            
+            if (snapshot.exists()) {
+                const allReports = Object.values(snapshot.val());
+                // Filter reports for current student
+                studentData.reports = allReports.filter(report => 
+                    report.admNo && report.admNo.toString() === currentStudent.admNo.toString()
+                );
+                // Sort by date descending
+                studentData.reports.sort((a, b) => {
+                    const dateA = a.timestamp || a.reportDate || 0;
+                    const dateB = b.timestamp || b.reportDate || 0;
+                    return dateB - dateA;
+                });
+            } else {
+                studentData.reports = [];
+            }
+        } catch (error) {
+            console.error('Error loading reports:', error);
+            studentData.reports = [];
+        }
+    }
+
+    function updateDashboard() {
+        // Update basic info
+        updateElement('studentFullName', currentStudent.fullName || 'Not available');
+        updateElement('studentAdmNo', currentStudent.admNo || '--');
+        updateElement('studentCourse', currentStudent.courseName || 'Not assigned');
+        updateElement('studentLevel', currentStudent.courseLevel || '--');
+        
+        // Update profile section
+        updateElement('profileFullName', currentStudent.fullName || '');
+        updateElement('profileAdmNo', currentStudent.admNo || '--');
+        updateElement('profileCourse', currentStudent.courseName || '--');
+        updateElement('profileLevel', currentStudent.courseLevel || '--');
+        
+        // Update academics section
+        updateAcademicsSection();
+        
+        // Update finance section
+        updateFinanceSection();
+        
+        // Update classes section
+        updateClassesSection();
+        
+        // Update exams section
+        updateExamsSection();
+        
+        // Update results section
+        updateResultsSection();
+        
+        // Update statement section
+        updateStatementSection();
+        
+        // Update hostel section
+        updateHostelSection();
+        
+        // Update reporting section
+        updateReportingSection();
+        
+        // Initialize finance chart
+        initFinanceChart();
+    }
+
+    function updateElement(elementId, value) {
+        const element = document.getElementById(elementId);
+        if (element) {
+            element.textContent = value;
+        }
+    }
+
+    function updateAcademicsSection() {
+        // Update course info
+        const course = studentData.courses;
+        updateElement('academicCourseCode', course.courseCode || '--');
+        updateElement('academicCourseName', course.courseName || '--');
+        updateElement('academicDepartment', course.courseDepartment || '--');
+        updateElement('academicExamBody', course.examBody || '--');
+        
+        // Update academic calendar
+        updateElement('academicIntake', currentStudent.intake || '--');
+        updateElement('academicYear', currentStudent.year || '--');
+        updateElement('academicModule', currentStudent.module || '--');
+        
+        // Find class info
+        const classInfo = studentData.classes.find(cls => 
+            cls.courseName === currentStudent.courseName
+        );
+        updateElement('studentClass', classInfo?.className || currentStudent.courseName || '--');
+    }
+
+    function updateFinanceSection() {
+        // Calculate module fees (33%, 33%, 34% of annual fee)
+        const annualFee = parseFloat(currentStudent.annualTuition) || 
+                         (currentStudent.semesterFee ? parseFloat(currentStudent.semesterFee) * 2 : 0);
+        
+        const module1Fee = Math.round(annualFee * 0.33);
+        const module2Fee = Math.round(annualFee * 0.33);
+        const module3Fee = annualFee - module1Fee - module2Fee;
+        
+        // Calculate module payments
+        const modulePayments = {
+            module1: 0,
+            module2: 0,
+            module3: 0
+        };
+        
+        studentData.payments.forEach(payment => {
+            if (payment.type === 'module1') modulePayments.module1 += parseFloat(payment.amountPaid) || 0;
+            if (payment.type === 'module2') modulePayments.module2 += parseFloat(payment.amountPaid) || 0;
+            if (payment.type === 'module3') modulePayments.module3 += parseFloat(payment.amountPaid) || 0;
+        });
+        
+        // Calculate module status
+        const module1Status = modulePayments.module1 >= module1Fee ? 'paid' : 
+                             modulePayments.module1 > 0 ? 'partial' : 'unpaid';
+        const module2Status = modulePayments.module2 >= module2Fee ? 'paid' : 
+                             modulePayments.module2 > 0 ? 'partial' : 'unpaid';
+        const module3Status = modulePayments.module3 >= module3Fee ? 'paid' : 
+                             modulePayments.module3 > 0 ? 'partial' : 'unpaid';
+        
+        // Update module displays
+        updateElement('module1Amount', `Ksh ${module1Fee.toLocaleString()}`);
+        updateElement('module2Amount', `Ksh ${module2Fee.toLocaleString()}`);
+        updateElement('module3Amount', `Ksh ${module3Fee.toLocaleString()}`);
+        
+        updateElement('module1Status', module1Status);
+        updateElement('module2Status', module2Status);
+        updateElement('module3Status', module3Status);
+        
+        // Update module progress bars
+        const module1Progress = Math.min((modulePayments.module1 / module1Fee) * 100, 100);
+        const module2Progress = Math.min((modulePayments.module2 / module2Fee) * 100, 100);
+        const module3Progress = Math.min((modulePayments.module3 / module3Fee) * 100, 100);
+        
+        document.getElementById('module1Progress').style.width = `${module1Progress}%`;
+        document.getElementById('module2Progress').style.width = `${module2Progress}%`;
+        document.getElementById('module3Progress').style.width = `${module3Progress}%`;
+        
+        document.getElementById('module1Progress').className = `module-progress-fill ${module1Status}`;
+        document.getElementById('module2Progress').className = `module-progress-fill ${module2Status}`;
+        document.getElementById('module3Progress').className = `module-progress-fill ${module3Status}`;
+        
+        // Calculate additional fees
+        let totalAdditionalFees = 0;
+        let totalAdditionalPaid = 0;
+        let additionalFeesHTML = '';
+        
+        studentData.additionalFees.forEach(fee => {
+            const totalAmount = parseFloat(fee.totalAmount) || 0;
+            const amountPaid = parseFloat(fee.amountPaid) || 0;
+            const balance = parseFloat(fee.balance) || 0;
+            const status = balance <= 0 ? 'paid' : (amountPaid > 0 ? 'partial' : 'unpaid');
+            
+            totalAdditionalFees += totalAmount;
+            totalAdditionalPaid += amountPaid;
+            
+            additionalFeesHTML += `
+                <div class="fee-item ${status}">
+                    <span class="fee-type">${fee.type || 'Other Fee'}</span>
+                    <span class="fee-amount">Ksh ${totalAmount.toLocaleString()}</span>
+                </div>
+            `;
+        });
+        
+        document.getElementById('additionalFeesList').innerHTML = additionalFeesHTML || 
+            '<p class="text-muted" style="font-size: 0.85rem;">No additional fees found.</p>';
+        
+        // Calculate totals
+        const totalFee = annualFee + totalAdditionalFees;
+        const totalPaid = modulePayments.module1 + modulePayments.module2 + modulePayments.module3 + totalAdditionalPaid;
+        const balance = Math.max(0, totalFee - totalPaid);
+        const progressPercent = totalFee > 0 ? Math.round((totalPaid / totalFee) * 100) : 0;
+        
+        // Update display
+        updateElement('totalFee', `Ksh ${totalFee.toLocaleString()}`);
+        updateElement('totalPaid', `Ksh ${totalPaid.toLocaleString()}`);
+        updateElement('outstandingBalance', `Ksh ${balance.toLocaleString()}`);
+        updateElement('feeBalance', `Ksh ${balance.toLocaleString()}`);
+        
+        const feeProgress = document.getElementById('feeProgress');
+        if (feeProgress) {
+            feeProgress.style.width = `${progressPercent}%`;
+            feeProgress.textContent = `${progressPercent}%`;
+        }
+        
+        // Update recent payments
+        updateRecentPayments();
+        
+        // Update units count
+        updateElement('unitsCount', studentData.classes.length);
+    }
+
+    function updateRecentPayments() {
+        const recentPayments = document.getElementById('recentPayments');
+        if (!recentPayments) return;
+        
+        if (studentData.payments.length > 0) {
+            let paymentsHTML = '';
+            const recent = studentData.payments.slice(0, 5); // Get first 5 (already sorted descending)
+            
+            recent.forEach(payment => {
+                const date = payment.date || (payment.timestamp ? new Date(payment.timestamp).toLocaleDateString() : 'N/A');
+                const type = payment.type ? payment.type.charAt(0).toUpperCase() + payment.type.slice(1) : 'Payment';
+                const amount = parseFloat(payment.amountPaid) || 0;
+                
+                paymentsHTML += `
+                    <div class="fee-item paid">
+                        <div>
+                            <div style="font-size: 0.8rem; font-weight: 600;">${type}</div>
+                            <div style="font-size: 0.75rem; color: #666;">${date}</div>
+                        </div>
+                        <div class="fee-amount">Ksh ${amount.toLocaleString()}</div>
+                    </div>
+                `;
+            });
+            
+            recentPayments.innerHTML = paymentsHTML;
+        } else {
+            recentPayments.innerHTML = '<p class="text-muted" style="font-size: 0.85rem;">No payment history found.</p>';
+        }
+    }
+
+    function updateClassesSection() {
+        const classesBody = document.getElementById('classesTableBody');
+        if (!classesBody) return;
+        
+        if (studentData.classes.length > 0) {
+            let classesHTML = '';
+            
+            studentData.classes.forEach(cls => {
+                classesHTML += `
+                    <tr>
+                        <td style="font-size: 0.85rem;">${cls.className || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${cls.courseName || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${cls.module || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${cls.intake || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${cls.capacity || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${cls.schedule || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">
+                            <span class="status-badge ${cls.status === 'Active' ? 'active' : 'inactive'}">
+                                ${cls.status || 'N/A'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            classesBody.innerHTML = classesHTML;
+            
+            // Initialize DataTable
+            if ($.fn.DataTable.isDataTable('#classesTable')) {
+                $('#classesTable').DataTable().destroy();
+            }
+            $('#classesTable').DataTable({
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                order: [[0, 'asc']],
+                language: { search: "Search classes:" }
+            });
+            
+        } else {
+            classesBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="font-size: 0.85rem;">No classes found.</td></tr>';
+        }
+    }
+
+    function updateExamsSection() {
+        const examsBody = document.getElementById('examsTableBody');
+        if (!examsBody) return;
+        
+        if (studentData.exams.length > 0) {
+            let examsHTML = '';
+            
+            studentData.exams.forEach(exam => {
+                examsHTML += `
+                    <tr>
+                        <td style="font-size: 0.85rem;">${exam.examId || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${exam.examName || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${exam.examType || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${exam.examDate || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${exam.maxMarks || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${exam.semester || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">
+                            <span class="status-badge ${exam.status === 'Active' ? 'active' : 'inactive'}">
+                                ${exam.status || 'N/A'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            examsBody.innerHTML = examsHTML;
+            
+            // Initialize DataTable
+            if ($.fn.DataTable.isDataTable('#examsTable')) {
+                $('#examsTable').DataTable().destroy();
+            }
+            $('#examsTable').DataTable({
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                order: [[3, 'desc']],
+                language: { search: "Search exams:" }
+            });
+            
+        } else {
+            examsBody.innerHTML = '<tr><td colspan="7" class="text-center text-muted" style="font-size: 0.85rem;">No exams found.</td></tr>';
+        }
+    }
+
+    function updateResultsSection() {
+        const resultsBody = document.getElementById('examResultsBody');
+        if (!resultsBody) return;
+        
+        if (studentData.results.length > 0) {
+            let resultsHTML = '';
+            let latestGrade = '--';
+            
+            studentData.results.forEach((result, index) => {
+                if (index === 0) latestGrade = result.grade || '--';
+                
+                resultsHTML += `
+                    <tr>
+                        <td style="font-size: 0.85rem;">${result.examName || result.examId || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${result.marks || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${result.grade || 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">${result.uploadedAt ? new Date(result.uploadedAt).toLocaleDateString() : 'N/A'}</td>
+                        <td style="font-size: 0.85rem;">
+                            <span class="status-badge ${result.status === 'Pending' ? 'pending' : 'completed'}">
+                                ${result.status || 'N/A'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            resultsBody.innerHTML = resultsHTML;
+            updateElement('latestGrade', latestGrade);
+            
+            // Initialize DataTable with export buttons
+            if ($.fn.DataTable.isDataTable('#resultsTable')) {
+                resultsDataTable.destroy();
+            }
+            
+            resultsDataTable = $('#resultsTable').DataTable({
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                order: [[3, 'desc']],
+                language: { search: "Search results:" },
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        className: 'btn btn-sm btn-secondary',
+                        text: '<i class="fas fa-copy"></i> Copy'
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-sm btn-success',
+                        text: '<i class="fas fa-file-excel"></i> Excel'
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-sm btn-danger',
+                        text: '<i class="fas fa-file-pdf"></i> PDF'
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-sm btn-primary',
+                        text: '<i class="fas fa-print"></i> Print'
+                    }
+                ]
+            });
+            
+        } else {
+            resultsBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted" style="font-size: 0.85rem;">No exam results found.</td></tr>';
+            updateElement('latestGrade', '--');
+        }
+    }
+
+    function updateStatementSection() {
+        // Update student info
+        updateElement('statementStudentName', currentStudent.fullName || '--');
+        updateElement('statementAdmNo', currentStudent.admNo || '--');
+        updateElement('statementCourse', currentStudent.courseName || '--');
+        updateElement('statementDate', new Date().toLocaleDateString());
+        
+        // Calculate financial summary
+        const annualFee = parseFloat(currentStudent.annualTuition) || 
+                         (currentStudent.semesterFee ? parseFloat(currentStudent.semesterFee) * 2 : 0);
+        
+        let totalAdditionalFees = 0;
+        studentData.additionalFees.forEach(fee => {
+            totalAdditionalFees += parseFloat(fee.totalAmount) || 0;
+        });
+        
+        let totalPaid = 0;
+        studentData.payments.forEach(payment => {
+            totalPaid += parseFloat(payment.amountPaid) || 0;
+        });
+        
+        const totalFee = annualFee + totalAdditionalFees;
+        const balance = Math.max(0, totalFee - totalPaid);
+        const progressPercent = totalFee > 0 ? Math.round((totalPaid / totalFee) * 100) : 0;
+        
+        // Update summary
+        updateElement('statementTotalFees', `Ksh ${totalFee.toLocaleString()}`);
+        updateElement('statementTotalPaid', `Ksh ${totalPaid.toLocaleString()}`);
+        updateElement('statementBalance', `Ksh ${balance.toLocaleString()}`);
+        updateElement('statementProgress', `${progressPercent}%`);
+        
+        // Update statement table
+        updateStatementTable();
+    }
+
+    function updateStatementTable() {
+        const statementBody = document.getElementById('statementTableBody');
+        if (!statementBody) return;
+        
+        let statementHTML = '';
+        let runningBalance = parseFloat(currentStudent.annualTuition) || 
+                           (currentStudent.semesterFee ? parseFloat(currentStudent.semesterFee) * 2 : 0);
+        
+        // Add initial fee entry
+        statementHTML += `
+            <tr>
+                <td>${new Date().toLocaleDateString()}</td>
+                <td>Annual Tuition Fee</td>
+                <td>${currentStudent.courseName || 'Course Fee'}</td>
+                <td>--</td>
+                <td>${(parseFloat(currentStudent.annualTuition) || 0).toLocaleString()}</td>
+                <td>${runningBalance.toLocaleString()}</td>
+            </tr>
+        `;
+        
+        // Add additional fees
+        studentData.additionalFees.forEach(fee => {
+            const feeAmount = parseFloat(fee.totalAmount) || 0;
+            runningBalance += feeAmount;
+            
+            statementHTML += `
+                <tr>
+                    <td>${fee.date || 'N/A'}</td>
+                    <td>Additional Fee</td>
+                    <td>${fee.type || 'Fee'} - ${fee.description || ''}</td>
+                    <td>--</td>
+                    <td>${feeAmount.toLocaleString()}</td>
+                    <td>${runningBalance.toLocaleString()}</td>
+                </tr>
+            `;
+        });
+        
+        // Add payments (in chronological order)
+        const sortedPayments = [...studentData.payments].sort((a, b) => {
+            const dateA = a.timestamp || a.date || 0;
+            const dateB = b.timestamp || b.date || 0;
+            return dateA - dateB;
+        });
+        
+        sortedPayments.forEach(payment => {
+            const paymentAmount = parseFloat(payment.amountPaid) || 0;
+            runningBalance -= paymentAmount;
+            
+            statementHTML += `
+                <tr>
+                    <td>${payment.date || (payment.timestamp ? new Date(payment.timestamp).toLocaleDateString() : 'N/A')}</td>
+                    <td>${payment.type ? payment.type.charAt(0).toUpperCase() + payment.type.slice(1) : 'Payment'}</td>
+                    <td>${payment.description || ''}</td>
+                    <td>${payment.method || 'Cash'}</td>
+                    <td style="color: var(--success);">-${paymentAmount.toLocaleString()}</td>
+                    <td>${runningBalance.toLocaleString()}</td>
+                </tr>
+            `;
+        });
+        
+        statementBody.innerHTML = statementHTML;
+        
+        // Initialize DataTable with export buttons
+        if ($.fn.DataTable.isDataTable('#statementTable')) {
+            if (statementDataTable) {
+                statementDataTable.destroy();
+            }
+        }
+        
+        statementDataTable = $('#statementTable').DataTable({
+            pageLength: 10,
+            lengthMenu: [5, 10, 25, 50],
+            order: [[0, 'desc']],
+            language: { search: "Search payments:" },
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    className: 'btn btn-sm btn-secondary',
+                    text: '<i class="fas fa-copy"></i> Copy'
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-sm btn-success',
+                    text: '<i class="fas fa-file-excel"></i> Excel'
+                },
+                {
+                    extend: 'pdf',
+                    className: 'btn btn-sm btn-danger',
+                    text: '<i class="fas fa-file-pdf"></i> PDF'
+                },
+                {
+                    extend: 'print',
+                    className: 'btn btn-sm btn-primary',
+                    text: '<i class="fas fa-print"></i> Print'
+                }
+            ]
+        });
+    }
+
+    function updateHostelSection() {
+        const hostelInfo = document.getElementById('hostelInfo');
+        if (!hostelInfo) return;
+        
+        if (studentData.hostelAllocations.length > 0) {
+            const allocation = studentData.hostelAllocations[0];
+            
+            // Try to find hostel details
+            let hostelDetails = {};
+            if (allocation.hostelId) {
+                hostelDetails = studentData.hostels.find(h => h.hostelId === allocation.hostelId) || {};
+            } else if (allocation.hostelName) {
+                hostelDetails = studentData.hostels.find(h => h.hostelName === allocation.hostelName) || {};
+            }
+            
+            // Extract bed number - check different possible field names
+            let bedNumber = '--';
+            if (allocation.bedNumber) {
+                bedNumber = allocation.bedNumber;
+            } else if (allocation.bedNo) {
+                bedNumber = allocation.bedNo;
+            } else if (allocation.bed) {
+                bedNumber = allocation.bed;
+            }
+            
+            hostelInfo.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <p style="font-size: 0.9rem;"><strong>Hostel Name:</strong> ${allocation.hostelName || hostelDetails.hostelName || 'Not Assigned'}</p>
+                        <p style="font-size: 0.9rem;"><strong>Room Number:</strong> ${allocation.roomNumber || 'Not Assigned'}</p>
+                        <p style="font-size: 0.9rem;"><strong>Bed Number:</strong> ${bedNumber}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p style="font-size: 0.9rem;"><strong>Status:</strong> 
+                            <span class="status-badge ${allocation.status === 'Allocated' || allocation.status === 'Active' ? 'active' : 'inactive'}">
+                                ${allocation.status || 'Not Allocated'}
+                            </span>
+                        </p>
+                        <p style="font-size: 0.9rem;"><strong>Allocation Date:</strong> ${allocation.allocationDate || 'N/A'}</p>
+                        <p style="font-size: 0.9rem;"><strong>Hostel Type:</strong> ${hostelDetails.hostelType || 'Standard'}</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            hostelInfo.innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-bed fa-3x text-muted mb-3"></i>
+                    <p class="text-muted" style="font-size: 0.85rem;">No hostel allocation found for this student.</p>
+                    <p class="text-muted" style="font-size: 0.8rem;">Please contact the hostel manager for allocation.</p>
+                </div>
+            `;
+        }
+    }
+
+    function updateReportingSection() {
+        // Update total reports count
+        updateElement('totalReports', studentData.reports.length);
+        
+        // Display previous reports
+        const previousReports = document.getElementById('previousReports');
+        if (!previousReports) return;
+        
+        if (studentData.reports.length > 0) {
+            let reportsHTML = '';
+            
+            studentData.reports.forEach(report => {
+                const reportDate = report.reportDate || (report.timestamp ? new Date(report.timestamp).toLocaleDateString() : 'N/A');
+                const returnDate = report.returnDate || 'N/A';
+                
+                reportsHTML += `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p style="font-size: 0.85rem;"><strong>Term/Module:</strong> ${report.term}</p>
+                                    <p style="font-size: 0.85rem;"><strong>Year:</strong> ${report.year}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p style="font-size: 0.85rem;"><strong>Report Date:</strong> ${reportDate}</p>
+                                    <p style="font-size: 0.85rem;"><strong>Return Date:</strong> ${returnDate}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p style="font-size: 0.85rem;"><strong>Status:</strong> 
+                                        <span class="status-badge reported">Reported</span>
+                                    </p>
+                                </div>
+                            </div>
+                            ${report.reason ? `<p style="font-size: 0.85rem;"><strong>Reason:</strong> ${report.reason}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            previousReports.innerHTML = reportsHTML;
+        } else {
+            previousReports.innerHTML = '<p class="text-muted" style="font-size: 0.85rem;">No previous reports found.</p>';
+        }
+    }
+
+    function initFinanceChart() {
+        const ctx = document.getElementById('financeChart').getContext('2d');
+        
+        // Calculate data for chart
+        const annualFee = parseFloat(currentStudent.annualTuition) || 
+                         (currentStudent.semesterFee ? parseFloat(currentStudent.semesterFee) * 2 : 0);
+        
+        const module1Fee = Math.round(annualFee * 0.33);
+        const module2Fee = Math.round(annualFee * 0.33);
+        const module3Fee = annualFee - module1Fee - module2Fee;
+        
+        // Calculate module payments
+        const modulePayments = {
+            module1: 0,
+            module2: 0,
+            module3: 0
+        };
+        
+        studentData.payments.forEach(payment => {
+            if (payment.type === 'module1') modulePayments.module1 += parseFloat(payment.amountPaid) || 0;
+            if (payment.type === 'module2') modulePayments.module2 += parseFloat(payment.amountPaid) || 0;
+            if (payment.type === 'module3') modulePayments.module3 += parseFloat(payment.amountPaid) || 0;
+        });
+        
+        // Calculate additional fees paid
+        let additionalFeesPaid = 0;
+        studentData.additionalFees.forEach(fee => {
+            additionalFeesPaid += parseFloat(fee.amountPaid) || 0;
+        });
+        
+        const totalPaid = modulePayments.module1 + modulePayments.module2 + modulePayments.module3 + additionalFeesPaid;
+        const totalFee = annualFee + studentData.additionalFees.reduce((sum, fee) => sum + (parseFloat(fee.totalAmount) || 0), 0);
+        const balance = Math.max(0, totalFee - totalPaid);
+        
+        if (financeChart) {
+            financeChart.destroy();
+        }
+        
+        financeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Module 1 Paid', 'Module 2 Paid', 'Module 3 Paid', 'Additional Fees Paid', 'Balance'],
+                datasets: [{
+                    data: [
+                        modulePayments.module1,
+                        modulePayments.module2,
+                        modulePayments.module3,
+                        additionalFeesPaid,
+                        balance
+                    ],
+                    backgroundColor: [
+                        '#2c5aa0',
+                        '#1e3a5f',
+                        '#3a7bd5',
+                        '#28a745',
+                        '#dc3545'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: Ksh ${context.raw.toLocaleString()}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // ================= REPORTING FUNCTIONS =================
+    function populateYearDropdown() {
+        const yearSelect = document.getElementById('reportYear');
+        const currentYear = new Date().getFullYear();
+        
+        // Add years from 2000 to 2100
+        for (let year = 2000; year <= 2100; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            if (year === currentYear) {
+                option.selected = true;
+            }
+            yearSelect.appendChild(option);
+        }
+    }
+
+    function checkExistingReport(reportDate) {
+        // Check if student has already reported on this date
+        const existingReport = studentData.reports.find(report => {
+            const storedDate = report.reportDate || (report.timestamp ? new Date(report.timestamp).toISOString().split('T')[0] : '');
+            return storedDate === reportDate;
+        });
+        
+        return existingReport;
+    }
+
+    function showDuplicateReportWarning(existingReport) {
+        const reportDate = existingReport.reportDate || (existingReport.timestamp ? new Date(existingReport.timestamp).toLocaleDateString() : 'N/A');
+        const returnDate = existingReport.returnDate || 'N/A';
+        const term = existingReport.term || 'N/A';
+        const year = existingReport.year || 'N/A';
+        
+        const warningMessage = `
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <h5><i class="fas fa-exclamation-triangle me-2"></i>Already Reported!</h5>
+                <p>You have already submitted a holiday report for <strong>${reportDate}</strong>.</p>
+                <hr>
+                <p><strong>Previous Report Details:</strong></p>
+                <ul class="mb-2">
+                    <li><strong>Term/Module:</strong> ${term}</li>
+                    <li><strong>Academic Year:</strong> ${year}</li>
+                    <li><strong>Report Date:</strong> ${reportDate}</li>
+                    <li><strong>Return Date:</strong> ${returnDate}</li>
+                </ul>
+                <p class="mb-0">If you need to make changes, please contact the administration office.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+        
+        // Create a modal to show the warning
+        const modalId = 'duplicateReportModal';
+        let modal = document.getElementById(modalId);
+        
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = modalId;
+            modal.className = 'modal fade';
+            modal.tabIndex = -1;
+            modal.innerHTML = `
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning text-dark">
+                            <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Already Reported!</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>You have already submitted a holiday report for <strong>${reportDate}</strong>.</p>
+                            <hr>
+                            <p><strong>Previous Report Details:</strong></p>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <p><strong>Term/Module:</strong> ${term}</p>
+                                    <p><strong>Academic Year:</strong> ${year}</p>
+                                    <p><strong>Report Date:</strong> ${reportDate}</p>
+                                    <p><strong>Return Date:</strong> ${returnDate}</p>
+                                    ${existingReport.reason ? `<p><strong>Reason:</strong> ${existingReport.reason}</p>` : ''}
+                                </div>
+                            </div>
+                            <p class="text-muted">If you need to make changes, please contact the administration office.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Show the modal
+        const bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.show();
+        
+        return true;
+    }
+
+    async function submitReporting() {
+        const term = document.getElementById('reportTerm').value;
+        const year = document.getElementById('reportYear').value;
+        const reportDate = document.getElementById('reportDate').value;
+        const returnDate = document.getElementById('returnDate').value;
+        const reason = document.getElementById('reportReason').value;
+        const notes = document.getElementById('reportNotes').value;
+        
+        if (!term || !year || !reportDate || !returnDate) {
+            showReportingMessage('Please fill all required fields.', 'danger');
+            return;
+        }
+        
+        if (new Date(returnDate) <= new Date(reportDate)) {
+            showReportingMessage('Return date must be after reporting date.', 'danger');
+            return;
+        }
+        
+        // Check for duplicate report
+        const existingReport = checkExistingReport(reportDate);
+        if (existingReport) {
+            showDuplicateReportWarning(existingReport);
+            return;
+        }
+        
+        showLoading(true);
+        
+        try {
+            const reportData = {
+                admNo: currentStudent.admNo,
+                studentName: currentStudent.fullName,
+                course: currentStudent.courseName,
+                term: term,
+                year: year,
+                reportDate: reportDate,
+                returnDate: returnDate,
+                reason: reason,
+                notes: notes,
+                status: 'Reported',
+                timestamp: Date.now(),
+                submittedAt: new Date().toISOString()
+            };
+            
+            // Save to Firebase
+            const reportsRef = database.ref('student_reports');
+            const newReportRef = reportsRef.push();
+            await newReportRef.set(reportData);
+            
+            // Add to local data
+            studentData.reports.unshift(reportData);
+            
+            // Update UI
+            updateReportingSection();
+            
+            // Reset form
+            document.getElementById('reportingForm').reset();
+            document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
+            
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('returnDate').value = tomorrow.toISOString().split('T')[0];
+            
+            // Select current year
+            document.getElementById('reportYear').value = new Date().getFullYear();
+            
+            showReportingMessage('Holiday reporting submitted successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Error submitting report:', error);
+            showReportingMessage('Error submitting report. Please try again.', 'danger');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // ================= EXPORT FUNCTIONS =================
+    function printStatement() {
+        window.print();
+    }
+
+    function downloadStatementPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add header
+        doc.setFontSize(16);
+        doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 105, 15, { align: 'center' });
+        doc.setFontSize(14);
+        doc.text('PAYMENT STATEMENT', 105, 25, { align: 'center' });
+        
+        // Add student info
+        doc.setFontSize(10);
+        doc.text(`Student: ${currentStudent.fullName}`, 20, 40);
+        doc.text(`Admission No: ${currentStudent.admNo}`, 20, 47);
+        doc.text(`Course: ${currentStudent.courseName}`, 20, 54);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 61);
+        
+        // Add summary
+        doc.setFontSize(12);
+        doc.text('Financial Summary', 20, 75);
+        doc.setFontSize(10);
+        
+        const annualFee = parseFloat(currentStudent.annualTuition) || 0;
+        let totalAdditionalFees = 0;
+        studentData.additionalFees.forEach(fee => {
+            totalAdditionalFees += parseFloat(fee.totalAmount) || 0;
+        });
+        
+        let totalPaid = 0;
+        studentData.payments.forEach(payment => {
+            totalPaid += parseFloat(payment.amountPaid) || 0;
+        });
+        
+        const totalFee = annualFee + totalAdditionalFees;
+        const balance = Math.max(0, totalFee - totalPaid);
+        
+        doc.text(`Total Fees: Ksh ${totalFee.toLocaleString()}`, 20, 85);
+        doc.text(`Total Paid: Ksh ${totalPaid.toLocaleString()}`, 20, 92);
+        doc.text(`Outstanding Balance: Ksh ${balance.toLocaleString()}`, 20, 99);
+        
+        // Add payment table
+        doc.autoTable({
+            startY: 110,
+            head: [['Date', 'Type', 'Description', 'Amount', 'Balance']],
+            body: getStatementDataForPDF(),
+            theme: 'striped',
+            headStyles: { fillColor: [44, 90, 160] }
+        });
+        
+        // Save PDF
+        doc.save(`Statement_${currentStudent.admNo}_${new Date().toISOString().split('T')[0]}.pdf`);
+    }
+
+    function getStatementDataForPDF() {
+        const data = [];
+        let runningBalance = parseFloat(currentStudent.annualTuition) || 0;
+        
+        // Add initial fee
+        data.push([
+            new Date().toLocaleDateString(),
+            'Annual Fee',
+            currentStudent.courseName,
+            runningBalance.toLocaleString(),
+            runningBalance.toLocaleString()
+        ]);
+        
+        // Add additional fees
+        studentData.additionalFees.forEach(fee => {
+            const feeAmount = parseFloat(fee.totalAmount) || 0;
+            runningBalance += feeAmount;
+            data.push([
+                fee.date || 'N/A',
+                'Additional Fee',
+                fee.type || 'Fee',
+                `+${feeAmount.toLocaleString()}`,
+                runningBalance.toLocaleString()
+            ]);
+        });
+        
+        // Add payments
+        const sortedPayments = [...studentData.payments].sort((a, b) => {
+            const dateA = a.timestamp || a.date || 0;
+            const dateB = b.timestamp || b.date || 0;
+            return dateA - dateB;
+        });
+        
+        sortedPayments.forEach(payment => {
+            const paymentAmount = parseFloat(payment.amountPaid) || 0;
+            runningBalance -= paymentAmount;
+            data.push([
+                payment.date || (payment.timestamp ? new Date(payment.timestamp).toLocaleDateString() : 'N/A'),
+                payment.type || 'Payment',
+                payment.description || '',
+                `-${paymentAmount.toLocaleString()}`,
+                runningBalance.toLocaleString()
+            ]);
+        });
+        
+        return data;
+    }
+
+    function exportStatementExcel() {
+        // Create worksheet
+        const wsData = [];
+        
+        // Add headers
+        wsData.push(['UNITED COLLEGE OF SCIENCE AND TECHNOLOGY']);
+        wsData.push(['PAYMENT STATEMENT']);
+        wsData.push([]);
+        wsData.push(['Student:', currentStudent.fullName]);
+        wsData.push(['Admission No:', currentStudent.admNo]);
+        wsData.push(['Course:', currentStudent.courseName]);
+        wsData.push(['Statement Date:', new Date().toLocaleDateString()]);
+        wsData.push([]);
+        
+        // Add summary
+        const annualFee = parseFloat(currentStudent.annualTuition) || 0;
+        let totalAdditionalFees = 0;
+        studentData.additionalFees.forEach(fee => {
+            totalAdditionalFees += parseFloat(fee.totalAmount) || 0;
+        });
+        
+        let totalPaid = 0;
+        studentData.payments.forEach(payment => {
+            totalPaid += parseFloat(payment.amountPaid) || 0;
+        });
+        
+        const totalFee = annualFee + totalAdditionalFees;
+        const balance = Math.max(0, totalFee - totalPaid);
+        
+        wsData.push(['FINANCIAL SUMMARY']);
+        wsData.push(['Total Fees:', `Ksh ${totalFee.toLocaleString()}`]);
+        wsData.push(['Total Paid:', `Ksh ${totalPaid.toLocaleString()}`]);
+        wsData.push(['Outstanding Balance:', `Ksh ${balance.toLocaleString()}`]);
+        wsData.push([]);
+        
+        // Add table headers
+        wsData.push(['Date', 'Payment Type', 'Description', 'Payment Method', 'Amount (Ksh)', 'Balance (Ksh)']);
+        
+        // Add data
+        let runningBalance = annualFee;
+        
+        // Add initial fee
+        wsData.push([
+            new Date().toLocaleDateString(),
+            'Annual Tuition Fee',
+            currentStudent.courseName,
+            '--',
+            annualFee.toLocaleString(),
+            runningBalance.toLocaleString()
+        ]);
+        
+        // Add additional fees
+        studentData.additionalFees.forEach(fee => {
+            const feeAmount = parseFloat(fee.totalAmount) || 0;
+            runningBalance += feeAmount;
+            wsData.push([
+                fee.date || 'N/A',
+                'Additional Fee',
+                `${fee.type || 'Fee'} - ${fee.description || ''}`,
+                '--',
+                feeAmount.toLocaleString(),
+                runningBalance.toLocaleString()
+            ]);
+        });
+        
+        // Add payments
+        const sortedPayments = [...studentData.payments].sort((a, b) => {
+            const dateA = a.timestamp || a.date || 0;
+            const dateB = b.timestamp || b.date || 0;
+            return dateA - dateB;
+        });
+        
+        sortedPayments.forEach(payment => {
+            const paymentAmount = parseFloat(payment.amountPaid) || 0;
+            runningBalance -= paymentAmount;
+            wsData.push([
+                payment.date || (payment.timestamp ? new Date(payment.timestamp).toLocaleDateString() : 'N/A'),
+                payment.type ? payment.type.charAt(0).toUpperCase() + payment.type.slice(1) : 'Payment',
+                payment.description || '',
+                payment.method || 'Cash',
+                `-${paymentAmount.toLocaleString()}`,
+                runningBalance.toLocaleString()
+            ]);
+        });
+        
+        // Create workbook
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        
+        // Set column widths
+        const wscols = [
+            { wch: 15 },
+            { wch: 20 },
+            { wch: 30 },
+            { wch: 15 },
+            { wch: 15 },
+            { wch: 15 }
+        ];
+        ws['!cols'] = wscols;
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Statement');
+        
+        // Save file
+        XLSX.writeFile(wb, `Statement_${currentStudent.admNo}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    }
+
+    function printResults() {
+        window.print();
+    }
+
+    function downloadResultsPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add header
+        doc.setFontSize(16);
+        doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 105, 15, { align: 'center' });
+        doc.setFontSize(14);
+        doc.text('EXAMINATION RESULTS', 105, 25, { align: 'center' });
+        
+        // Add student info
+        doc.setFontSize(10);
+        doc.text(`Student: ${currentStudent.fullName}`, 20, 40);
+        doc.text(`Admission No: ${currentStudent.admNo}`, 20, 47);
+        doc.text(`Course: ${currentStudent.courseName}`, 20, 54);
+        doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 61);
+        
+        // Add results table
+        doc.autoTable({
+            startY: 70,
+            head: [['Exam', 'Marks', 'Grade', 'Date', 'Status']],
+            body: getResultsDataForPDF(),
+            theme: 'striped',
+            headStyles: { fillColor: [44, 90, 160] }
+        });
+        
+        // Save PDF
+        doc.save(`Results_${currentStudent.admNo}_${new Date().toISOString().split('T')[0]}.pdf`);
+    }
+
+    function getResultsDataForPDF() {
+        const data = [];
+        
+        studentData.results.forEach(result => {
+            data.push([
+                result.examName || result.examId || 'N/A',
+                result.marks || 'N/A',
+                result.grade || 'N/A',
+                result.uploadedAt ? new Date(result.uploadedAt).toLocaleDateString() : 'N/A',
+                result.status || 'N/A'
+            ]);
+        });
+        
+        return data;
+    }
+
+    function exportResultsExcel() {
+        // Create worksheet data
+        const wsData = [];
+        
+        // Add headers
+        wsData.push(['UNITED COLLEGE OF SCIENCE AND TECHNOLOGY']);
+        wsData.push(['EXAMINATION RESULTS']);
+        wsData.push([]);
+        wsData.push(['Student:', currentStudent.fullName]);
+        wsData.push(['Admission No:', currentStudent.admNo]);
+        wsData.push(['Course:', currentStudent.courseName]);
+        wsData.push(['Report Date:', new Date().toLocaleDateString()]);
+        wsData.push([]);
+        
+        // Add table headers
+        wsData.push(['Exam', 'Marks', 'Grade', 'Date', 'Status']);
+        
+        // Add data
+        studentData.results.forEach(result => {
+            wsData.push([
+                result.examName || result.examId || 'N/A',
+                result.marks || 'N/A',
+                result.grade || 'N/A',
+                result.uploadedAt ? new Date(result.uploadedAt).toLocaleDateString() : 'N/A',
+                result.status || 'N/A'
+            ]);
+        });
+        
+        // Create workbook
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        
+        // Set column widths
+        const wscols = [
+            { wch: 30 },
+            { wch: 10 },
+            { wch: 10 },
+            { wch: 15 },
+            { wch: 15 }
+        ];
+        ws['!cols'] = wscols;
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Results');
+        
+        // Save file
+        XLSX.writeFile(wb, `Results_${currentStudent.admNo}_${new Date().toISOString().split('T')[0]}.xlsx`);
+    }
+
+    function generateStatementPDF() {
+        downloadStatementPDF();
+    }
+
+    // ================= UTILITY FUNCTIONS =================
+    function switchModule(moduleName) {
+        // Hide all modules
+        document.querySelectorAll('.module-section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Remove active class from all nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Show selected module
+        const moduleSection = document.getElementById(moduleName);
+        if (moduleSection) {
+            moduleSection.classList.add('active');
+            
+            // Update active nav link
+            const activeLink = document.querySelector(`.nav-link[data-module="${moduleName}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+        
+        // Close mobile menu if open
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) sidebar.classList.remove('show');
+    }
+
+    function toggleMobileMenu() {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.classList.toggle('show');
+        }
+    }
+
+    function toggleTheme() {
+        isDarkMode = !isDarkMode;
+        document.body.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        
+        const themeIcon = document.querySelector('#themeToggle i');
+        if (themeIcon) {
+            themeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+
+    function logout() {
+        // Reset all data
+        currentStudent = null;
+        currentStudentKey = null;
+        studentData = {
+            admissions: {},
+            courses: {},
+            classes: [],
+            exams: [],
+            results: [],
+            payments: [],
+            additionalFees: [],
+            hostelAllocations: [],
+            hostels: [],
+            reports: []
+        };
+        
+        // Destroy DataTables
+        if (resultsDataTable) {
+            resultsDataTable.destroy();
+            resultsDataTable = null;
+        }
+        
+        if (statementDataTable) {
+            statementDataTable.destroy();
+            statementDataTable = null;
+        }
+        
+        // Destroy chart
+        if (financeChart) {
+            financeChart.destroy();
+            financeChart = null;
+        }
+        
+        // Reset UI
+        document.getElementById('dashboardSection').classList.add('d-none');
+        document.getElementById('loginSection').classList.remove('d-none');
+        document.getElementById('loginForm').reset();
+        document.getElementById('loginMessage').classList.add('d-none');
+        
+        // Reset to overview module
+        switchModule('overview');
+    }
+    </script>
+</body>
+</html>

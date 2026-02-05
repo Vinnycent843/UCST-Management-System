@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admissions — Admitted Students</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; padding:20px; }
+    h1 { text-align:center; margin-bottom:20px; color:#023e8a; }
+    table { width:100%; border-collapse:collapse; background:#fff; margin-top:20px; }
+    th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+    th { background:#0077b6; color:#fff; }
+    tr:nth-child(even) { background:#f2f2f2; }
+    .actions { text-align:right; margin-bottom:15px; }
+    .btn { padding:8px 15px; margin:3px; border:none; border-radius:5px; cursor:pointer; }
+    .print { background:#0077b6; color:white; }
+    .pdf { background:#28a745; color:white; }
+  </style>
+</head>
+<body>
+
+  <h1>🎓 Admitted Students</h1>
+
+  <div class="actions">
+    <button class="btn print" onclick="window.print()">🖨️ Print</button>
+    <button class="btn pdf" onclick="exportPDF()">📄 Export to PDF</button>
+  </div>
+
+  <table id="admissionsTable">
+    <thead>
+      <tr>
+        <th>Admission No</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Course</th>
+        <th>Course Code</th>
+        <th>Level</th>
+        <th>Duration</th>
+        <th>Exam Body</th>
+        <th>Fee</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="admittedTable"></tbody>
+  </table>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  
+  <!-- jsPDF & autoTable for PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+  
+  <script>
+    // 🔹 Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB9IZdOuXlYrCSySXW68DCgVY4Dd92pgKE",
+      authDomain: "stemuk-interiors.firebaseapp.com",
+      databaseURL: "https://stemuk-interiors-default-rtdb.firebaseio.com",
+      projectId: "stemuk-interiors",
+      storageBucket: "stemuk-interiors.appspot.com",
+      messagingSenderId: "786343323195",
+      appId: "1:786343323195:web:yourappid"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // 🔹 Load admitted students
+    function loadAdmissions() {
+      db.ref("admissions").on("value", snap => {
+        const tbody = document.getElementById("admittedTable");
+        tbody.innerHTML = "";
+        snap.forEach(child => {
+          const s = child.val();
+          const row = `
+            <tr>
+              <td>${s.admNo || ""}</td>
+              <td>${s.fullName || ""}</td>
+              <td>${s.email || ""}</td>
+              <td>${s.phone || ""}</td>
+              <td>${s.courseName || ""}</td>
+              <td>${s.courseCode || ""}</td>
+              <td>${s.courseLevel || ""}</td>
+              <td>${s.courseDuration || ""}</td>
+              <td>${s.examBody || ""}</td>
+              <td>${s.courseFee || ""}</td>
+              <td>${s.status || ""}</td>
+            </tr>`;
+          tbody.innerHTML += row;
+        });
+      });
+    }
+    loadAdmissions();
+
+    // 🔹 Export to PDF
+    function exportPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.text("Admitted Students List", 14, 15);
+      doc.autoTable({
+        html: '#admissionsTable',
+        startY: 20,
+        theme: 'grid',
+        headStyles: { fillColor: [0, 119, 182] }
+      });
+
+      doc.save("admitted_students.pdf");
+    }
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admitted Students — JNNP</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; padding:20px; }
+    h1 { text-align:center; color:#023e8a; }
+    table { width:100%; border-collapse:collapse; margin-top:20px; background:#fff; }
+    th, td { border:1px solid #ddd; padding:10px; text-align:left; }
+    th { background:#023e8a; color:white; }
+    tr:nth-child(even) { background:#f2f2f2; }
+    .btn-container { margin:20px 0; text-align:center; }
+    button { padding:10px 20px; margin:5px; border:none; border-radius:5px; cursor:pointer; font-weight:bold; }
+    .print-btn { background:#0077b6; color:white; }
+    .pdf-btn { background:#38b000; color:white; }
+  </style>
+</head>
+<body>
+  <h1>List of Admitted Students</h1>
+
+  <div class="btn-container">
+    <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+    <button class="pdf-btn" onclick="downloadPDF()">📄 Export to PDF</button>
+  </div>
+
+  <table id="admissionTable">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Gender</th>
+        <th>DOB</th>
+        <th>KCPE Marks</th>
+        <th>KCSE Grade</th>
+        <th>Course Name</th>
+        <th>Level</th>
+        <th>Duration</th>
+        <th>Fee</th>
+        <th>Exam Body</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js"></script>
+  
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB9IZdOuXlYrCSySXW68DCgVY4Dd92pgKE",
+      authDomain: "stemuk-interiors.firebaseapp.com",
+      databaseURL: "https://stemuk-interiors-default-rtdb.firebaseio.com/",
+      projectId: "stemuk-interiors",
+      storageBucket: "stemuk-interiors.appspot.com",
+      messagingSenderId: "786343323195",
+      appId: "1:786343323195:web:example"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    const tableBody = document.querySelector("#admissionTable tbody");
+
+    // Fetch from "admissions" table only
+    function fetchAdmissions() {
+      db.ref("admissions").on("value", (snapshot) => {
+        tableBody.innerHTML = "";
+        snapshot.forEach((childSnapshot) => {
+          const student = childSnapshot.val();
+          const row = `
+            <tr>
+              <td>${student.fullName || ""}</td>
+              <td>${student.email || ""}</td>
+              <td>${student.phone || ""}</td>
+              <td>${student.gender || ""}</td>
+              <td>${student.dob || ""}</td>
+              <td>${student.kcpeMarks || ""}</td>
+              <td>${student.kcseGrade || ""}</td>
+              <td>${student.courseName || ""}</td>
+              <td>${student.courseLevel || ""}</td>
+              <td>${student.courseDuration || ""}</td>
+              <td>${student.courseFee || ""}</td>
+              <td>${student.examBody || ""}</td>
+              <td>${student.status || "Admitted"}</td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      });
+    }
+
+    fetchAdmissions();
+
+    // Export to PDF
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF("landscape");
+      doc.text("Admitted Students", 14, 10);
+
+      const rows = [];
+      document.querySelectorAll("#admissionTable tbody tr").forEach((tr) => {
+        const row = [];
+        tr.querySelectorAll("td").forEach((td) => row.push(td.innerText));
+        rows.push(row);
+      });
+
+      const headers = [];
+      document.querySelectorAll("#admissionTable thead th").forEach((th) => headers.push(th.innerText));
+
+      doc.autoTable({
+        head: [headers],
+        body: rows,
+        startY: 20,
+        theme: "grid",
+        styles: { fontSize: 8 }
+      });
+
+      doc.save("admitted_students.pdf");
+    }
+  </script>
+
+  <!-- jsPDF AutoTable Plugin -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+</body>
+</html>

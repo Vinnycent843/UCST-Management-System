@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCST Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --ucst-primary: #003366;
+            --ucst-secondary: #00a3e0;
+            --ucst-accent: #ff6600;
+            --ucst-light: #f5f9fc;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f9fc 0%, #e6f2ff 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--ucst-primary) 0%, #002244 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid var(--ucst-accent);
+        }
+
+        .logo-icon i {
+            font-size: 35px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .tagline {
+            color: var(--ucst-accent);
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        /* Role Selection Form */
+        .role-form {
+            padding: 40px 30px;
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--ucst-primary);
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: "▼";
+            font-size: 12px;
+            color: var(--ucst-secondary);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .role-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-select:focus {
+            outline: none;
+            border-color: var(--ucst-secondary);
+            box-shadow: 0 0 0 3px rgba(0, 163, 224, 0.2);
+        }
+
+        .role-select option {
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        /* Get Started Button */
+        .get-started-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--ucst-secondary) 0%, var(--ucst-primary) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 163, 224, 0.3);
+        }
+
+        .get-started-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .get-started-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .get-started-btn i {
+            font-size: 1.2rem;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(0, 163, 224, 0.1);
+            border-left: 4px solid var(--ucst-secondary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .instructions h4 {
+            color: var(--ucst-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .instructions p {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .instructions i {
+            color: var(--ucst-accent);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 51, 102, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+            padding: 30px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--ucst-accent);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+                border-radius: 15px;
+            }
+            
+            .header {
+                padding: 25px 20px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+            
+            .role-form {
+                padding: 30px 20px;
+            }
+            
+            .logo {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo-icon i {
+                font-size: 30px;
+            }
+        }
+
+        /* Animation for button */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>UCST PORTAL</h1>
+                    <p>United College of Science & Technology</p>
+                </div>
+            </div>
+            <div class="tagline">Select Your Dashboard</div>
+        </div>
+
+        <!-- Role Selection Form -->
+        <div class="role-form">
+            <form id="roleForm">
+                <div class="input-group">
+                    <label for="roleSelect">
+                        <i class="fas fa-user-tag"></i>
+                        Select Your Role
+                    </label>
+                    <div class="select-wrapper">
+                        <select id="roleSelect" class="role-select" required>
+                            <option value="" disabled selected>-- Choose Your Role --</option>
+                            <option value="Main Admin">Main Admin</option>
+                            <option value="Admissions">Admissions</option>
+                            <option value="Class Management">Class Management</option>
+                            <option value="Course Management">Course Management</option>
+                            <option value="Academics">Academics</option>
+                            <option value="Accountant">Accountant</option>
+                            <option value="Hostel">Hostel</option>
+                            <option value="Reporting Management">Reporting Management</option>
+                            <option value="Staff Management">Staff Management</option>
+                            <option value="Student">Student</option>
+                            <option value="Subordinate Staff">Subordinate Staff</option>
+                            <option value="Trainer">Trainer</option>
+                            <option value="Trainer Management">Trainer Management</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="get-started-btn pulse" id="startBtn">
+                    <i class="fas fa-rocket"></i>
+                    Get Started
+                </button>
+
+                <div class="instructions">
+                    <h4><i class="fas fa-info-circle"></i> How to Access</h4>
+                    <p>1. Select your role from the dropdown above<br>
+                       2. Click "Get Started" to access your dashboard<br>
+                       3. You will be redirected to your specific portal</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2023 United College of Science and Technology</p>
+            <p>Empowering Minds, Sharpening the Future</p>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Redirecting to Dashboard</h3>
+            <p>Please wait while we redirect you...</p>
+        </div>
+    </div>
+
+    <script>
+        // Role to page mapping - EXACTLY AS YOU SPECIFIED
+        const rolePages = {
+            "Main Admin": "admin.html",
+            "Admissions": "admissionsdashboard.html",
+            "Class Management": "classmanagementlogin.html",
+            "Course Management": "coursemanagementlogin.html",
+            "Academics": "examresultlogin.html",
+            "Accountant": "financepanel.html",
+            "Hostel": "hostelmanagement.html",
+            "Reporting Management": "reporting.html",
+            "Staff Management": "staffmanagementlogin.html",
+            "Student": "studentportal.html",
+            "Subordinate Staff": "surbodinatestaffdashboard.html",
+            "Trainer": "trainersportal.html",
+            "Trainer Management": "trainerslogin.html"
+        };
+
+        // Get DOM elements
+        const roleForm = document.getElementById('roleForm');
+        const roleSelect = document.getElementById('roleSelect');
+        const startBtn = document.getElementById('startBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Handle form submission
+        roleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const selectedRole = roleSelect.value;
+            
+            // Validate selection
+            if (!selectedRole) {
+                alert("Please select a role from the dropdown list.");
+                roleSelect.focus();
+                return;
+            }
+            
+            // Check if role exists in mapping
+            if (!rolePages[selectedRole]) {
+                alert("Error: Invalid role selected. Please try again.");
+                return;
+            }
+            
+            // Show loading overlay
+            loadingOverlay.style.display = 'flex';
+            
+            // Change button to loading state
+            startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting...';
+            startBtn.disabled = true;
+            startBtn.classList.remove('pulse');
+            
+            // Simulate a short delay for better UX, then redirect
+            setTimeout(() => {
+                // Redirect to the corresponding page
+                window.location.href = rolePages[selectedRole];
+            }, 1500); // 1.5 second delay to show loading screen
+        });
+
+        // Change button text when role is selected
+        roleSelect.addEventListener('change', function() {
+            if (this.value) {
+                startBtn.innerHTML = `<i class="fas fa-rocket"></i> Access ${this.value} Dashboard`;
+            } else {
+                startBtn.innerHTML = '<i class="fas fa-rocket"></i> Get Started';
+            }
+        });
+
+        // Auto-focus on select when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            roleSelect.focus();
+            
+            // Add keyboard navigation
+            roleSelect.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    startBtn.click();
+                }
+            });
+        });
+
+        // Test function to check if pages exist (for development)
+        function testPages() {
+            console.log("Testing all redirects:");
+            for (const [role, page] of Object.entries(rolePages)) {
+                console.log(`${role} → ${page}`);
+            }
+        }
+
+        // Uncomment the line below to test in console
+        // testPages();
+    </script>
+</body>
+</html>

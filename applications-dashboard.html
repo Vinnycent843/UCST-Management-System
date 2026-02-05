@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — JNNP</title>
+<style>
+:root {
+  --primary-color: #2062f0;
+  --primary-light: #4a86f8;
+  --primary-dark: #0a3cb9;
+  --secondary-color: #3943d6;
+  --accent-color: #a3defd;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --danger-color: #dc3545;
+  --info-color: #17a2b8;
+  --light-bg: #f9f9f9;
+  --dark-bg: #121212;
+  --card-bg: #fff;
+  --dark-card-bg: #1e1e1e;
+  --text-light: #333;
+  --text-dark: #fff;
+  --sidebar-width: 250px;
+  --header-height: 70px;
+  --transition: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+  transition: background 0.3s, color 0.3s;
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background: var(--light-bg);
+  margin: 0;
+  padding: 0;
+  color: var(--text-light);
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Enhanced Sidebar Styles */
+.sidebar {
+  width: var(--sidebar-width);
+  background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  color: white;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.1);
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.sidebar-menu li {
+  padding: 0;
+}
+
+.sidebar-menu a {
+  display: block;
+  padding: 15px 20px;
+  color: white;
+  text-decoration: none;
+  border-left: 4px solid transparent;
+  transition: var(--transition);
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+  background: rgba(255,255,255,0.1);
+  border-left: 4px solid var(--accent-color);
+}
+
+.sidebar-menu i {
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+/* Main Content Styles */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 20px;
+  width: calc(100% - var(--sidebar-width));
+}
+
+.header {
+  background: var(--card-bg);
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.header-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Card Styles */
+.card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.card:hover {
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.card-header {
+  padding: 15px 20px;
+  background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-body {
+  padding: 0;
+  overflow-x: auto;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background: var(--secondary-color);
+  color: #fff;
+}
+
+tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+/* Fee Display Styles */
+.fee-amount {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: var(--success-color);
+  background: rgba(40, 167, 69, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.fee-breakdown {
+  font-size: 0.85em;
+  color: #666;
+  margin-top: 3px;
+}
+
+.fee-breakdown span {
+  display: block;
+}
+
+/* Button Styles */
+.btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 6px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+.approve { background: var(--success-color); color: #fff; }
+.pending { background: var(--warning-color); color: #000; }
+.save { background: var(--primary-color); color: #fff; }
+.delete { background: var(--danger-color); color: #fff; }
+.print { background: #6c757d; color: #fff; }
+.export { background: var(--info-color); color: #fff; }
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: var(--card-bg);
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.modal-content label {
+  display: block;
+  margin: 8px 0 4px;
+  font-weight: 500;
+}
+
+.modal-content input, .modal-content select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.modal-content input:focus, .modal-content select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(32, 98, 240, 0.2);
+}
+
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--danger-color);
+}
+
+/* Search and Dark Mode */
+#searchInput {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: var(--transition);
+}
+
+#searchInput:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(32, 98, 240, 0.2);
+}
+
+#darkModeBtn {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  background: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+#darkModeBtn:hover {
+  background: var(--primary-dark);
+  opacity: 0.85;
+}
+
+/* Enhanced Dark Mode Styles */
+body.dark-mode {
+  background: var(--dark-bg);
+  color: var(--text-dark);
+}
+
+body.dark-mode .sidebar {
+  background: linear-gradient(180deg, #0a1a3a 0%, #1a2a5a 100%);
+}
+
+body.dark-mode .card, 
+body.dark-mode .header,
+body.dark-mode .modal-content {
+  background: var(--dark-card-bg);
+}
+
+body.dark-mode table {
+  background: var(--dark-card-bg);
+  color: var(--text-dark);
+}
+
+body.dark-mode th {
+  background: var(--primary-color);
+  color: var(--text-dark);
+}
+
+body.dark-mode tr:nth-child(even) {
+  background: #2c2c2c;
+}
+
+body.dark-mode .modal-content input, 
+body.dark-mode .modal-content select {
+  background: #2c2c2c;
+  color: var(--text-dark);
+  border: 1px solid #444;
+}
+
+body.dark-mode .fee-amount {
+  color: #4cd964;
+  background: rgba(76, 217, 100, 0.1);
+}
+
+body.dark-mode .fee-breakdown {
+  color: #aaa;
+}
+
+/* Stats Cards */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+.stat-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
+
+.stat-card .number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+body.dark-mode .stat-card {
+  background: var(--dark-card-bg);
+}
+
+/* Enhanced Settings Panel Styles */
+.settings-panel {
+  display: none;
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.settings-panel h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.setting-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.03);
+  transition: var(--transition);
+}
+
+.setting-item:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.setting-item select, .setting-item input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.setting-item select:focus, .setting-item input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(32, 98, 240, 0.2);
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* Enhanced Reports Container */
+.reports-container {
+  display: none;
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.reports-container h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.report-option {
+  margin-bottom: 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.report-option:hover {
+  background: #f5f5f5;
+  transform: translateX(5px);
+}
+
+body.dark-mode .report-option:hover {
+  background: #2c2c2c;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+  }
+  
+  .sidebar-header h2, .sidebar-menu span {
+    display: none;
+  }
+  
+  .sidebar-menu a {
+    text-align: center;
+    padding: 15px 10px;
+  }
+  
+  .sidebar-menu i {
+    margin-right: 0;
+    font-size: 1.2rem;
+  }
+  
+  .main-content {
+    margin-left: 70px;
+    width: calc(100% - 70px);
+    padding: 10px;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  th, td {
+    padding: 8px;
+    font-size: 14px;
+  }
+  
+  .stats-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-card {
+    padding: 15px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 3px;
+  }
+  
+  .btn {
+    width: 100%;
+    margin: 2px 0;
+    padding: 8px;
+  }
+}
+
+/* Settings Sections */
+.settings-section {
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.settings-section h4 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.settings-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.settings-option label {
+  margin: 0;
+  flex: 1;
+  font-weight: normal;
+  color: var(--text-light);
+}
+
+body.dark-mode .settings-option label {
+  color: var(--text-dark);
+}
+
+/* Success Message */
+.success-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--success-color);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transform: translateX(150%);
+  transition: transform 0.3s ease;
+}
+
+.success-message.show {
+  transform: translateX(0);
+}
+
+/* Loading Spinner */
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.loading::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--primary-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h2>UCST Admin</h2>
+  </div>
+  <ul class="sidebar-menu">
+    <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+    <li><a href="#applications"><i class="fas fa-file-alt"></i> <span>Applications</span></a></li>
+    <li><a href="student-list.html"><i class="fas fa-user-graduate"></i> <span>Admissions</span></a></li>
+    <li><a href="#courses"><i class="fas fa-book"></i> <span>Courses</span></a></li>
+    <li><a href="#reports"><i class="fas fa-chart-bar"></i> <span>Reports</span></a></li>
+    <li><a href="#settings"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+  </ul>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="header">
+    <h1>Registrar Dashboard</h1>
+    <div class="header-controls">
+      <input type="text" id="searchInput" placeholder="Search table...">
+      <button id="darkModeBtn">Toggle Dark/Light</button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <h3>Total Applications</h3>
+      <div class="number" id="totalApplications">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>Admitted Students</h3>
+      <div class="number" id="totalAdmissions">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>Pending Applications</h3>
+      <div class="number" id="pendingApplications">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>Courses Available</h3>
+      <div class="number" id="totalCourses">0</div>
+    </div>
+    <div class="stat-card">
+      <h3>Total Revenue</h3>
+      <div class="number" id="totalRevenue">KES 0</div>
+    </div>
+  </div>
+
+  <!-- Applications Card -->
+  <div class="card" id="applications">
+    <div class="card-header">
+      <h2><i class="fas fa-file-alt"></i> Student Applications</h2>
+    </div>
+    <div class="card-body">
+      <table id="applicationsTable">
+        <thead>
+          <tr>
+            <th>Full Name</th><th>Email</th><th>Phone</th><th>Course</th><th>Level</th><th>Duration</th><th>Exam Body</th><th>Annual Fee</th><th>Semester Fee</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="applicationsTableBody">
+          <tr><td colspan="11" class="loading">Loading applications...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Admissions Card -->
+  <div class="card" id="admissions">
+    <div class="card-header">
+      <h2><i class="fas fa-user-graduate"></i> Admitted Students</h2>
+      <div>
+        <button class="btn save" onclick="openAddModal()">➕ Add Student</button>
+        <button class="btn print" onclick="window.print()">🖨️ Print</button>
+        <button class="btn export" onclick="exportPDF()">📄 Export PDF</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <table id="admissionsTable">
+        <thead>
+          <tr>
+            <th>Admission No</th><th>Full Name</th><th>Email</th><th>Phone</th><th>Course</th><th>Course Code</th><th>Level</th><th>Duration</th><th>Exam Body</th><th>Annual Fee</th><th>Semester Fee</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="admissionsTableBody">
+          <tr><td colspan="13" class="loading">Loading admissions...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Reports Section -->
+  <div class="reports-container" id="reports">
+    <h2><i class="fas fa-chart-bar"></i> Reports</h2>
+    <div class="report-option" onclick="generateReport('applications')">
+      <h3>Applications Report</h3>
+      <p>Generate a detailed report of all student applications</p>
+    </div>
+    <div class="report-option" onclick="generateReport('admissions')">
+      <h3>Admissions Report</h3>
+      <p>Generate a detailed report of all admitted students</p>
+    </div>
+    <div class="report-option" onclick="generateReport('courses')">
+      <h3>Courses Report</h3>
+      <p>Generate a detailed report of all available courses</p>
+    </div>
+    <div class="report-option" onclick="generateReport('finance')">
+      <h3>Finance Report</h3>
+      <p>Generate a financial analysis report</p>
+    </div>
+  </div>
+
+  <!-- Enhanced Settings Section -->
+  <div class="settings-panel" id="settings">
+    <h2><i class="fas fa-cog"></i> Settings</h2>
+    
+    <div class="settings-section">
+      <h4>General Settings</h4>
+      <div class="settings-option">
+        <label for="themeSetting">Theme</label>
+        <select id="themeSetting">
+          <option value="light">Light Mode</option>
+          <option value="dark">Dark Mode</option>
+          <option value="auto">Auto (System Preference)</option>
+        </select>
+      </div>
+      <div class="settings-option">
+        <label for="languageSetting">Language</label>
+        <select id="languageSetting">
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option>
+          <option value="sw">Swahili</option>
+        </select>
+      </div>
+      <div class="settings-option">
+        <label for="autoLogout">Auto Logout (minutes)</label>
+        <input type="number" id="autoLogout" value="30" min="5" max="120">
+      </div>
+    </div>
+    
+    <div class="settings-section">
+      <h4>Notification Settings</h4>
+      <div class="settings-option">
+        <label for="emailNotifications">Email Notifications</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="emailNotifications" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="settings-option">
+        <label for="paymentReminders">Payment Reminders</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="paymentReminders" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="settings-option">
+        <label for="lowBalanceAlerts">Low Balance Alerts</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="lowBalanceAlerts">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    
+    <div class="settings-section">
+      <h4>Security Settings</h4>
+      <div class="settings-option">
+        <label for="twoFactorAuth">Two-Factor Authentication</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="twoFactorAuth">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="settings-option">
+        <label for="sessionTimeout">Session Timeout (minutes)</label>
+        <input type="number" id="sessionTimeout" value="60" min="15" max="240">
+      </div>
+      <div class="settings-option">
+        <label for="passwordPolicy">Strong Password Policy</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="passwordPolicy" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    
+    <div class="settings-section">
+      <h4>System Preferences</h4>
+      <div class="settings-option">
+        <label for="receiptPrefix">Receipt Prefix</label>
+        <input type="text" id="receiptPrefix" value="RCPT">
+      </div>
+      <div class="settings-option">
+        <label for="currency">Currency</label>
+        <select id="currency">
+          <option>KSh (Kenyan Shilling)</option>
+          <option>$ (US Dollar)</option>
+          <option>€ (Euro)</option>
+          <option>£ (British Pound)</option>
+        </select>
+      </div>
+      <div class="settings-option">
+        <label for="autoSaveSetting">Auto Save</label>
+        <select id="autoSaveSetting">
+          <option value="enabled">Enabled</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="setting-item">
+      <button class="btn save" onclick="saveSettings()">Save Settings</button>
+      <button class="btn" onclick="resetSettings()">Reset to Default</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Message -->
+<div class="success-message" id="successMessage">
+  <i class="fas fa-check-circle"></i>
+  <span>Settings saved successfully!</span>
+</div>
+
+<!-- Add Student Modal -->
+<div id="addModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeAddModal()">&times;</span>
+    <h2>Add New Student</h2>
+    <form id="addForm">
+      <label>Full Name:</label><input type="text" id="addFullName" required>
+      <label>Email:</label><input type="email" id="addEmail" required>
+      <label>Phone:</label><input type="text" id="addPhone" required>
+      <label>Date of Birth:</label><input type="date" id="addDOB" required>
+      <label>Gender:</label>
+      <select id="addGender" required>
+        <option value="">--Select--</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+      <label>Course Selection:</label>
+      <select id="addCourse" required onchange="populateCourseDetails()">
+        <option value="">--Select Course--</option>
+        <!-- Courses will be populated here -->
+      </select>
+      <label>Previous School:</label><input type="text" id="addPrevSchool">
+      <label>KCPE Marks:</label><input type="number" id="addKCPE" min="0" max="500">
+      <label>KCPE Year:</label><input type="number" id="addKCPEYear" min="1900" max="2100">
+      <label>KCSE Grade:</label><input type="text" id="addKCSEGrade">
+      <label>KCSE Year:</label><input type="number" id="addKCSEYear" min="1900" max="2100">
+      <label>Parent Name:</label><input type="text" id="addParentName">
+      <label>Parent Phone:</label><input type="text" id="addParentPhone">
+      <label>Relationship:</label><input type="text" id="addRelationship">
+      <label>Marital Status:</label>
+      <select id="addMarital">
+        <option value="">--Select--</option>
+        <option value="Single">Single</option>
+        <option value="Married">Married</option>
+        <option value="Divorced">Divorced</option>
+        <option value="Widowed">Widowed</option>
+      </select>
+      <label>Sponsor (if any):</label><input type="text" id="addSponsor">
+      <h4>Course Details (Auto-filled):</h4>
+      <p>Course Code: <span id="courseCode"></span></p>
+      <p>Level: <span id="courseLevel"></span></p>
+      <p>Duration: <span id="courseDuration"></span></p>
+      <p>Exam Body: <span id="examBody"></span></p>
+      <p>Annual Fee: <span id="courseFeeAnnual"></span></p>
+      <p>Semester Fee: <span id="courseFeeSemester"></span></p>
+      <label>Status:</label>
+      <select id="addStatus">
+        <option value="Admitted">Admitted</option>
+        <option value="Pending">Pending</option>
+      </select>
+      <button type="submit" class="btn save">Add Student</button>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Student Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <h2>Edit Admitted Student</h2>
+    <form id="editForm">
+      <input type="hidden" id="editKey">
+      <label>Full Name</label><input type="text" id="editFullName">
+      <label>Email</label><input type="email" id="editEmail">
+      <label>Phone</label><input type="text" id="editPhone">
+      <label>Course</label><input type="text" id="editCourseName">
+      <label>Course Code</label><input type="text" id="editCourseCode">
+      <label>Level</label><input type="text" id="editLevel">
+      <label>Duration</label><input type="text" id="editDuration">
+      <label>Exam Body</label><input type="text" id="editExamBody">
+      <label>Annual Fee</label><input type="text" id="editAnnualFee">
+      <label>Semester Fee</label><input type="text" id="editSemesterFee">
+      <label>Status</label><input type="text" id="editStatus">
+      <button type="submit" class="btn save">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<!-- Course Management Modal -->
+<div id="courseManagementModal" class="modal">
+  <div class="modal-content" style="width: 800px; max-width: 95%;">
+    <span class="modal-close" onclick="closeCourseModal()">&times;</span>
+    <h2>Course Management</h2>
+    <div style="margin-bottom: 20px;">
+      <button class="btn save" onclick="showAddCourseForm()">➕ Add New Course</button>
+      <button class="btn export" onclick="exportCourses()">📄 Export Courses</button>
+    </div>
+    
+    <div id="courseListContainer">
+      <table style="width: 100%;">
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Course Name</th>
+            <th>Level</th>
+            <th>Annual Fee</th>
+            <th>Semester Fee</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="courseListBody">
+          <!-- Courses will be loaded here -->
+        </tbody>
+      </table>
+    </div>
+    
+    <div id="addCourseForm" style="display: none; margin-top: 20px;">
+      <h3>Add/Edit Course</h3>
+      <form id="courseForm" onsubmit="saveCourse(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div>
+            <label>Course Code *</label>
+            <input type="text" id="newCourseCode" required>
+          </div>
+          <div>
+            <label>Course Name *</label>
+            <input type="text" id="newCourseName" required>
+          </div>
+          <div>
+            <label>Course Level *</label>
+            <select id="newCourseLevel" required>
+              <option value="">--Select Level--</option>
+              <option value="Diploma">Diploma</option>
+              <option value="Certificate">Certificate</option>
+            </select>
+          </div>
+          <div>
+            <label>Department *</label>
+            <select id="newDepartment" required>
+              <option value="">--Select Department--</option>
+              <option value="Computing & Informatics">Computing & Informatics</option>
+              <option value="Business & Entrepreneurship">Business & Entrepreneurship</option>
+              <option value="Electrical & Electronics">Electrical & Electronics Engineering</option>
+              <option value="Mechanical & Automotive">Mechanical Engineering</option>
+              <option value="Hospitality & Tourism">Hospitality & Tourism</option>
+            </select>
+          </div>
+          <div>
+            <label>Annual Tuition Fee (KES) *</label>
+            <input type="number" id="newAnnualFee" required min="0" step="1000">
+          </div>
+          <div>
+            <label>Semester Fee (KES) *</label>
+            <input type="number" id="newSemesterFee" required min="0" step="1000">
+          </div>
+          <div>
+            <label>Exam Body *</label>
+            <select id="newExamBody" required>
+              <option value="">--Select Exam Body--</option>
+              <option value="KNEC">KNEC</option>
+              <option value="CDACC">CDACC</option>
+              <option value="KASNEB">KASNEB</option>
+            </select>
+          </div>
+          <div>
+            <label>Duration</label>
+            <input type="text" id="newDuration" readonly>
+          </div>
+          <div style="grid-column: span 2;">
+            <label>Course Description</label>
+            <textarea id="newDescription" rows="3" style="width: 100%;"></textarea>
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="newCourseStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+          <button type="submit" class="btn save">Save Course</button>
+          <button type="button" class="btn" onclick="cancelCourseForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script>
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+  authDomain: "jnnp-system.firebasestorage.app",
+  databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+  projectId: "jnnp-system",
+  storageBucket: "jnnp-system.firebasestorage.app",
+  messagingSenderId: "769232855377",
+  appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
+// Global Variables
+let coursesCache = {};
+let applicationsData = [];
+let admissionsData = [];
+let isEditingCourse = false;
+let editingCourseId = null;
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+  initializeApp();
+});
+
+function initializeApp() {
+  loadAllData();
+  setupEventListeners();
+  setupAutoRefresh();
+}
+
+function setupEventListeners() {
+  // Dark Mode Toggle
+  document.getElementById('darkModeBtn').addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+  });
+  
+  // Search functionality
+  document.getElementById('searchInput').addEventListener('input', filterTables);
+  
+  // Sidebar navigation
+  document.querySelectorAll('.sidebar-menu a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      
+      // Update active state
+      document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Handle navigation
+      handleNavigation(targetId);
+    });
+  });
+  
+  // Course level change for auto-duration
+  document.getElementById('newCourseLevel')?.addEventListener('change', function() {
+    const durationField = document.getElementById('newDuration');
+    if (this.value === 'Diploma') {
+      durationField.value = '3 Years (6 Semesters)';
+    } else if (this.value === 'Certificate') {
+      durationField.value = '2 Years (4 Semesters)';
+    }
+    
+    // Auto-set fee if not set
+    const annualFeeField = document.getElementById('newAnnualFee');
+    if (!annualFeeField.value) {
+      if (this.value === 'Diploma') {
+        annualFeeField.value = '120000';
+      } else if (this.value === 'Certificate') {
+        annualFeeField.value = '80000';
+      }
+      updateSemesterFee();
+    }
+  });
+  
+  // Auto-calculate semester fee
+  document.getElementById('newAnnualFee')?.addEventListener('input', updateSemesterFee);
+  
+  // Load saved dark mode preference
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+  }
+}
+
+function updateSemesterFee() {
+  const annualFee = parseFloat(document.getElementById('newAnnualFee').value) || 0;
+  document.getElementById('newSemesterFee').value = Math.round(annualFee / 2);
+}
+
+function loadAllData() {
+  // Load courses
+  db.ref("courses").on("value", snapshot => {
+    coursesCache = snapshot.val() || {};
+    updateCourseStats();
+    populateCourseOptions();
+    renderCourseList();
+    renderAllTables();
+  });
+  
+  // Load applications
+  db.ref("applications").on("value", snapshot => {
+    applicationsData = [];
+    if (snapshot.exists()) {
+      snapshot.forEach(child => {
+        applicationsData.push({
+          id: child.key,
+          ...child.val()
+        });
+      });
+    }
+    renderApplicationsTable();
+    updateStats();
+  });
+  
+  // Load admissions
+  db.ref("admissions").on("value", snapshot => {
+    admissionsData = [];
+    if (snapshot.exists()) {
+      snapshot.forEach(child => {
+        admissionsData.push({
+          id: child.key,
+          ...child.val()
+        });
+      });
+    }
+    renderAdmissionsTable();
+    updateStats();
+  });
+}
+
+function updateCourseStats() {
+  const totalCourses = Object.keys(coursesCache).length;
+  document.getElementById('totalCourses').textContent = totalCourses;
+  
+  // Calculate total potential revenue
+  let totalRevenue = 0;
+  const diplomaCount = Object.values(coursesCache).filter(c => 
+    c.courseLevel === 'Diploma' && c.courseStatus !== 'inactive'
+  ).length;
+  const certificateCount = Object.values(coursesCache).filter(c => 
+    c.courseLevel === 'Certificate' && c.courseStatus !== 'inactive'
+  ).length;
+  
+  // Estimate revenue (average 25 students per course)
+  Object.values(coursesCache).forEach(course => {
+    if (course.courseStatus !== 'inactive') {
+      const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+      totalRevenue += annualFee * 25;
+    }
+  });
+  
+  document.getElementById('totalRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
+}
+
+function getCourseDetails(courseId) {
+  if (!coursesCache[courseId]) {
+    return {
+      courseName: 'Unknown Course',
+      courseCode: 'N/A',
+      courseLevel: 'N/A',
+      courseDuration: 'N/A',
+      examBody: 'N/A',
+      annualFee: 0,
+      semesterFee: 0
+    };
+  }
+  
+  const course = coursesCache[courseId];
+  return {
+    courseName: course.courseName || 'Unknown Course',
+    courseCode: course.courseCode || 'N/A',
+    courseLevel: course.courseLevel || 'N/A',
+    courseDuration: course.courseDuration || course.duration || (course.courseLevel === 'Diploma' ? '3 Years (6 Semesters)' : '2 Years (4 Semesters)'),
+    examBody: course.examBody || 'N/A',
+    annualFee: parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0,
+    semesterFee: parseFloat(course.semesterFee) || Math.round((parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0) / 2)
+  };
+}
+
+function renderApplicationsTable() {
+  const tbody = document.getElementById('applicationsTableBody');
+  tbody.innerHTML = '';
+  
+  if (applicationsData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 20px;">No applications found</td></tr>';
+    return;
+  }
+  
+  applicationsData.forEach(app => {
+    const course = getCourseDetails(app.courseId || app.course || '');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(app.fullName || '')}</td>
+      <td>${escapeHtml(app.email || '')}</td>
+      <td>${escapeHtml(app.phone || '')}</td>
+      <td>${escapeHtml(course.courseName)}</td>
+      <td>${escapeHtml(course.courseLevel)}</td>
+      <td>${escapeHtml(course.courseDuration)}</td>
+      <td>${escapeHtml(course.examBody)}</td>
+      <td>
+        <div class="fee-amount">KES ${course.annualFee.toLocaleString()}</div>
+      </td>
+      <td>
+        <div class="fee-amount">KES ${course.semesterFee.toLocaleString()}</div>
+      </td>
+      <td id="status-${app.id}">${escapeHtml(app.status || 'Pending')}</td>
+      <td class="action-buttons">
+        <button class="btn approve" onclick="approveApplication('${app.id}')">Approve</button>
+        <button class="btn pending" onclick="updateStatus('${app.id}','Pending')">Pending</button>
+        <button class="btn delete" onclick="deleteApplication('${app.id}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderAdmissionsTable() {
+  const tbody = document.getElementById('admissionsTableBody');
+  tbody.innerHTML = '';
+  
+  if (admissionsData.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; padding: 20px;">No admissions found</td></tr>';
+    return;
+  }
+  
+  admissionsData.forEach(admission => {
+    const tr = document.createElement('tr');
+    const annualFee = parseFloat(admission.annualTuition) || parseFloat(admission.annualFee) || parseFloat(admission.courseFee) || 0;
+    const semesterFee = parseFloat(admission.semesterFee) || Math.round(annualFee / 2);
+    
+    tr.innerHTML = `
+      <td>${escapeHtml(admission.admNo || '')}</td>
+      <td>${escapeHtml(admission.fullName || '')}</td>
+      <td>${escapeHtml(admission.email || '')}</td>
+      <td>${escapeHtml(admission.phone || '')}</td>
+      <td>${escapeHtml(admission.courseName || '')}</td>
+      <td>${escapeHtml(admission.courseCode || '')}</td>
+      <td>${escapeHtml(admission.courseLevel || '')}</td>
+      <td>${escapeHtml(admission.courseDuration || '')}</td>
+      <td>${escapeHtml(admission.examBody || '')}</td>
+      <td>
+        <div class="fee-amount">KES ${annualFee.toLocaleString()}</div>
+      </td>
+      <td>
+        <div class="fee-amount">KES ${semesterFee.toLocaleString()}</div>
+        <div class="fee-breakdown">
+          <span>Per semester</span>
+        </div>
+      </td>
+      <td>${escapeHtml(admission.status || 'Admitted')}</td>
+      <td class="action-buttons">
+        <button class="btn save" onclick="openEditModal('${admission.id}')">Edit</button>
+        <button class="btn delete" onclick="deleteAdmission('${admission.id}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderAllTables() {
+  renderApplicationsTable();
+  renderAdmissionsTable();
+}
+
+function filterTables() {
+  const filter = document.getElementById('searchInput').value.toLowerCase();
+  
+  // Filter applications table
+  const appRows = document.querySelectorAll('#applicationsTableBody tr');
+  appRows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(filter) ? '' : 'none';
+  });
+  
+  // Filter admissions table
+  const admRows = document.querySelectorAll('#admissionsTableBody tr');
+  admRows.forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(filter) ? '' : 'none';
+  });
+}
+
+function updateStats() {
+  // Total applications
+  document.getElementById('totalApplications').textContent = applicationsData.length;
+  
+  // Total admissions
+  document.getElementById('totalAdmissions').textContent = admissionsData.length;
+  
+  // Pending applications
+  const pendingApps = applicationsData.filter(app => app.status === 'Pending').length;
+  document.getElementById('pendingApplications').textContent = pendingApps;
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  return text.toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Course Management Functions
+function populateCourseOptions() {
+  const select = document.getElementById('addCourse');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="">--Select Course--</option>';
+  Object.keys(coursesCache).forEach(key => {
+    const course = coursesCache[key];
+    if (course.courseStatus !== 'inactive') {
+      const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+      select.innerHTML += `<option value="${key}">${course.courseName} - KES ${annualFee.toLocaleString()}/year</option>`;
+    }
+  });
+}
+
+function populateCourseDetails() {
+  const courseId = document.getElementById('addCourse').value;
+  if (coursesCache[courseId]) {
+    const course = coursesCache[courseId];
+    const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+    const semesterFee = parseFloat(course.semesterFee) || Math.round(annualFee / 2);
+    
+    document.getElementById('courseCode').textContent = course.courseCode || '';
+    document.getElementById('courseLevel').textContent = course.courseLevel || '';
+    document.getElementById('courseDuration').textContent = course.courseDuration || '';
+    document.getElementById('examBody').textContent = course.examBody || '';
+    document.getElementById('courseFeeAnnual').textContent = `KES ${annualFee.toLocaleString()}`;
+    document.getElementById('courseFeeSemester').textContent = `KES ${semesterFee.toLocaleString()}`;
+  }
+}
+
+// Add Student Modal
+function openAddModal() {
+  populateCourseOptions();
+  document.getElementById('addModal').style.display = 'block';
+}
+
+function closeAddModal() {
+  document.getElementById('addModal').style.display = 'none';
+  document.getElementById('addForm').reset();
+}
+
+document.getElementById('addForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const courseId = document.getElementById('addCourse').value;
+  if (!courseId) {
+    alert('Please select a course');
+    return;
+  }
+  
+  const course = coursesCache[courseId];
+  if (!course) {
+    alert('Selected course not found');
+    return;
+  }
+  
+  // Generate admission number
+  db.ref("admissions").once("value").then(snapshot => {
+    let lastNo = 12000;
+    snapshot.forEach(child => {
+      const n = parseInt(child.val().admNo);
+      if (!isNaN(n) && n > lastNo) lastNo = n;
+    });
+    const newAdmNo = lastNo + 1;
+    
+    const studentData = {
+      admNo: newAdmNo,
+      fullName: document.getElementById('addFullName').value.trim(),
+      email: document.getElementById('addEmail').value.trim(),
+      phone: document.getElementById('addPhone').value.trim(),
+      dob: document.getElementById('addDOB').value,
+      gender: document.getElementById('addGender').value,
+      prevSchool: document.getElementById('addPrevSchool').value.trim(),
+      kcpeMarks: document.getElementById('addKCPE').value,
+      kcpeYear: document.getElementById('addKCPEYear').value,
+      kcseGrade: document.getElementById('addKCSEGrade').value.trim(),
+      kcseYear: document.getElementById('addKCSEYear').value,
+      parentName: document.getElementById('addParentName').value.trim(),
+      parentPhone: document.getElementById('addParentPhone').value.trim(),
+      relationship: document.getElementById('addRelationship').value.trim(),
+      maritalStatus: document.getElementById('addMarital').value,
+      sponsor: document.getElementById('addSponsor').value.trim(),
+      status: document.getElementById('addStatus').value,
+      courseName: course.courseName,
+      courseCode: course.courseCode,
+      courseLevel: course.courseLevel,
+      courseDuration: course.courseDuration || (course.courseLevel === 'Diploma' ? '3 Years (6 Semesters)' : '2 Years (4 Semesters)'),
+      examBody: course.examBody,
+      annualTuition: parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0,
+      semesterFee: parseFloat(course.semesterFee) || Math.round((parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0) / 2),
+      createdAt: new Date().toISOString()
+    };
+    
+    db.ref("admissions").push(studentData)
+      .then(() => {
+        alert(`✅ Student added successfully with Admission No: ${newAdmNo}`);
+        closeAddModal();
+      })
+      .catch(error => {
+        alert('❌ Error adding student: ' + error.message);
+      });
+  });
+});
+
+// Edit Student Modal
+function openEditModal(studentId) {
+  const student = admissionsData.find(s => s.id === studentId);
+  if (!student) {
+    alert('Student not found');
+    return;
+  }
+  
+  document.getElementById('editKey').value = studentId;
+  document.getElementById('editFullName').value = student.fullName || '';
+  document.getElementById('editEmail').value = student.email || '';
+  document.getElementById('editPhone').value = student.phone || '';
+  document.getElementById('editCourseName').value = student.courseName || '';
+  document.getElementById('editCourseCode').value = student.courseCode || '';
+  document.getElementById('editLevel').value = student.courseLevel || '';
+  document.getElementById('editDuration').value = student.courseDuration || '';
+  document.getElementById('editExamBody').value = student.examBody || '';
+  document.getElementById('editAnnualFee').value = student.annualTuition || student.annualFee || student.courseFee || '';
+  document.getElementById('editSemesterFee').value = student.semesterFee || Math.round((student.annualTuition || student.annualFee || student.courseFee || 0) / 2);
+  document.getElementById('editStatus').value = student.status || 'Admitted';
+  
+  document.getElementById('editModal').style.display = 'block';
+}
+
+function closeModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+document.getElementById('editForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const studentId = document.getElementById('editKey').value;
+  const updatedData = {
+    fullName: document.getElementById('editFullName').value,
+    email: document.getElementById('editEmail').value,
+    phone: document.getElementById('editPhone').value,
+    courseName: document.getElementById('editCourseName').value,
+    courseCode: document.getElementById('editCourseCode').value,
+    courseLevel: document.getElementById('editLevel').value,
+    courseDuration: document.getElementById('editDuration').value,
+    examBody: document.getElementById('editExamBody').value,
+    annualTuition: parseFloat(document.getElementById('editAnnualFee').value) || 0,
+    semesterFee: parseFloat(document.getElementById('editSemesterFee').value) || 0,
+    status: document.getElementById('editStatus').value,
+    updatedAt: new Date().toISOString()
+  };
+  
+  db.ref("admissions/" + studentId).update(updatedData)
+    .then(() => {
+      alert('✅ Student updated successfully');
+      closeModal();
+    })
+    .catch(error => {
+      alert('❌ Error updating student: ' + error.message);
+    });
+});
+
+// Application Actions
+function approveApplication(appId) {
+  const app = applicationsData.find(a => a.id === appId);
+  if (!app) {
+    alert('Application not found');
+    return;
+  }
+  
+  // Check if student already admitted
+  db.ref("admissions").orderByChild("email").equalTo(app.email).once("value")
+    .then(snapshot => {
+      if (snapshot.exists()) {
+        alert('❌ Student already admitted');
+        return;
+      }
+      
+      // Generate admission number
+      db.ref("admissions").once("value").then(allSnap => {
+        let lastNo = 12000;
+        allSnap.forEach(child => {
+          const n = parseInt(child.val().admNo);
+          if (!isNaN(n) && n > lastNo) lastNo = n;
+        });
+        const newAdmNo = lastNo + 1;
+        
+        const course = getCourseDetails(app.courseId || app.course || '');
+        const admissionData = {
+          admNo: newAdmNo,
+          fullName: app.fullName,
+          email: app.email,
+          phone: app.phone,
+          courseName: course.courseName,
+          courseCode: course.courseCode,
+          courseLevel: course.courseLevel,
+          courseDuration: course.courseDuration,
+          examBody: course.examBody,
+          annualTuition: course.annualFee,
+          semesterFee: course.semesterFee,
+          status: "Admitted",
+          createdAt: new Date().toISOString()
+        };
+        
+        const newKey = db.ref("admissions").push().key;
+        db.ref("admissions/" + newKey).set(admissionData)
+          .then(() => {
+            // Remove from applications
+            db.ref("applications/" + appId).remove()
+              .then(() => {
+                alert(`✅ Student admitted with Admission No: ${newAdmNo}`);
+              });
+          })
+          .catch(err => alert("❌ " + err));
+      });
+    });
+}
+
+function updateStatus(appId, status) {
+  db.ref("applications/" + appId).update({ status })
+    .then(() => {
+      document.getElementById("status-" + appId).textContent = status;
+    })
+    .catch(err => alert("❌ " + err));
+}
+
+function deleteApplication(appId) {
+  if (confirm("Are you sure you want to delete this application?")) {
+    db.ref("applications/" + appId).remove()
+      .then(() => alert("✅ Application deleted"))
+      .catch(err => alert("❌ " + err));
+  }
+}
+
+function deleteAdmission(admissionId) {
+  if (confirm("Are you sure you want to delete this admitted student?")) {
+    db.ref("admissions/" + admissionId).remove()
+      .then(() => alert("✅ Student deleted"))
+      .catch(err => alert("❌ " + err));
+  }
+}
+
+// Course Management Modal
+function openCourseManagement() {
+  document.getElementById('courseManagementModal').style.display = 'block';
+  renderCourseList();
+}
+
+function closeCourseModal() {
+  document.getElementById('courseManagementModal').style.display = 'none';
+  document.getElementById('addCourseForm').style.display = 'none';
+  document.getElementById('courseForm').reset();
+  isEditingCourse = false;
+  editingCourseId = null;
+}
+
+function renderCourseList() {
+  const tbody = document.getElementById('courseListBody');
+  tbody.innerHTML = '';
+  
+  if (Object.keys(coursesCache).length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">No courses found</td></tr>';
+    return;
+  }
+  
+  Object.keys(coursesCache).forEach(key => {
+    const course = coursesCache[key];
+    const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+    const semesterFee = parseFloat(course.semesterFee) || Math.round(annualFee / 2);
+    
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${escapeHtml(course.courseCode || '')}</td>
+      <td>${escapeHtml(course.courseName || '')}</td>
+      <td>${escapeHtml(course.courseLevel || '')}</td>
+      <td class="fee-amount">KES ${annualFee.toLocaleString()}</td>
+      <td class="fee-amount">KES ${semesterFee.toLocaleString()}</td>
+      <td>${escapeHtml(course.department || '')}</td>
+      <td>
+        <span class="status-badge" style="
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          background: ${course.courseStatus === 'active' ? '#d4edda' : '#f8d7da'};
+          color: ${course.courseStatus === 'active' ? '#155724' : '#721c24'};
+        ">
+          ${course.courseStatus || 'inactive'}
+        </span>
+      </td>
+      <td class="action-buttons">
+        <button class="btn save" onclick="editCourse('${key}')">Edit</button>
+        <button class="btn delete" onclick="deleteCourse('${key}')">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function showAddCourseForm() {
+  document.getElementById('addCourseForm').style.display = 'block';
+  document.getElementById('courseForm').reset();
+  isEditingCourse = false;
+  editingCourseId = null;
+  document.getElementById('newDuration').value = '';
+}
+
+function cancelCourseForm() {
+  document.getElementById('addCourseForm').style.display = 'none';
+  document.getElementById('courseForm').reset();
+  isEditingCourse = false;
+  editingCourseId = null;
+}
+
+function editCourse(courseId) {
+  const course = coursesCache[courseId];
+  if (!course) return;
+  
+  document.getElementById('addCourseForm').style.display = 'block';
+  document.getElementById('newCourseCode').value = course.courseCode || '';
+  document.getElementById('newCourseName').value = course.courseName || '';
+  document.getElementById('newCourseLevel').value = course.courseLevel || '';
+  document.getElementById('newDepartment').value = course.department || '';
+  document.getElementById('newAnnualFee').value = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+  document.getElementById('newSemesterFee').value = parseFloat(course.semesterFee) || Math.round((parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0) / 2);
+  document.getElementById('newExamBody').value = course.examBody || '';
+  document.getElementById('newDuration').value = course.courseDuration || '';
+  document.getElementById('newDescription').value = course.courseDescription || '';
+  document.getElementById('newCourseStatus').value = course.courseStatus || 'active';
+  
+  isEditingCourse = true;
+  editingCourseId = courseId;
+  
+  // Scroll to form
+  document.getElementById('addCourseForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function saveCourse(event) {
+  event.preventDefault();
+  
+  const courseData = {
+    courseCode: document.getElementById('newCourseCode').value.trim().toUpperCase(),
+    courseName: document.getElementById('newCourseName').value.trim(),
+    courseLevel: document.getElementById('newCourseLevel').value,
+    department: document.getElementById('newDepartment').value,
+    annualTuition: parseFloat(document.getElementById('newAnnualFee').value) || 0,
+    semesterFee: parseFloat(document.getElementById('newSemesterFee').value) || 0,
+    examBody: document.getElementById('newExamBody').value,
+    courseDuration: document.getElementById('newDuration').value,
+    courseDescription: document.getElementById('newDescription').value.trim(),
+    courseStatus: document.getElementById('newCourseStatus').value,
+    lastUpdated: new Date().toISOString()
+  };
+  
+  // Set duration if not provided
+  if (!courseData.courseDuration) {
+    courseData.courseDuration = courseData.courseLevel === 'Diploma' ? '3 Years (6 Semesters)' : '2 Years (4 Semesters)';
+  }
+  
+  let promise;
+  if (isEditingCourse && editingCourseId) {
+    // Update existing course
+    promise = db.ref("courses/" + editingCourseId).update(courseData);
+  } else {
+    // Add new course
+    courseData.createdAt = new Date().toISOString();
+    promise = db.ref("courses").push(courseData);
+  }
+  
+  promise.then(() => {
+    alert(isEditingCourse ? '✅ Course updated successfully!' : '✅ Course added successfully!');
+    cancelCourseForm();
+    renderCourseList();
+  }).catch(error => {
+    alert('❌ Error saving course: ' + error.message);
+  });
+}
+
+function deleteCourse(courseId) {
+  if (confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
+    db.ref("courses/" + courseId).remove()
+      .then(() => {
+        alert('✅ Course deleted successfully!');
+        renderCourseList();
+      })
+      .catch(error => {
+        alert('❌ Error deleting course: ' + error.message);
+      });
+  }
+}
+
+function exportCourses() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  doc.text("Courses Report - " + new Date().toLocaleDateString(), 14, 15);
+  
+  const tableData = Object.values(coursesCache).map(course => {
+    const annualFee = parseFloat(course.annualTuition) || parseFloat(course.annualFee) || 0;
+    const semesterFee = parseFloat(course.semesterFee) || Math.round(annualFee / 2);
+    
+    return [
+      course.courseCode || '',
+      course.courseName || '',
+      course.courseLevel || '',
+      `KES ${annualFee.toLocaleString()}`,
+      `KES ${semesterFee.toLocaleString()}`,
+      course.department || '',
+      course.examBody || '',
+      course.courseStatus || 'inactive'
+    ];
+  });
+  
+  doc.autoTable({
+    head: [['Code', 'Name', 'Level', 'Annual Fee', 'Semester Fee', 'Department', 'Exam Body', 'Status']],
+    body: tableData,
+    startY: 25,
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [0, 119, 182] }
+  });
+  
+  doc.save("Courses_Report_" + new Date().toISOString().split('T')[0] + ".pdf");
+}
+
+// Export PDF
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("Admitted Students Report", 14, 15);
+  doc.autoTable({
+    html: "#admissionsTable",
+    startY: 20,
+    styles: { fontSize: 8 },
+    headStyles: { fillColor: [0, 119, 182] }
+  });
+  doc.save("Admitted_Students_" + new Date().toISOString().split('T')[0] + ".pdf");
+}
+
+// Reports
+function generateReport(type) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  
+  switch(type) {
+    case 'applications':
+      doc.text("Student Applications Report", 14, 15);
+      doc.autoTable({
+        html: "#applicationsTable",
+        startY: 20,
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [0, 119, 182] }
+      });
+      doc.save("Applications_Report_" + new Date().toISOString().split('T')[0] + ".pdf");
+      break;
+      
+    case 'admissions':
+      doc.text("Admitted Students Report", 14, 15);
+      doc.autoTable({
+        html: "#admissionsTable",
+        startY: 20,
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [0, 119, 182] }
+      });
+      doc.save("Admissions_Report_" + new Date().toISOString().split('T')[0] + ".pdf");
+      break;
+      
+    case 'courses':
+      exportCourses();
+      break;
+      
+    case 'finance':
+      doc.text("Financial Analysis Report", 14, 15);
+      
+      // Calculate financial summary
+      let totalAnnualRevenue = 0;
+      let totalStudents = admissionsData.length;
+      
+      admissionsData.forEach(admission => {
+        const annualFee = parseFloat(admission.annualTuition) || parseFloat(admission.annualFee) || parseFloat(admission.courseFee) || 0;
+        totalAnnualRevenue += annualFee;
+      });
+      
+      doc.text(`Total Students: ${totalStudents}`, 14, 30);
+      doc.text(`Total Annual Revenue: KES ${totalAnnualRevenue.toLocaleString()}`, 14, 40);
+      doc.text(`Average Fee per Student: KES ${totalStudents > 0 ? Math.round(totalAnnualRevenue / totalStudents).toLocaleString() : 0}`, 14, 50);
+      
+      // Course-wise breakdown
+      let yPos = 70;
+      doc.text("Course-wise Revenue:", 14, yPos);
+      yPos += 10;
+      
+      const courseRevenue = {};
+      admissionsData.forEach(admission => {
+        const courseName = admission.courseName || 'Unknown';
+        const annualFee = parseFloat(admission.annualTuition) || parseFloat(admission.annualFee) || parseFloat(admission.courseFee) || 0;
+        
+        if (!courseRevenue[courseName]) {
+          courseRevenue[courseName] = { count: 0, revenue: 0 };
+        }
+        courseRevenue[courseName].count++;
+        courseRevenue[courseName].revenue += annualFee;
+      });
+      
+      Object.keys(courseRevenue).forEach(courseName => {
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+        doc.text(`${courseName}: ${courseRevenue[courseName].count} students, KES ${courseRevenue[courseName].revenue.toLocaleString()}`, 20, yPos);
+        yPos += 10;
+      });
+      
+      doc.save("Finance_Report_" + new Date().toISOString().split('T')[0] + ".pdf");
+      break;
+  }
+}
+
+// Navigation handling
+function handleNavigation(targetId) {
+  if (targetId === 'courses') {
+    openCourseManagement();
+  } else if (targetId === 'reports') {
+    document.getElementById('reports').style.display = 'block';
+    document.getElementById('settings').style.display = 'none';
+    document.getElementById('reports').scrollIntoView({ behavior: 'smooth' });
+  } else if (targetId === 'settings') {
+    document.getElementById('settings').style.display = 'block';
+    document.getElementById('reports').style.display = 'none';
+    document.getElementById('settings').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    const targetElement = document.getElementById(targetId);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+}
+
+// Settings functionality
+function saveSettings() {
+  const theme = document.getElementById('themeSetting').value;
+  const language = document.getElementById('languageSetting').value;
+  const autoLogout = document.getElementById('autoLogout').value;
+  const emailNotifications = document.getElementById('emailNotifications').checked;
+  const paymentReminders = document.getElementById('paymentReminders').checked;
+  const lowBalanceAlerts = document.getElementById('lowBalanceAlerts').checked;
+  const twoFactorAuth = document.getElementById('twoFactorAuth').checked;
+  const sessionTimeout = document.getElementById('sessionTimeout').value;
+  const passwordPolicy = document.getElementById('passwordPolicy').checked;
+  const receiptPrefix = document.getElementById('receiptPrefix').value;
+  const currency = document.getElementById('currency').value;
+  const autoSave = document.getElementById('autoSaveSetting').value;
+  
+  // Apply theme
+  if (theme === 'dark') {
+    document.body.classList.add('dark-mode');
+  } else if (theme === 'light') {
+    document.body.classList.remove('dark-mode');
+  } else if (theme === 'auto') {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.body.classList.add('dark-mode');
+    } else {
+      document.body.classList.remove('dark-mode');
+    }
+  }
+  
+  // Save to localStorage
+  const settings = {
+    theme,
+    language,
+    autoLogout,
+    emailNotifications,
+    paymentReminders,
+    lowBalanceAlerts,
+    twoFactorAuth,
+    sessionTimeout,
+    passwordPolicy,
+    receiptPrefix,
+    currency,
+    autoSave
+  };
+  localStorage.setItem('adminSettings', JSON.stringify(settings));
+  
+  showSuccessMessage();
+}
+
+function resetSettings() {
+  if (confirm('Reset all settings to default?')) {
+    localStorage.removeItem('adminSettings');
+    location.reload();
+  }
+}
+
+function showSuccessMessage() {
+  const successMessage = document.getElementById('successMessage');
+  successMessage.classList.add('show');
+  
+  setTimeout(() => {
+    successMessage.classList.remove('show');
+  }, 3000);
+}
+
+// Load saved settings
+function loadSettings() {
+  const savedSettings = localStorage.getItem('adminSettings');
+  if (savedSettings) {
+    const settings = JSON.parse(savedSettings);
+    if (settings.theme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+  }
+}
+
+// Auto-refresh data every 30 seconds
+function setupAutoRefresh() {
+  setInterval(() => {
+    console.log('Auto-refreshing data...');
+    loadAllData();
+  }, 30000); // 30 seconds
+}
+
+// Initialize
+loadSettings();
+</script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Application — JNNP</title>
+  <style>
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { font-family: 'Georgia','Times New Roman',serif; background: linear-gradient(135deg,#0d0d0e,#ffffff); min-height:100vh; }
+
+    
+    .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  position: fixed; /* Always stays on top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+
+    .logo img {
+      height: 80px;
+      width: auto;
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 28px;
+      cursor: pointer;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links li a {
+      text-decoration: none;
+      color: #000;
+      padding: 10px;
+      display: block;
+    }
+
+    .nav-links .cta-button a {
+      background-color: #007bff;
+      color: #fff;
+      padding: 8px 15px;
+      border-radius: 4px;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      position: absolute;
+      background-color: #fff;
+      top: 100%;
+      left: 0;
+      display: none;
+      min-width: 220px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 99;
+    }
+
+    .dropdown-content li a {
+      padding: 10px 15px;
+      white-space: nowrap;
+      color: #000;
+    }
+
+    /* Show dropdown on hover (desktop only) */
+    @media (min-width: 769px) {
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+    }
+
+    /* MOBILE STYLES */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        display: none;
+        padding: 20px;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        padding-left: 15px;
+        width: 100%;
+      }
+
+      .dropdown-content.show {
+        display: block;
+      }
+
+      .nav-links li {
+        width: 100%;
+      }
+
+      .cta-button a {
+        width: 100%;
+        text-align: center;
+      }
+    }
+
+    /* Page header */
+    header.page-header{
+      margin-top:80px;
+      text-align:center;
+      padding:26px 10px;
+      font-size:22px;
+      color:#fff;
+      background:#023e8a;
+      animation: headerGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes headerGlow {
+      from { box-shadow: 0 0 6px #4fc3f7; }
+      to   { box-shadow: 0 0 18px #81d4fa; }
+    }
+
+    /* FORM container */
+    .wrap { display:flex; justify-content:center; padding:30px 15px 80px; }
+    .form-container {
+      width:100%;
+      max-width:760px;
+      background:#fff;
+      border-radius:14px;
+      padding:20px;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 6px 20px rgba(2,46,91,0.08);
+      opacity:0;
+      transform: translateY(-20px);
+      animation: fadeSlideIn 700ms ease-out forwards 120ms;
+    }
+    @keyframes fadeSlideIn { 
+      0%{opacity:0; transform:translateY(-20px)} 
+      100%{opacity:1; transform:translateY(0)} 
+    }
+
+    /* glowing border */
+    .form-container::before{
+      content:"";
+      position:absolute;
+      inset:-3px;
+      border-radius:6px;
+      background:conic-gradient(#00b4d8,#0077b6,#90e0ef,#00b4d8);
+      z-index:0;
+      animation:spin 5s linear infinite;
+    }
+    .form-inner{
+      position:relative;
+      z-index:1;
+      background:#fff;
+      border-radius:12px;
+      padding:18px;
+    }
+    @keyframes spin { from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+
+    h2 { text-align:center; color:#023e8a; margin-bottom:12px; font-size:20px; }
+
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:12px 18px; }
+    @media (max-width:760px){ .grid{ grid-template-columns:1fr; } }
+
+    label{ display:block; font-weight:700; margin-top:8px; color:#073b66; font-size:14px; }
+    input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select {
+      width:100%; padding:10px; border-radius:8px; border:1px solid #d0d7df; margin-top:6px; font-size:14px;
+    }
+    input[type="file"]{ margin-top:8px; }
+    .full-row{ grid-column: 1 / -1; }
+
+    .btn {
+      margin-top:14px;
+      background:#0077b6;
+      color:#fff;
+      padding:12px;
+      border-radius:8px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      width:100%;
+      font-size:16px;
+    }
+    .btn:disabled { opacity:0.6; cursor:wait; }
+
+    #status { margin-top:10px; text-align:center; font-weight:600; color:#055a8c; }
+
+    small.hint { display:block; color:#6b7b88; margin-top:6px; font-size:12px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="images/logo.jpg" alt="Logo" />
+      </a>
+    </div>
+
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+
+      </ul>
+      </nav>
+  </header>
+
+  <header class="page-header">📄 Student Application Form</header>
+
+  <div class="wrap">
+    <div class="form-container">
+      <div class="form-inner">
+        <h2>Application Details</h2>
+
+        <form id="applicationForm">
+          <div class="grid">
+            <div class="full-row">
+              <label for="fullName">Full Name:</label>
+              <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div>
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div>
+              <label for="phone">Phone:</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div>
+              <label for="dob">Date of Birth:</label>
+              <input type="date" id="dob" name="dob" required>
+            </div>
+            <div>
+              <label for="gender">Gender:</label>
+              <select id="gender" name="gender" required>
+                <option value="">--Select--</option><option>Male</option><option>Female</option>
+              </select>
+            </div>
+            <div class="full-row">
+              <label for="course">Course Selection:</label>
+              <select id="course" name="course" required><option value="">--Loading--</option></select>
+            </div>
+            <div class="full-row">
+              <label for="previousSchool">Previous School:</label>
+              <input type="text" id="previousSchool" name="previousSchool" required>
+            </div>
+            <div><label for="kcpeMarks">KCPE Marks:</label>
+              <input type="number" id="kcpeMarks" name="kcpeMarks" required>
+            </div>
+            <div><label for="kcpeYear">KCPE Year:</label>
+              <input type="number" id="kcpeYear" name="kcpeYear" required>
+            </div>
+            <div><label for="kcseGrade">KCSE Grade:</label>
+              <input type="text" id="kcseGrade" name="kcseGrade" required>
+            </div>
+            <div><label for="kcseYear">KCSE Year:</label>
+              <input type="number" id="kcseYear" name="kcseYear" required>
+            </div>
+            <div class="full-row"><label for="parentName">Parent Name:</label>
+              <input type="text" id="parentName" name="parentName" required>
+            </div>
+            <div><label for="parentPhone">Parent Phone:</label>
+              <input type="tel" id="parentPhone" name="parentPhone" required>
+            </div>
+            <div><label for="relationship">Relationship:</label>
+              <input type="text" id="relationship" name="relationship" required>
+            </div>
+            <div><label for="maritalStatus">Marital Status:</label>
+              <select id="maritalStatus" name="maritalStatus" required>
+                <option value="">--Select--</option><option>Single</option><option>Married</option>
+              </select>
+            </div>
+            <div class="full-row"><label for="sponsor">Sponsor (if any):</label>
+              <input type="text" id="sponsor" name="sponsor">
+            </div>
+
+            <!-- File uploads -->
+            <div class="full-row"><label>National ID (PDF):</label><input type="file" id="idFile" name="idFile" accept="application/pdf" required></div>
+            <div class="full-row"><label>Birth Certificate (PDF):</label><input type="file" id="birthFile" name="birthFile" accept="application/pdf" required></div>
+            <div><label>KCPE Certificate (PDF):</label><input type="file" id="kcpeFile" name="kcpeFile" accept="application/pdf" required></div>
+            <div><label>KCPE Slip (PDF):</label><input type="file" id="kcpeSlipFile" name="kcpeSlipFile" accept="application/pdf" required></div>
+            <div><label>KCSE Certificate (PDF):</label><input type="file" id="kcseFile" name="kcseFile" accept="application/pdf" required></div>
+            <div><label>KCSE Slip (PDF):</label><input type="file" id="kcseSlipFile" name="kcseSlipFile" accept="application/pdf" required></div>
+            <div class="full-row"><label>Leaving Certificate (PDF):</label><input type="file" id="leavingFile" name="leavingFile" accept="application/pdf" required></div>
+          </div>
+
+          <div class="full-row" style="margin-top:10px;">
+            <button class="btn" id="submitBtn" type="submit">Submit</button>
+            <div id="status"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+      authDomain: "jnnp-system.firebaseapp.com",
+      databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+      projectId: "jnnp-system",
+      storageBucket: "jnnp-system.firebasestorage.app",
+      messagingSenderId: "769232855377",
+      appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzypv4CpyPIwa1UY9kOdXmNih_CbEhL3MYzqzcwgeavenG6gqWGxj-NSxBllwUOV-lJ/exec";
+
+    // load courses
+    const courseDropdown = document.getElementById("course");
+    db.ref("courses").on("value", snap=>{
+      courseDropdown.innerHTML = '<option value="">--Select Course--</option>';
+      snap.forEach(c=>{
+        let opt=document.createElement("option");
+        opt.value=c.key; opt.textContent=c.val().courseName||c.val().course||c.key;
+        courseDropdown.appendChild(opt);
+      });
+    });
+
+    function fileToBase64(file){
+      return new Promise((res,rej)=>{
+        const r=new FileReader();
+        r.onload=()=>res(r.result.split(",")[1]);
+        r.onerror=e=>rej(e);
+        r.readAsDataURL(file);
+      });
+    }
+
+    async function uploadFile(file, key, applicantName){
+      const base64=await fileToBase64(file);
+      const body=new URLSearchParams({
+        file:base64, filename:file.name, mimeType:file.type, field:key, fullName:applicantName
+      });
+      const resp=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body});
+      let txt=await resp.text();
+      try{ return JSON.parse(txt).url; }catch{ return txt; }
+    }
+
+    document.getElementById("applicationForm").addEventListener("submit", async e=>{
+      e.preventDefault();
+      const btn=document.getElementById("submitBtn");
+      const status=document.getElementById("status");
+      btn.disabled=true; status.textContent="Uploading files...";
+      try{
+        const applicant={
+          fullName:fullName.value,email:email.value,phone:phone.value,dob:dob.value,gender:gender.value,
+          course:course.value,previousSchool:previousSchool.value,kcpeMarks:kcpeMarks.value,kcpeYear:kcpeYear.value,
+          kcseGrade:kcseGrade.value,kcseYear:kcseYear.value,parentName:parentName.value,parentPhone:parentPhone.value,
+          relationship:relationship.value,maritalStatus:maritalStatus.value,sponsor:sponsor.value,timestamp:Date.now()
+        };
+        const filesMap=[["idFile","idCard"],["birthFile","birthCert"],["kcpeFile","kcpeCert"],["kcpeSlipFile","kcpeSlip"],["kcseFile","kcseCert"],["kcseSlipFile","kcseSlip"],["leavingFile","leavingCert"]];
+        applicant.files={};
+        for(let [id,key] of filesMap){
+          const input=document.getElementById(id);
+          status.textContent="Uploading "+input.files[0].name+" ...";
+          applicant.files[key]=await uploadFile(input.files[0],key,applicant.fullName);
+        }
+        status.textContent="Saving details...";
+        await db.ref("applications").push(applicant);
+        alert("✅ Application submitted!We will contact you shortly");
+        applicationForm.reset(); status.textContent="";
+      }catch(err){
+        console.error(err); alert("Error: "+err.message); status.textContent="Error: "+err.message;
+      }finally{ btn.disabled=false; }
+    });
+
+    document.getElementById("menu-toggle").addEventListener("click",()=>document.getElementById("nav-links").classList.toggle("active"));
+  </script>
+</body>
+</html>

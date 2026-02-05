@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ADMITTED STUDENTS— JNNP</title>
+<style>
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background:#f9f9f9;
+  margin:0;
+  padding:20px;
+  transition: background 0.3s, color 0.3s;
+}
+h1 {
+  text-align:center;
+  margin-bottom:20px;
+  color:#023e8a;
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom:40px;
+  display:block;
+  overflow-x:auto;
+}
+th, td {
+  padding:12px;
+  border:1px solid #ddd;
+  text-align:left;
+  white-space:nowrap;
+}
+th {
+  background:#0077b6;
+  color:#fff;
+}
+tr:nth-child(even) {
+  background:#f2f2f2;
+}
+#searchInput {
+  padding:6px 12px;
+  font-size:14px;
+  border-radius:4px;
+  border:1px solid #ccc;
+  margin-bottom:10px;
+  width:100%;
+  max-width:300px;
+}
+#toggleTheme {
+  cursor:pointer;
+  font-size:20px;
+  margin-left:10px;
+}
+.dark {
+  background:#212529;
+  color:#f8f9fa;
+}
+.dark table {
+  background:#2c2c2c;
+}
+.dark th {
+  background:#343a40;
+}
+.dark td {
+  border-color:#555;
+}
+</style>
+</head>
+<body>
+
+<h1>📋 ADMITTED STUDENTS</h1>
+
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+  <input type="text" id="searchInput" placeholder="Search table...">
+  <span id="toggleTheme">🌙</span>
+</div>
+
+<table id="admissionsTable">
+<thead>
+<tr>
+<th>Admission No</th>
+<th>Full Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Course</th>
+<th>Course Code</th>
+<th>Level</th>
+<th>Duration</th>
+<th>Exam Body</th>
+<th>Fee</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+  authDomain: "jnnp-system.firebaseapp.com",
+  databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+  projectId: "jnnp-system",
+  storageBucket: "jnnp-system.firebasestorage.app",
+  messagingSenderId: "769232855377",
+  appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const tableBody = document.querySelector("#admissionsTable tbody");
+const searchInput = document.getElementById("searchInput");
+
+// Fetch admissions
+function loadAdmissions() {
+  db.ref("admissions").once("value").then(snapshot => {
+    tableBody.innerHTML = "";
+    snapshot.forEach(snap => {
+      const s = snap.val();
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${s.admNo || ""}</td>
+        <td>${s.fullName || ""}</td>
+        <td>${s.email || ""}</td>
+        <td>${s.phone || ""}</td>
+        <td>${s.courseName || ""}</td>
+        <td>${s.courseCode || ""}</td>
+        <td>${s.courseLevel || ""}</td>
+        <td>${s.courseDuration || ""}</td>
+        <td>${s.examBody || ""}</td>
+        <td>${s.courseFee || ""}</td>
+        <td>Admitted</td>
+      `;
+      tableBody.appendChild(tr);
+    });
+  });
+}
+loadAdmissions();
+
+// Search
+searchInput.addEventListener("input", function(){
+  const filter = this.value.toLowerCase();
+  Array.from(tableBody.rows).forEach(row=>{
+    row.style.display = Array.from(row.cells).some(td=>td.textContent.toLowerCase().includes(filter))?"":"none";
+  });
+});
+
+// Dark/light toggle
+document.getElementById("toggleTheme").addEventListener("click", ()=>{
+  document.body.classList.toggle("dark");
+  const icon = document.getElementById("toggleTheme");
+  icon.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+});
+</script>
+
+</body>
+</html>

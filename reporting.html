@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCST - Student Reporting System</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --light-blue: #eff6ff;
+            --accent-blue: #2563eb;
+            --dark-blue: #1e40af;
+            --white: #ffffff;
+            --light-gray: #f8fafc;
+            --medium-gray: #e2e8f0;
+            --dark-gray: #64748b;
+            --black: #1e293b;
+            --success-green: #10b981;
+            --warning-orange: #f59e0b;
+            --error-red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background: var(--light-blue);
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo i {
+            font-size: 3.5rem;
+            color: var(--primary-blue);
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-logo h2 {
+            color: var(--primary-blue);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .login-logo p {
+            color: var(--dark-gray);
+            font-size: 0.95rem;
+        }
+
+        .login-form .form-control {
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid var(--medium-gray);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .login-form .form-control:focus {
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+            outline: none;
+        }
+
+        .login-form .form-label {
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .login-btn {
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.3);
+            background: linear-gradient(to right, var(--dark-blue), var(--accent-blue));
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 1.8rem;
+            color: var(--dark-gray);
+            font-size: 0.9rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .login-error {
+            color: var(--error-red);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        /* Dashboard Styles */
+        .dashboard-header {
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent-blue);
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo i {
+            color: var(--white);
+            background: var(--accent-blue);
+            padding: 8px;
+            border-radius: 10px;
+        }
+
+        .college-name {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        .stats-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 5px solid var(--secondary-blue);
+            height: 100%;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-blue);
+        }
+
+        .stats-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--secondary-blue), var(--accent-blue));
+            color: var(--white);
+        }
+
+        .card-title {
+            color: var(--dark-gray);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 8px 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-reported {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success-green);
+            border: 1px solid var(--success-green);
+        }
+
+        .badge-submitted {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--secondary-blue);
+            border: 1px solid var(--secondary-blue);
+        }
+
+        .badge-pending {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning-orange);
+            border: 1px solid var(--warning-orange);
+        }
+
+        .filter-section {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .student-table {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .student-table th {
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            border: none;
+            font-weight: 600;
+            padding: 1rem;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .student-table td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--medium-gray);
+            font-size: 0.9rem;
+            color: var(--black);
+        }
+
+        .student-table tr:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .course-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-blue);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .chart-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            height: 100%;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: var(--dark-gray);
+            font-weight: 500;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary-blue);
+            border-bottom: 3px solid var(--primary-blue);
+            background: transparent;
+            font-weight: 600;
+        }
+
+        .settings-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--white);
+            box-shadow: 3px 0 15px rgba(0,0,0,0.08);
+            z-index: 1001;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            border-right: 2px solid var(--primary-blue);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--accent-blue);
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .sidebar-menu-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--dark-gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+            font-size: 0.95rem;
+            margin: 4px 0;
+        }
+
+        .sidebar-menu-item:hover, .sidebar-menu-item.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-blue);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .sidebar-menu-item i {
+            width: 24px;
+            text-align: center;
+            color: var(--secondary-blue);
+        }
+
+        .sidebar-menu-item.active i {
+            color: var(--primary-blue);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        .main-content {
+            padding: 1.5rem;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .export-btn {
+            background: linear-gradient(to right, var(--primary-blue), var(--secondary-blue));
+            color: var(--white);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+        }
+
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(30, 58, 138, 0.3);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 50px;
+            border-radius: 10px;
+            border: 2px solid var(--medium-gray);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--secondary-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--dark-gray);
+        }
+
+        .class-section {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--medium-gray);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .class-header {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .student-count {
+            background: var(--secondary-blue);
+            color: var(--white);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--secondary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .data-status {
+            padding: 2rem;
+            text-align: center;
+            color: var(--dark-gray);
+            background: var(--white);
+            border-radius: 10px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--white);
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .login-card {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .login-logo h2 {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-header {
+                padding: 0.8rem 0;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats-card {
+                padding: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .card-value {
+                font-size: 1.6rem;
+            }
+
+            .filter-section {
+                padding: 1.2rem;
+            }
+
+            .student-table {
+                font-size: 0.85rem;
+                display: block;
+                overflow-x: auto;
+            }
+
+            .student-table th, .student-table td {
+                padding: 0.8rem 0.6rem;
+                white-space: nowrap;
+            }
+
+            .chart-container {
+                padding: 1.2rem;
+                margin-bottom: 1rem;
+            }
+
+            .sidebar {
+                width: 85%;
+                max-width: 300px;
+            }
+
+            .search-input {
+                padding: 10px 16px 10px 45px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 1.5rem;
+            }
+
+            .login-logo i {
+                font-size: 3rem;
+            }
+
+            .login-logo h2 {
+                font-size: 1.3rem;
+            }
+
+            .card-value {
+                font-size: 1.4rem;
+            }
+
+            .stats-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h2>UCST Dashboard</h2>
+                <p>United College of Science & Technology</p>
+                <p class="text-muted">Student Reporting System</p>
+            </div>
+            <div class="login-form">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password">
+                </div>
+                <div class="login-error" id="loginError">
+                    <i class="fas fa-exclamation-circle me-2"></i>Invalid username or password
+                </div>
+                <button class="login-btn" onclick="login()">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Dashboard
+                </button>
+                <div class="login-footer">
+                    <small>Authorized access only</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (Hidden until login) -->
+    <div id="dashboardPage" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h4 class="logo"><i class="fas fa-graduation-cap"></i> UCST</h4>
+                <div class="college-name">United College of Science & Technology</div>
+            </div>
+            <div class="sidebar-menu">
+                <a href="#" class="sidebar-menu-item active" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+                <a href="#" class="sidebar-menu-item" data-section="reports">
+                    <i class="fas fa-file-alt"></i> Student Reports
+                </a>
+                <a href="#" class="sidebar-menu-item" data-section="reporting">
+                    <i class="fas fa-clipboard-check"></i> Reporting Records
+                </a>
+                <a href="#" class="sidebar-menu-item" data-section="analysis">
+                    <i class="fas fa-chart-bar"></i> Analysis
+                </a>
+                <a href="#" class="sidebar-menu-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+        
+        <!-- Overlay -->
+        <div class="overlay" id="overlay"></div>
+        
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="mobile-menu-btn" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="d-flex align-items-center">
+                        <div class="logo">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <div>UCST Dashboard</div>
+                                <div class="college-name">Student Reporting System</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="me-3 text-end d-none d-md-block">
+                            <div class="small" id="connectionStatus">
+                                <span class="loading-spinner"></span> Connecting...
+                            </div>
+                            <div class="small opacity-75" id="dataCount">Loading data...</div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#" onclick="refreshData()"><i class="fas fa-sync-alt me-2"></i>Refresh Data</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <div class="container">
+                <!-- Dashboard Section -->
+                <div class="section active" id="dashboard">
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="card-title">Total Reports</div>
+                                <div class="card-value" id="totalReports">0</div>
+                                <div class="card-subtitle small">From student_reports</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon">
+                                    <i class="fas fa-clipboard-list"></i>
+                                </div>
+                                <div class="card-title">Reporting Records</div>
+                                <div class="card-value" id="totalReporting">0</div>
+                                <div class="card-subtitle small">From reporting collection</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="card-title">Unique Students</div>
+                                <div class="card-value" id="totalStudents">0</div>
+                                <div class="card-subtitle small">Across all collections</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-icon">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="card-title">Database Type</div>
+                                <div class="card-value" id="dbType">RTDB</div>
+                                <div class="card-subtitle small">Realtime Database</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div class="filter-section mb-4">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" id="globalSearch" placeholder="Search students by name, status, or year...">
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-4">
+                                <label class="form-label small">Filter by Course</label>
+                                <select class="form-select form-select-sm" id="dashboardCourseFilter">
+                                    <option value="">All Courses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Filter by Status</label>
+                                <select class="form-select form-select-sm" id="dashboardStatusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="Reported">Reported</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label small">Filter by Year</label>
+                                <input type="text" class="form-control form-control-sm" id="dashboardYearFilter" placeholder="e.g., 2026">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Overview by Class -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="filter-section">
+                                <h5>Students by Class/Course</h5>
+                                <p class="text-muted small mb-3">Organized by course with search results</p>
+                                <div id="classGroups">
+                                    <div class="data-status">Loading class groups...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Reports -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="chart-container">
+                                <h5>Recent Student Reports</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Adm No</th>
+                                                <th>Student Name</th>
+                                                <th>Course</th>
+                                                <th>Report Date</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="recentReports">
+                                            <tr><td colspan="5" class="data-status">Loading recent reports...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Reports Section -->
+                <div class="section" id="reports">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3>Student Reports <span class="badge bg-primary">/student_reports</span></h3>
+                            <p class="text-muted small">Data from Realtime Database path: /student_reports</p>
+                        </div>
+                        <div>
+                            <button class="export-btn" onclick="exportStudentReports()">
+                                <i class="fas fa-download me-2"></i>Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter Section -->
+                    <div class="filter-section mb-4">
+                        <div class="search-container mb-3">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" id="reportsSearch" placeholder="Search student reports by name, status, or year...">
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-3">
+                                <label class="form-label small">Status</label>
+                                <select class="form-select form-select-sm" id="reportStatusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="Reported">Reported</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Course</label>
+                                <select class="form-select form-select-sm" id="reportCourseFilter">
+                                    <option value="">All Courses</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Term</label>
+                                <select class="form-select form-select-sm" id="reportTermFilter">
+                                    <option value="">All Terms</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Year</label>
+                                <input type="text" class="form-control form-control-sm" id="reportYearFilter" placeholder="e.g., 2026">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Student Reports Table Organized by Class -->
+                    <div id="reportsByClass">
+                        <div class="data-status">Loading student reports organized by class...</div>
+                    </div>
+                </div>
+
+                <!-- Reporting Records Section -->
+                <div class="section" id="reporting">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3>Reporting Records <span class="badge bg-primary">/reporting</span></h3>
+                            <p class="text-muted small">Data from Realtime Database path: /reporting</p>
+                        </div>
+                        <div>
+                            <button class="export-btn" onclick="exportReportingRecords()">
+                                <i class="fas fa-download me-2"></i>Export CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter Section -->
+                    <div class="filter-section mb-4">
+                        <div class="search-container mb-3">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" id="reportingSearch" placeholder="Search reporting records by admission number or status...">
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-md-3">
+                                <label class="form-label small">Accompanied By</label>
+                                <select class="form-select form-select-sm" id="accompaniedFilter">
+                                    <option value="">All</option>
+                                    <option value="Parent">Parent</option>
+                                    <option value="Guardian">Guardian</option>
+                                    <option value="Alone">Alone</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Status</label>
+                                <select class="form-select form-select-sm" id="reportingStatusFilter">
+                                    <option value="">All Status</option>
+                                    <option value="Submitted">Submitted</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Approved">Approved</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Date</label>
+                                <input type="date" class="form-control form-control-sm" id="reportingDateFilter">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">&nbsp;</label>
+                                <button class="btn btn-sm btn-outline-secondary w-100" onclick="resetFilters()">Reset Filters</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reporting Table -->
+                    <div class="student-table">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Adm No</th>
+                                        <th>Student ID</th>
+                                        <th>Reporting Date</th>
+                                        <th>Accompanied By</th>
+                                        <th>Status</th>
+                                        <th>Submitted At</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reportingTable">
+                                    <tr><td colspan="7" class="data-status">Loading reporting records...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Section -->
+                <div class="section" id="analysis">
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h3>Reporting Analysis</h3>
+                            <p class="text-muted small">Analytics from Realtime Database</p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h5>Status Distribution</h5>
+                                <canvas id="statusChart" height="200"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="chart-container">
+                                <h5>Course Distribution</h5>
+                                <canvas id="courseChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="chart-container">
+                                <h5>Reporting Timeline</h5>
+                                <canvas id="timelineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // ==================== YOUR FIREBASE CONFIGURATION ====================
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+            authDomain: "jnnp-system.firebaseapp.com",
+            databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+            projectId: "jnnp-system",
+            storageBucket: "jnnp-system.firebasestorage.app",
+            messagingSenderId: "769232855377",
+            appId: "1:769232855377:web:e3ba51e3e25cc24735f370",
+            measurementId: "G-L7TL83DRCV"
+        };
+
+        // Firebase instances
+        let app;
+        let database;
+        let studentReportsData = [];
+        let reportingData = [];
+        
+        // Chart instances
+        let statusChart, courseChart, timelineChart;
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorElement = document.getElementById('loginError');
+            
+            if (username === 'reporting' && password === '1234') {
+                // Hide login, show dashboard
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboardPage').style.display = 'block';
+                
+                // Clear password field for security
+                document.getElementById('password').value = '';
+                
+                // Hide error message
+                errorElement.style.display = 'none';
+                
+                // Initialize Firebase and load data
+                initializeFirebase();
+                
+                // Store login state
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('username', username);
+            } else {
+                // Show error message
+                errorElement.style.display = 'block';
+                
+                // Add shake animation to form
+                const loginCard = document.querySelector('.login-card');
+                loginCard.classList.add('shake-animation');
+                setTimeout(() => {
+                    loginCard.classList.remove('shake-animation');
+                }, 500);
+            }
+        }
+
+        // Add shake animation style
+        const style = document.createElement('style');
+        style.textContent = `
+            .shake-animation {
+                animation: shake 0.5s ease-in-out;
+            }
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Check if already logged in
+        function checkLogin() {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboardPage').style.display = 'block';
+                initializeFirebase();
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('isLoggedIn');
+                sessionStorage.removeItem('username');
+                document.getElementById('loginPage').style.display = 'flex';
+                document.getElementById('dashboardPage').style.display = 'none';
+                
+                // Clear form fields
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('loginError').style.display = 'none';
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLogin();
+            setupEventListeners();
+            
+            // Set up enter key for login
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+            
+            // Also for username field
+            document.getElementById('username').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('password').focus();
+                }
+            });
+        });
+
+        async function initializeFirebase() {
+            try {
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<span class="loading-spinner"></span> Connecting to database...';
+                
+                // Initialize Firebase
+                app = firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<i class="fas fa-check-circle text-success"></i> Connected to Realtime DB';
+                document.getElementById('dataCount').textContent = 'Loading data...';
+                
+                // Load data
+                await loadAllData();
+                
+            } catch (error) {
+                console.error('Firebase initialization failed:', error);
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<i class="fas fa-times-circle text-danger"></i> Connection Failed';
+            }
+        }
+
+        async function loadAllData() {
+            try {
+                await loadStudentReports();
+                await loadReportingRecords();
+                updateStats();
+                updateFilters();
+                updateClassGroups();
+                updateRecentReports();
+                initializeCharts();
+                
+                document.getElementById('dataCount').textContent = 
+                    `${studentReportsData.length} student reports, ${reportingData.length} reporting records`;
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        async function loadStudentReports() {
+            try {
+                document.getElementById('recentReports').innerHTML = 
+                    '<tr><td colspan="5" class="data-status"><span class="loading-spinner"></span> Loading student reports...</td></tr>';
+                
+                const snapshot = await database.ref('student_reports').once('value');
+                studentReportsData = [];
+                
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    
+                    // Convert object to array
+                    Object.keys(data).forEach(key => {
+                        const item = data[key];
+                        if (item && typeof item === 'object') {
+                            item.id = key;
+                            studentReportsData.push(item);
+                        }
+                    });
+                    
+                    // Sort by course and then by name
+                    studentReportsData.sort((a, b) => {
+                        if (a.course < b.course) return -1;
+                        if (a.course > b.course) return 1;
+                        if (a.studentName < b.studentName) return -1;
+                        if (a.studentName > b.studentName) return 1;
+                        return 0;
+                    });
+                    
+                } else {
+                    console.log('No student reports found');
+                }
+                
+            } catch (error) {
+                console.error('Error loading student reports:', error);
+            }
+        }
+
+        async function loadReportingRecords() {
+            try {
+                document.getElementById('reportingTable').innerHTML = 
+                    '<tr><td colspan="7" class="data-status"><span class="loading-spinner"></span> Loading reporting records...</td></tr>';
+                
+                const snapshot = await database.ref('reporting').once('value');
+                reportingData = [];
+                
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    
+                    // Convert object to array
+                    Object.keys(data).forEach(key => {
+                        const item = data[key];
+                        if (item && typeof item === 'object') {
+                            item.id = key;
+                            reportingData.push(item);
+                        }
+                    });
+                    
+                    renderReportingRecords();
+                    
+                } else {
+                    document.getElementById('reportingTable').innerHTML = 
+                        '<tr><td colspan="7" class="data-status">No reporting records found</td></tr>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading reporting records:', error);
+            }
+        }
+
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayReports = studentReportsData.filter(r => r.reportDate === today).length;
+            
+            document.getElementById('totalReports').textContent = studentReportsData.length;
+            document.getElementById('totalReporting').textContent = reportingData.length;
+            
+            // Count unique students
+            const uniqueStudents = new Set([
+                ...studentReportsData.map(r => r.admNo),
+                ...reportingData.map(r => r.admNo)
+            ]);
+            document.getElementById('totalStudents').textContent = uniqueStudents.size;
+        }
+
+        function updateFilters() {
+            // Update course filter in dashboard
+            const dashboardCourseFilter = document.getElementById('dashboardCourseFilter');
+            const reportCourseFilter = document.getElementById('reportCourseFilter');
+            const courses = [...new Set(studentReportsData.map(r => r.course).filter(Boolean))];
+            
+            // Clear existing options (keep "All Courses")
+            while (dashboardCourseFilter.options.length > 1) {
+                dashboardCourseFilter.remove(1);
+            }
+            while (reportCourseFilter.options.length > 1) {
+                reportCourseFilter.remove(1);
+            }
+            
+            courses.forEach(course => {
+                const option1 = document.createElement('option');
+                option1.value = course;
+                option1.textContent = course;
+                dashboardCourseFilter.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = course;
+                option2.textContent = course;
+                reportCourseFilter.appendChild(option2);
+            });
+
+            // Update term filter
+            const termFilter = document.getElementById('reportTermFilter');
+            const terms = [...new Set(studentReportsData.map(r => r.term).filter(Boolean))];
+            
+            while (termFilter.options.length > 1) {
+                termFilter.remove(1);
+            }
+            
+            terms.forEach(term => {
+                const option = document.createElement('option');
+                option.value = term;
+                option.textContent = term;
+                termFilter.appendChild(option);
+            });
+        }
+
+        function updateClassGroups() {
+            const classGroupsContainer = document.getElementById('classGroups');
+            const reportsByClassContainer = document.getElementById('reportsByClass');
+            
+            if (studentReportsData.length === 0) {
+                classGroupsContainer.innerHTML = '<div class="data-status">No student reports found</div>';
+                reportsByClassContainer.innerHTML = '<div class="data-status">No student reports found</div>';
+                return;
+            }
+            
+            // Group students by course
+            const studentsByCourse = {};
+            studentReportsData.forEach(student => {
+                const course = student.course || 'Unknown Course';
+                if (!studentsByCourse[course]) {
+                    studentsByCourse[course] = [];
+                }
+                studentsByCourse[course].push(student);
+            });
+            
+            // Get search term
+            const searchTerm = document.getElementById('globalSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('dashboardStatusFilter').value;
+            const yearFilter = document.getElementById('dashboardYearFilter').value;
+            const courseFilter = document.getElementById('dashboardCourseFilter').value;
+            
+            // Render class groups for dashboard
+            let classGroupsHTML = '';
+            Object.keys(studentsByCourse).sort().forEach(course => {
+                let courseStudents = studentsByCourse[course];
+                
+                // Apply filters
+                if (searchTerm) {
+                    courseStudents = courseStudents.filter(student => 
+                        (student.studentName && student.studentName.toLowerCase().includes(searchTerm)) ||
+                        (student.status && student.status.toLowerCase().includes(searchTerm)) ||
+                        (student.year && student.year.includes(searchTerm))
+                    );
+                }
+                
+                if (statusFilter) {
+                    courseStudents = courseStudents.filter(student => student.status === statusFilter);
+                }
+                
+                if (yearFilter) {
+                    courseStudents = courseStudents.filter(student => student.year && student.year.includes(yearFilter));
+                }
+                
+                if (courseFilter && course !== courseFilter) {
+                    return; // Skip this course if not matching filter
+                }
+                
+                if (courseStudents.length > 0) {
+                    classGroupsHTML += `
+                        <div class="class-section">
+                            <div class="class-header">
+                                ${course}
+                                <span class="student-count">${courseStudents.length} students</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Adm No</th>
+                                            <th>Student Name</th>
+                                            <th>Report Date</th>
+                                            <th>Status</th>
+                                            <th>Year</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${courseStudents.map(student => `
+                                            <tr>
+                                                <td><strong>${student.admNo || 'N/A'}</strong></td>
+                                                <td>${student.studentName || 'Unknown'}</td>
+                                                <td>${student.reportDate || 'N/A'}</td>
+                                                <td><span class="status-badge badge-${(student.status || '').toLowerCase()}">${student.status || 'Unknown'}</span></td>
+                                                <td>${student.year || 'N/A'}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            classGroupsContainer.innerHTML = classGroupsHTML || '<div class="data-status">No students match your search criteria</div>';
+            
+            // Render detailed reports by class for reports section
+            let reportsByClassHTML = '';
+            Object.keys(studentsByCourse).sort().forEach(course => {
+                let courseStudents = studentsByCourse[course];
+                
+                // Apply filters from reports section
+                const searchTerm2 = document.getElementById('reportsSearch').value.toLowerCase();
+                const statusFilter2 = document.getElementById('reportStatusFilter').value;
+                const courseFilter2 = document.getElementById('reportCourseFilter').value;
+                const termFilter2 = document.getElementById('reportTermFilter').value;
+                const yearFilter2 = document.getElementById('reportYearFilter').value;
+                
+                if (searchTerm2) {
+                    courseStudents = courseStudents.filter(student => 
+                        (student.studentName && student.studentName.toLowerCase().includes(searchTerm2)) ||
+                        (student.status && student.status.toLowerCase().includes(searchTerm2)) ||
+                        (student.year && student.year.includes(searchTerm2))
+                    );
+                }
+                
+                if (statusFilter2) {
+                    courseStudents = courseStudents.filter(student => student.status === statusFilter2);
+                }
+                
+                if (courseFilter2 && course !== courseFilter2) {
+                    return;
+                }
+                
+                if (termFilter2) {
+                    courseStudents = courseStudents.filter(student => student.term === termFilter2);
+                }
+                
+                if (yearFilter2) {
+                    courseStudents = courseStudents.filter(student => student.year && student.year.includes(yearFilter2));
+                }
+                
+                if (courseStudents.length > 0) {
+                    reportsByClassHTML += `
+                        <div class="class-section mb-4">
+                            <div class="class-header">
+                                ${course}
+                                <span class="student-count">${courseStudents.length} students</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Adm No</th>
+                                            <th>Student Name</th>
+                                            <th>Report Date</th>
+                                            <th>Return Date</th>
+                                            <th>Term/Year</th>
+                                            <th>Status</th>
+                                            <th>Submitted At</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${courseStudents.map(student => {
+                                            const submittedDate = student.submittedAt ? new Date(student.submittedAt) : new Date();
+                                            const formattedTime = submittedDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                                            return `
+                                                <tr>
+                                                    <td><strong>${student.admNo || 'N/A'}</strong></td>
+                                                    <td>${student.studentName || 'Unknown'}</td>
+                                                    <td class="date-time">${student.reportDate || 'N/A'}<br><small class="time-only">${formattedTime}</small></td>
+                                                    <td>${student.returnDate || 'N/A'}</td>
+                                                    <td>${student.term || 'N/A'} ${student.year || ''}</td>
+                                                    <td><span class="status-badge badge-${(student.status || '').toLowerCase()}">${student.status || 'Unknown'}</span></td>
+                                                    <td class="date-time">${submittedDate.toLocaleDateString()}<br><small class="time-only">${formattedTime}</small></td>
+                                                </tr>
+                                            `;
+                                        }).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            reportsByClassContainer.innerHTML = reportsByClassHTML || '<div class="data-status">No student reports match your search criteria</div>';
+        }
+
+        function updateRecentReports() {
+            const container = document.getElementById('recentReports');
+            
+            if (studentReportsData.length === 0) {
+                container.innerHTML = '<tr><td colspan="5" class="data-status">No recent reports available</td></tr>';
+                return;
+            }
+
+            // Sort by submittedAt date (most recent first) and take first 8
+            const recentReports = [...studentReportsData]
+                .sort((a, b) => new Date(b.submittedAt || 0) - new Date(a.submittedAt || 0))
+                .slice(0, 8);
+            
+            container.innerHTML = '';
+            
+            recentReports.forEach(report => {
+                const row = document.createElement('tr');
+                const submittedTime = report.submittedAt ? new Date(report.submittedAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'N/A';
+                
+                row.innerHTML = `
+                    <td>${report.admNo || 'N/A'}</td>
+                    <td>${report.studentName || 'Unknown'}</td>
+                    <td><span class="course-tag">${report.course ? report.course.split(' ')[0] : 'N/A'}</span></td>
+                    <td class="date-time">${report.reportDate || 'N/A'}<br><small class="time-only">${submittedTime}</small></td>
+                    <td><span class="status-badge badge-${(report.status || '').toLowerCase()}">${report.status || 'Unknown'}</span></td>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderReportingRecords() {
+            const tableBody = document.getElementById('reportingTable');
+            
+            if (reportingData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" class="data-status">No reporting records found</td></tr>';
+                return;
+            }
+
+            const searchTerm = document.getElementById('reportingSearch').value.toLowerCase();
+            const accompaniedFilter = document.getElementById('accompaniedFilter').value;
+            const statusFilter = document.getElementById('reportingStatusFilter').value;
+            const dateFilter = document.getElementById('reportingDateFilter').value;
+
+            let filteredReports = reportingData;
+
+            if (searchTerm) {
+                filteredReports = filteredReports.filter(r => 
+                    (r.admNo && r.admNo.toLowerCase().includes(searchTerm)) ||
+                    (r.status && r.status.toLowerCase().includes(searchTerm)) ||
+                    (r.studentId && r.studentId.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            if (accompaniedFilter) {
+                filteredReports = filteredReports.filter(r => r.accompaniedBy === accompaniedFilter);
+            }
+
+            if (statusFilter) {
+                filteredReports = filteredReports.filter(r => r.status === statusFilter);
+            }
+
+            if (dateFilter) {
+                filteredReports = filteredReports.filter(r => r.reportingDate === dateFilter);
+            }
+
+            if (filteredReports.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="7" class="data-status">No records match your search criteria</td></tr>';
+                return;
+            }
+
+            tableBody.innerHTML = '';
+            
+            filteredReports.forEach((report, index) => {
+                const row = document.createElement('tr');
+                const submittedDate = report.submittedAt ? new Date(report.submittedAt) : new Date();
+                const formattedTime = submittedDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                row.innerHTML = `
+                    <td><small class="text-muted">${report.id || index + 1}</small></td>
+                    <td><strong>${report.admNo || 'N/A'}</strong></td>
+                    <td><small>${report.studentId || 'N/A'}</small></td>
+                    <td>${report.reportingDate || 'N/A'}</td>
+                    <td><span class="accompanied-badge">${report.accompaniedBy || 'Unknown'}</span></td>
+                    <td><span class="status-badge badge-${(report.status || '').toLowerCase()}">${report.status || 'Unknown'}</span></td>
+                    <td class="date-time">${submittedDate.toLocaleDateString()}<br><small class="time-only">${formattedTime}</small></td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        function initializeCharts() {
+            // Destroy existing charts
+            if (statusChart) statusChart.destroy();
+            if (courseChart) courseChart.destroy();
+            if (timelineChart) timelineChart.destroy();
+
+            // Status Chart
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const statusCounts = {
+                Reported: studentReportsData.filter(r => r.status === 'Reported').length,
+                Submitted: studentReportsData.filter(r => r.status === 'Submitted').length,
+                Pending: studentReportsData.filter(r => r.status === 'Pending').length
+            };
+            
+            statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Reported', 'Submitted', 'Pending'],
+                    datasets: [{
+                        data: [statusCounts.Reported, statusCounts.Submitted, statusCounts.Pending],
+                        backgroundColor: ['#10b981', '#3b82f6', '#f59e0b'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Course Chart
+            const courseCtx = document.getElementById('courseChart').getContext('2d');
+            const courses = [...new Set(studentReportsData.map(r => r.course).filter(Boolean))];
+            const courseCounts = courses.map(course => 
+                studentReportsData.filter(r => r.course === course).length
+            );
+            
+            courseChart = new Chart(courseCtx, {
+                type: 'bar',
+                data: {
+                    labels: courses,
+                    datasets: [{
+                        label: 'Number of Reports',
+                        data: courseCounts,
+                        backgroundColor: '#1e3a8a',
+                        borderColor: '#1e40af',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            // Timeline Chart
+            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+            
+            // Group by date
+            const dateCounts = {};
+            studentReportsData.forEach(report => {
+                const date = report.reportDate;
+                if (date) {
+                    dateCounts[date] = (dateCounts[date] || 0) + 1;
+                }
+            });
+            
+            const dates = Object.keys(dateCounts).sort();
+            const counts = dates.map(date => dateCounts[date]);
+            
+            timelineChart = new Chart(timelineCtx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Reports per Day',
+                        data: counts,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        function setupEventListeners() {
+            // Menu toggle
+            document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+            document.getElementById('overlay').addEventListener('click', toggleSidebar);
+
+            // Global search
+            document.getElementById('globalSearch').addEventListener('input', updateClassGroups);
+            document.getElementById('reportsSearch').addEventListener('input', updateClassGroups);
+            document.getElementById('reportingSearch').addEventListener('input', renderReportingRecords);
+            
+            // Filter listeners for dashboard
+            document.getElementById('dashboardStatusFilter').addEventListener('change', updateClassGroups);
+            document.getElementById('dashboardYearFilter').addEventListener('input', updateClassGroups);
+            document.getElementById('dashboardCourseFilter').addEventListener('change', updateClassGroups);
+            
+            // Filter listeners for student reports
+            document.getElementById('reportStatusFilter').addEventListener('change', updateClassGroups);
+            document.getElementById('reportCourseFilter').addEventListener('change', updateClassGroups);
+            document.getElementById('reportTermFilter').addEventListener('change', updateClassGroups);
+            document.getElementById('reportYearFilter').addEventListener('input', updateClassGroups);
+
+            // Filter listeners for reporting records
+            document.getElementById('accompaniedFilter').addEventListener('change', renderReportingRecords);
+            document.getElementById('reportingStatusFilter').addEventListener('change', renderReportingRecords);
+            document.getElementById('reportingDateFilter').addEventListener('change', renderReportingRecords);
+
+            // Navigation
+            document.querySelectorAll('.sidebar-menu-item:not([onclick])').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    navigateToSection(section);
+                    if (window.innerWidth <= 768) {
+                        toggleSidebar();
+                    }
+                });
+            });
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        function navigateToSection(sectionId) {
+            // Update active menu item
+            document.querySelectorAll('.sidebar-menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+            // Show selected section
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // Action functions
+        function refreshData() {
+            loadAllData();
+            alert('Data refreshed successfully!');
+        }
+
+        function resetFilters() {
+            document.getElementById('accompaniedFilter').value = '';
+            document.getElementById('reportingStatusFilter').value = '';
+            document.getElementById('reportingDateFilter').value = '';
+            document.getElementById('reportingSearch').value = '';
+            renderReportingRecords();
+        }
+
+        function exportStudentReports() {
+            if (studentReportsData.length === 0) {
+                alert('No student reports to export');
+                return;
+            }
+            
+            const csv = convertToCSV(studentReportsData);
+            downloadCSV(csv, 'student_reports.csv');
+            alert('Student reports exported successfully!');
+        }
+
+        function exportReportingRecords() {
+            if (reportingData.length === 0) {
+                alert('No reporting records to export');
+                return;
+            }
+            
+            const csv = convertToCSV(reportingData);
+            downloadCSV(csv, 'reporting_records.csv');
+            alert('Reporting records exported successfully!');
+        }
+
+        function convertToCSV(data) {
+            if (data.length === 0) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csvRows = [];
+            
+            csvRows.push(headers.join(','));
+            
+            for (const row of data) {
+                const values = headers.map(header => {
+                    const escaped = ('' + (row[header] || '')).replace(/"/g, '""');
+                    return `"${escaped}"`;
+                });
+                csvRows.push(values.join(','));
+            }
+            
+            return csvRows.join('\n');
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', filename);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

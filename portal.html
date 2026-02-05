@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Navbar</title>
+
+   <style>
+   * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #141212;
+    position: fixed; /* Always stays on top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.logo img {
+    height: 90px;
+    width: auto;
+}
+
+.menu-toggle {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    align-items: center;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    color: #000;
+    padding: 10px;
+    display: block;
+    position: relative; /* Added for bottom line */
+}
+
+/* ADDED: Bottom line hover effect */
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #007bff;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-links li a:hover::after {
+    width: 80%;
+}
+
+.nav-links .cta-button a {
+    background-color: #007bff;
+    color:black;
+    padding: 8px 15px;
+    border-radius: 6px;
+}
+.cta-button{
+    background:#83a6e7;
+    border-radius: 6px;
+
+}
+.cta-button:hover{
+    background: #83a6e7;
+    transition: all 0.3s ease;
+}
+.cta-button a:hover{
+    background: rgb(106, 222, 240);
+    color: white;
+}
+
+/* REMOVED: The background color hover effect */
+/* a:hover{
+    background-color: rgb(106, 222, 240);
+    border-radius: 6px;
+} */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: #fff;
+    top: 100%;
+    left: 0;
+    display: none;
+    min-width: 220px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 99;
+}
+
+.dropdown-content li a {
+    padding: 10px 15px;
+    white-space: nowrap;
+    color: #000;
+}
+
+/* Show dropdown on hover (desktop only) */
+@media (min-width: 769px) {
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+}
+
+/* MOBILE STYLES */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        background-color: #fff;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        display: none;
+        padding: 20px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        padding-left: 15px;
+        width: 100%;
+    }
+
+    .dropdown-content.show {
+        display: block;
+    }
+
+    .nav-links li {
+        width: 100%;
+    }
+
+    .cta-button a {
+        width: 100%;
+        text-align: center;
+    }
+    
+    /* REMOVED: The mobile background color hover effect */
+    /* a:hover{
+        background-color: #83b1e6;
+    } */
+}
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="index.html">
+          <img src="images/logo.jpg" alt="Logo" />
+        </a>
+      </div>
+
+      <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+
+        <li class="dropdown">
+          <a href="#">Our Courses</a>
+          <ul class="dropdown-content">
+            <li><a href="mechanical.html">Mechanical & Automotive Engineering</a></li>
+            <li><a href="business.html">Business & Entrepreneurship</a></li>
+            <li><a href="electrical.html">Electrical & Electronics Engineering</a></li>
+            <li><a href="sciences.html">Applied Sciences & Mathematics</a></li>
+            <li><a href="agriculture.html">Agriculture & Environmental Studies</a></li>
+            <li><a href="hospitality.html">Hospitality & Institutional Management</a></li>
+            <li><a href="computing.html">Computing & Informatics</a></li>
+            <li><a href="fashion.html">Fashion & Design</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">About Us</a>
+          <ul class="dropdown-content">
+            <li><a href="background.html">Background</a></li>
+            <li><a href="mission.html">Mission & Vision</a></li>
+            <li><a href="core-values.html">Core Values</a></li>
+            <
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="application.html">Online Application</a>
+          <ul class="dropdown-content">
+            <li><a href="procedures.html">Application Procedures</a></li>
+            <li><a href="courses.html">Our Courses</a></li>
+            <li><a href="application.html">Apply Online</a></li>
+            <li><a href="https://www.helb.co.ke" target="_blank">HELB application</a>
+            </li>
+            <li><a href="https://students.kuccps.net" target="_blank">KUCCPS Portal</a>
+            </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#">Examinations</a>
+          <ul class="dropdown-content">
+            <li><a href="endterm.html">End Term Examinations</a></li>
+            <li><a href="registration.html">KNEC Registration</a></li>
+            <li><a href="results.html">KNEC Results</a></li>
+          </ul>
+        </li>
+
+        <li><a href="news.html">News</a></li>
+        <li><a href="contacts.html">Contacts</a></li>
+        <li class="cta-button"><a href="student-portal.html">Login to Portal</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const navLinks = document.getElementById('nav-links');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    // Mobile dropdown toggle
+    document.querySelectorAll('.dropdown > a').forEach(link => {
+      link.addEventListener('click', function (e) {
+        if (window.innerWidth <= 768) {
+          e.preventDefault();
+          const dropdownContent = this.nextElementSibling;
+
+          // Close all other dropdowns
+          document.querySelectorAll('.dropdown-content').forEach(content => {
+            if (content !== dropdownContent) {
+              content.classList.remove('show');
+            }
+          });
+
+          dropdownContent.classList.toggle('show');
+        }
+      });
+    });
+
+    // Close dropdowns if clicking outside
+    document.addEventListener('click', function (e) {
+      if (window.innerWidth <= 768 && !e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown-content').forEach(content => {
+          content.classList.remove('show');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

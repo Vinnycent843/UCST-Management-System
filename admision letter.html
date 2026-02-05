@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admission Letter</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body { font-family: Georgia, 'Times New Roman', Times, serif; }
+    #letterContent {
+      border: 2px solid #000;
+      padding: 25px;
+      width: 650px;
+      background: #fff;
+    }
+    .letter-header {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .letter-header img {
+      width: 80px;
+      height: auto;
+    }
+    .letter-header h2 {
+      margin: 5px 0;
+      font-size: 22px;
+      color: #003366;
+    }
+    button {
+      background: linear-gradient(45deg, blue, green);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    button:hover { opacity: 0.8; }
+  </style>
+</head>
+<body>
+  <h2>Latest Admission Letter</h2>
+  <div id="letterContent">
+    Loading latest admission...
+  </div>
+  <br>
+  <button onclick="downloadPDF()">📥 Download PDF</button>
+
+  <script>
+    // 🔹 Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+      authDomain: "jnnp-system.firebaseapp.com",
+      databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+      projectId: "jnnp-system",
+      storageBucket: "jnnp-system.firebasestorage.app",
+      messagingSenderId: "769232855377",
+      appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let currentStudent = null;
+
+    // 🔹 Fetch latest admitted student
+    db.ref("admissions")
+      .orderByChild("timestamp")
+      .limitToLast(1)
+      .on("child_added", snapshot => {
+        const admission = snapshot.val();
+        currentStudent = admission;
+
+        const letterHTML = `
+          <div class="letter-header">
+            <img src="images/logo.jpg" alt="School Logo" style="width:80px;">
+            <h2>Jeremiah Nyagah National Polytechnic</h2>
+            <p><i>Competence Through Technology</i></p>
+          </div>
+          <p>Date: ${new Date().toLocaleDateString()}</p>
+          <p><b>Admission No:</b> ${admission.admNo}</p>
+          <p>Dear <b>${admission.fullName}</b>,</p>
+          <p><b>Congratulations 🎉!</b> You have been officially admitted to 
+          <b>Jeremiah Nyagah National Polytechnic</b>.</p>
+          
+          <p><b>Admission Details:</b></p>
+          <ul>
+            <li><b>Full Name:</b> ${admission.fullName}</li>
+            <li><b>Gender:</b> ${admission.gender || "N/A"}</li>
+            <li><b>DOB:</b> ${admission.dob || "N/A"}</li>
+            <li><b>KCSE Grade:</b> ${admission.kcseGrade || "N/A"} (${admission.kcseYear || "N/A"})</li>
+            <li><b>KCPE Marks:</b> ${admission.kcpeMarks || "N/A"} (${admission.kcpeYear || "N/A"})</li>
+            <li><b>Previous School:</b> ${admission.previousSchool || "N/A"}</li>
+            <li><b>Sponsor:</b> ${admission.sponsor || "N/A"}</li>
+            <li><b>Parent/Guardian:</b> ${admission.parentName || "N/A"} (${admission.relationship || "N/A"})</li>
+            <li><b>Parent Phone:</b> ${admission.parentPhone || "N/A"}</li>
+            <li><b>Student Phone:</b> ${admission.phone || "N/A"}</li>
+          </ul>
+
+          <p><b>Course Information:</b></p>
+          <ul>
+            <li><b>Course Name:</b> ${admission.courseName || admission.course || "N/A"}</li>
+            <li><b>Duration:</b> ${admission.courseDuration || "N/A"}</li>
+            <li><b>Level:</b> ${admission.courseLevel || "N/A"}</li>
+            <li><b>Fee Structure:</b> ${admission.courseFee || "N/A"}</li>
+          </ul>
+
+          <p>Your admission status: <b>${admission.status || "N/A"}</b></p>
+          <p>We are pleased to welcome you to our institution. Kindly report on the scheduled reporting date with all necessary documents.</p>
+          <br>
+          <p>Best Regards,<br><b>Registrar</b><br>Jeremiah Nyagah National Polytechnic</p>
+        `;
+
+        document.getElementById("letterContent").innerHTML = letterHTML;
+
+        // 🔹 Send Email Copy
+        sendEmail(admission.email, admission.fullName, letterHTML);
+      });
+
+    // 🔹 Download PDF using html2canvas + jsPDF
+    function downloadPDF() {
+      if (!currentStudent) return alert("No student loaded yet!");
+      const element = document.getElementById("letterContent");
+      html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`${currentStudent.fullName.replace(/\s+/g, "_")}_Admission_Letter.pdf`);
+      });
+    }
+
+    // 🔹 Send Email with EmailJS
+    function sendEmail(toEmail, name, letterHTML) {
+      emailjs.init("YOUR_PUBLIC_KEY"); // Replace with EmailJS Public Key
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        to_name: name,
+        to_email: toEmail,
+        message_html: letterHTML
+      }).then(() => {
+        console.log("✅ Admission email sent to " + toEmail);
+      }).catch(err => console.error("❌ Email Error:", err));
+    }
+  </script>
+</body>
+</html>

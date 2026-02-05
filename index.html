@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="United College of Science and Technology - Empowering Minds, Sharpening Futures">
+    <title>UNITED COLLEGE OF SCIENCE AND TECHNOLOGY - Home</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Inline Critical CSS -->
+    <style>
+        /* ===== CRITICAL ABOVE-THE-FOLD STYLES ===== */
+        :root {
+            --primary-blue: #003366;
+            --accent-blue: #007bff;
+            --accent-light-blue: #00a3e0;
+            --cta-blue: #83a6e7;
+            --cta-hover: rgb(106, 222, 240);
+            --bulletin-blue: #4271f5;
+            --wave-blue: #0044ff;
+            --text-dark: #000;
+            --text-light: #fff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: var(--primary-blue);
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1001;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 20px;
+            border-bottom: 1px solid #141212;
+            position: fixed;
+            top: 40px;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        .logo img {
+            height: 90px;
+            width: auto;
+            display: block;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 28px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-links li a {
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 10px;
+            display: block;
+            position: relative;
+        }
+        
+        /* Bottom line hover effect */
+        .nav-links li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: var(--accent-blue);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links li a:hover::after {
+            width: 80%;
+        }
+        
+        .cta-button {
+            background: var(--cta-blue);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            background: var(--cta-blue);
+        }
+        
+        .cta-button a {
+            background-color: var(--accent-blue);
+            color: var(--text-dark);
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .cta-button a:hover {
+            background: var(--cta-hover);
+            color: var(--text-light);
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-content {
+            position: absolute;
+            background-color: #fff;
+            top: 100%;
+            left: 0;
+            display: none;
+            min-width: 220px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 99;
+        }
+        
+        .dropdown-content li a {
+            padding: 10px 15px;
+            white-space: nowrap;
+            color: var(--text-dark);
+        }
+        
+        /* Show dropdown on hover (desktop only) */
+        @media (min-width: 769px) {
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+        }
+        
+        /* MOBILE STYLES */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                background-color: #fff;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                display: none;
+                padding: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .dropdown-content {
+                position: static;
+                display: none;
+                box-shadow: none;
+                padding-left: 15px;
+                width: 100%;
+            }
+            
+            .dropdown-content.show {
+                display: block;
+            }
+            
+            .nav-links li {
+                width: 100%;
+            }
+            
+            .cta-button a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .top-bar {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
+            
+            .navbar {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <span>Mon – Fri 8am to 5pm, Weekends & Holidays - CLOSED</span>
+        <span>📞 +254 700 334 477 ✉ info@ucst.ac.ke</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.jpg" alt="UCST Logo" loading="lazy">
+            </a>
+        </div>
+
+        <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html">Home</a></li>
+
+            <li class="dropdown">
+                <a href="courses.html">Our Courses</a>
+                <ul class="dropdown-content">
+                    <li><a href="mechanical.html">Mechanical & Automotive Engineering</a></li>
+                    <li><a href="business.html">Business & Entrepreneurship</a></li>
+                    <li><a href="electrical.html">Electrical & Electronics Engineering</a></li>
+                    <li><a href="sciences.html">Applied Sciences & Mathematics</a></li>
+                    <li><a href="agriculture.html">Agriculture & Environmental Studies</a></li>
+                    <li><a href="hospitality.html">Hospitality & Institutional Management</a></li>
+                    <li><a href="computing.html">Computing & Informatics</a></li>
+                    <li><a href="fashion.html">Fashion & Design</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="background.html">About Us</a>
+                <ul class="dropdown-content">
+                    <li><a href="background.html">Background</a></li>
+                    <li><a href="mission.html">Mission & Vision</a></li>
+                    <li><a href="core-values.html">Core Values</a></li>
+                    <li><a href="mandate.html">Core Mandate</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="application.html">Online Application</a>
+                <ul class="dropdown-content">
+                    <li><a href="procedures.html">Application Procedures</a></li>
+                    <li><a href="courses.html">Our Courses</a></li>
+                    <li><a href="application.html">Apply Online</a></li>
+                    <li><a href="https://www.helb.co.ke" target="_blank" rel="noopener noreferrer">HELB application</a></li>
+                    <li><a href="https://students.kuccps.net" target="_blank" rel="noopener noreferrer">KUCCPS Portal</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown">
+                <a href="endterm.html">Examinations</a>
+                <ul class="dropdown-content">
+                    <li><a href="endterm.html">End Term Examinations</a></li>
+                    <li><a href="registration.html">KNEC Registration</a></li>
+                    <li><a href="results.html">KNEC Results</a></li>
+                </ul>
+            </li>
+
+            <li><a href="news.html">News</a></li>
+            <li><a href="contacts.html">Contacts</a></li>
+            <li class="cta-button"><a href="student-portal.html">Login to Portal</a></li>
+            <li class="cta-button"><a href="AI-assistant.html">Ask AI-Assistant</a></li>
+        </ul>
+    </nav>
+
+    <!-- Banner Slider -->
+    <div class="banner-marquee" style="margin-top: 130px;">
+        <div class="banner-track">
+            <div class="slide" style="background-image: url('images/back.jpg');">
+                <div class="overlay">
+                    <h1>Welcome to United College Of Science And Technology</h1>
+                    <p>"Empowering Minds, Sharpening Futures"</p>
+                    <a href="application.html" class="btn-apply">Apply Now</a>
+                </div>
+            </div>
+            
+            <div class="slide" style="background-image: url('images/havard.jpg');">
+                <div class="overlay">
+                    <h1>Explore Our Diverse Programs</h1>
+                    <p>Engineering to Hospitality — We've got you covered</p>
+                    <a href="courses.html" class="btn-apply">View Courses</a>
+                </div>
+            </div>
+            
+            <div class="slide" style="background-image: url('images/agrix1.jpeg');">
+                <div class="overlay">
+                    <h1>Excellence in Every Department</h1>
+                    <p>Success stories that inspire</p>
+                    <a href="achievement.html" class="btn-apply">Our Achievements</a>
+                </div>
+            </div>
+            
+            <div class="slide" style="background-image: url('images/agrix2.jpg');">
+                <div class="overlay">
+                    <h1>Hands-On Training</h1>
+                    <p>Practical learning for real-world success</p>
+                    <a href="application.html" class="btn-apply">Learn More</a>
+                </div>
+            </div>
+            
+            <div class="slide" style="background-image: url('images/electrical1.jpg');">
+                <div class="overlay">
+                    <h1>Inclusive Learning Environment</h1>
+                    <p>Education for all — Diverse and united</p>
+                    <a href="background.html" class="btn-apply">About Us</a>
+                </div>
+            </div>
+            
+            <div class="slide" style="background-image: url('images/pex4.jpg');">
+                <div class="overlay">
+                    <h1>Shape Your Future Today</h1>
+                    <p>Join our community of achievers</p>
+                    <a href="application.html" class="btn-apply">Join Now</a>
+                </div>
+            </div>
+            
+            <div class="slide" style="background-image: url('images/beststudent.jpg');">
+                <div class="overlay">
+                    <h1>Explore Our Diverse Programs</h1>
+                    <p>Engineering to Hospitality — We've got you covered</p>
+                    <a href="courses.html" class="btn-apply">View Courses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulletin Bar -->
+    <div class="bulletin-bar">
+        <div class="bulletin-icon">📌</div>
+        <div class="bulletin-message">
+            <div class="bulletin-text active">📅 Semester begins on Monday 1st September 2025.</div>
+            <div class="bulletin-text">📝 CAT 1 exams start 10th September – Check timetable online.</div>
+            <div class="bulletin-text">📢 Staff meeting this Friday at 10:00 AM in Hall B.</div>
+            <div class="bulletin-text">🎓 Career Talk: Join us on 15th August with industry guests.</div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div class="about-section">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>United College Of Science And Technology</h2>
+                <p>U.C.S.T is a technical institute under the Ministry of Education, State Department of Vocational training. It is located along Kakamega–Shinyalu Road at Muranda Market, United College of Science and Technology (UCST) is a forward-thinking institution dedicated to providing high-quality technical and professional education.</p>
+                <p>The institute has a current student population of over 3500 and offers over 50 courses in both technical and business fields ranging from plumbing, hairdressing, tourism, food production to ICT and social work. UCST prides itself in instilling core values to its students.</p>
+                <p>Our mission is to empower students with practical skills, innovation, and a growth mindset needed to excel in today's competitive world. We believe in empowering minds and sharpening futures — one student at a time.</p>
+                <p>UCST offers a broad range of accredited courses designed to equip learners with the skills needed to excel in today's competitive job market. Our dynamic student community benefits from a supportive learning atmosphere where creativity, competence, and ethical leadership are cultivated.</p>
+                <p>At United College of Science and Technology, we take pride not only in academic excellence but also in holistic development. Our students actively participate and succeed in national innovation, sports, and cultural activities, making UCST a hub for well-rounded education.</p>
+                <p>Join us on the journey to build your future through practical knowledge, technological skills, and a growth mindset—because at UCST, we are truly Empowering Minds and Sharpening Futures.</p>
+            </div>
+        </div>
+        
+        <!-- Bottom Wave -->
+        <svg class="about-wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+            <path fill="#0044ff" d="M0,80L1440,0L1440,100L0,100Z"></path>
+        </svg>
+    </div>
+
+    <!-- Courses Gallery -->
+    <section class="gallery-section" id="gallery">
+        <h2 class="gallery-title">Our Courses</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <img src="images/business.jpg" alt="Business and Entrepreneurship" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Business and Entrepreneurship</h3>
+                </div>
+                <a href="business.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/electrical.jpg" alt="Electrical and Electronics Engineering" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Electrical and Electronics Engineering</h3>
+                </div>
+                <a href="electrical.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/building.jpg" alt="Building and Civil Engineering" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Building and Civil Engineering</h3>
+                </div>
+                <a href="mechanical.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/sciences.jpg" alt="Applied sciences" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Applied Sciences & Lab Sciences</h3>
+                </div>
+                <a href="sciences.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/agriculture.jpg" alt="Agriculture and Environmental Studies" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Agriculture & Environmental Studies</h3>
+                </div>
+                <a href="agriculture.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/img3.jpg" alt="Hospitality, Institutional Management" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Hospitality, Institutional Management</h3>
+                </div>
+                <a href="hospitality.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/computing.jpg" alt="Computing & Informatics" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Computing and Informatics (I.C.T)</h3>
+                </div>
+                <a href="computing.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/ict.jpg" alt="Agriculture and Environmental Studies" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Certified Public Accountant</h3>
+                </div>
+                <a href="cpa.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/kitchen.jpg" alt="Food and Beverages" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Food & Beverages</h3>
+                </div>
+                <a href="hospitality.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/mechanic.jpg" alt="Mechanical And Automotive Engineering" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Mechanical and Automotive Engineering</h3>
+                </div>
+                <a href="mechanical.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/ict3.jpg" alt="Computer Science" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Computer Science</h3>
+                </div>
+                <a href="computing.html" class="learn-more-btn">Learn More</a>
+            </div>
+            
+            <div class="gallery-item">
+                <img src="images/pex5.jpg" alt="Business Management" loading="lazy">
+                <div class="gallery-caption">
+                    <h3>Business Management</h3>
+                </div>
+                <a href="computing.html" class="learn-more-btn">Learn More</a>
+            </div>
+           
+        </div>
+    </section>
+
+    <!-- Modal Popup for Image -->
+    <div class="modal" id="imageModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Preview">
+    </div>
+
+    <!-- Wave Section - CENTERED -->
+    <div class="custom-wave-section">
+        <!-- Top wave -->
+        <svg class="custom-wave-top" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+            <path fill="#0044ff" fill-opacity="1" d="M0,0L1440,80L1440,0L0,0Z"></path>
+        </svg>
+        
+        <!-- Blue overlay + text - CENTERED -->
+        <div class="custom-overlay" style="display: flex; align-items: center; justify-content: center; text-align: center;">
+            <h1 style="width: 100%; margin: 0;">Empowering Minds, Sharpening Futures.</h1>
+        </div>
+        
+        <!-- Bottom wave -->
+        <svg class="custom-wave-bottom" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+            <path fill="#0044ff" fill-opacity="1" d="M0,80L1440,0L1440,100L0,100Z"></path>
+        </svg>
+    </div>
+
+    <!-- Why Choose UCST -->
+    <section class="why-choose-section">
+        <h2>Why Choose United College Of Science And Technology?</h2>
+        <p>At United College Of Science And Technology, we are committed to excellence in technical training, innovation, and career development. Here's why we're the right choice for your future:</p>
+        
+        <div class="why-choose-grid">
+            <div class="why-choose-card">
+                <h3>Industry-Relevant Courses</h3>
+                <p>We offer a wide range of accredited courses designed to equip you with practical and employable skills.</p>
+            </div>
+            
+            <div class="why-choose-card">
+                <h3>Modern Facilities</h3>
+                <p>Our workshops and labs are equipped with up-to-date technology to give you hands-on experience.</p>
+            </div>
+            
+            <div class="why-choose-card">
+                <h3>Qualified Trainers</h3>
+                <p>Our dedicated and experienced instructors are passionate about guiding students to success.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements -->
+    <section class="achievements-section">
+        <h2>Our Achievements</h2>
+        
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <h3 class="counter" data-target="2500">0</h3>
+                <p>Graduates</p>
+            </div>
+            
+            <div class="achievement-card">
+                <h3 class="counter" data-target="45">0</h3>
+                <p>Programs Offered</p>
+            </div>
+            
+            <div class="achievement-card">
+                <h3 class="counter" data-target="15">0</h3>
+                <p>Awards Won</p>
+            </div>
+            
+            <div class="achievement-card">
+                <h3 class="counter" data-target="44">0</h3>
+                <p>Years of Service</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
+    <section class="hero-banner-section">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1>Empowering Minds, Sharpening Future</h1>
+                <p>Welcome to United College Of Science And Technology – where skills meet opportunity and dreams become careers.</p>
+                
+                <div class="hero-buttons">
+                    <a href="courses.html" class="hero-btn explore-btn">Explore Programs</a>
+                    <a href="application.html" class="hero-btn apply-btn">Apply Now</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Facts -->
+    <section class="quick-facts-section">
+        <h2>Quick Facts</h2>
+        
+        <div class="quick-facts-grid">
+            <div class="quick-fact-card">
+                <img src="images/students.jpg" alt="Students Icon" loading="lazy">
+                <h3>5,000+ Students</h3>
+                <p>Enrolled across all programs and departments.</p>
+            </div>
+            
+            <div class="quick-fact-card">
+                <img src="images/courses.jpg" alt="Courses Icon" loading="lazy">
+                <h3>60+ Courses</h3>
+                <p>Ranging from Engineering to ICT, Business, and more.</p>
+            </div>
+            
+            <div class="quick-fact-card">
+                <img src="images/years.jpg" alt="Years Icon" loading="lazy">
+                <h3>40+ Years</h3>
+                <p>Of technical education and skills development.</p>
+            </div>
+            
+            <div class="quick-fact-card">
+                <img src="images/graduate.jpg" alt="Graduates Icon" loading="lazy">
+                <h3>10,000+ Graduates</h3>
+                <p>Proud alumni working across the globe.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <!-- Get In Touch -->
+            <div class="footer-column">
+                <h3>Get In Touch</h3>
+                <p><strong>Address:</strong><br>P.O Box 1264–60100 Kakamega–Shinyalu</p>
+                <p><strong>Phone:</strong><br>
+                    <a href="tel:+254700334477">(+254) 700 334 477</a><br>
+                    <a href="tel:+254700532399">(+254) 700 532 399</a>
+                </p>
+                <p><strong>Email:</strong><br>
+                    <a href="mailto:info@ucst.ac.ke">info@ucst.ac.ke</a>
+                </p>
+                <p><strong>Open:</strong><br>Mon – Fri / 9:00AM – 8:00PM</p>
+            </div>
+            
+            <!-- Sitemap -->
+            <div class="footer-column">
+                <h3>Sitemap</h3>
+                <ul>
+                    <li><a href="background.html">About Us</a></li>
+                    <li><a href="courses.html">Our Courses</a></li>
+                    <li><a href="news.html">News</a></li>
+                    <li><a href="mission.html">Mission and Vision</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="application.html">Online Application</a></li>
+                </ul>
+            </div>
+            
+            <!-- Subscribe Newsletter -->
+            <div class="footer-column">
+                <h3>Subscribe Newsletter</h3>
+                <form>
+                    <input type="email" placeholder="Your Email Address" required>
+                    <div class="recaptcha-box">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5264.295508297161!2d37.5032786467435!3d-0.6128239622134545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x18263af3296bb427%3A0x45fed6d3d8fd874b!2sJeremiah%20Nyagah%20National%20Polytechnic!5e0!3m2!1sen!2ske!4v1754576743672!5m2!1sen!2ske" width="300" height="78" style="border:0;"></iframe>
+                    </div>
+                    <button type="submit">Subscribe</button>
+                </form>
+                
+                <!-- Social icons -->
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 United College of Science and Technology. All rights reserved.</p>
+            <p>Empowering Minds, Sharpening the Future</p>
+        </div>
+    </footer>
+
+    <!-- Main CSS -->
+    <style>
+        /* ===== MAIN CSS ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 60px 20px;
+        }
+        
+        h2 {
+            text-align: center;
+            color: var(--primary-blue);
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+        }
+        
+        /* Banner Slider - FIXED: NO DELAY, SLOWER SPEED, MOBILE HEIGHT */
+        .banner-marquee {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Desktop height */
+        .banner-marquee,
+        .banner-track,
+        .slide {
+            height: 70vh;
+        }
+        
+        .banner-track {
+            display: flex;
+            width: 700%;
+            animation: slide 50s infinite linear; /* SLOWER: 50 seconds */
+            animation-delay: 0s; /* NO DELAY - starts immediately */
+        }
+        
+        .slide {
+            flex: 0 0 14.2857%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+        
+        .overlay h1 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            margin-bottom: 15px;
+        }
+        
+        .overlay p {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            margin-bottom: 25px;
+            max-width: 600px;
+        }
+        
+        .btn-apply {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--accent-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-apply:hover {
+            background: var(--primary-blue);
+            transform: translateY(-3px);
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            14.2857% { transform: translateX(0); }
+            28.5714% { transform: translateX(-14.2857%); }
+            42.8571% { transform: translateX(-28.5714%); }
+            57.1428% { transform: translateX(-42.8571%); }
+            71.4285% { transform: translateX(-57.1428%); }
+            85.7142% { transform: translateX(-71.4285%); }
+            100% { transform: translateX(-85.7142%); }
+        }
+        
+        /* Bulletin Bar - FIXED FOR PHONE */
+        .bulletin-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bulletin-blue);
+            color: rgb(8, 8, 7);
+            padding: 12px 15px;
+            min-height: 60px;
+            position: relative;
+            overflow: visible;
+            width: 100%;
+        }
+        
+        .bulletin-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+            flex-shrink: 0;
+        }
+        
+        .bulletin-message {
+            flex: 1;
+            position: relative;
+            height: auto;
+            min-height: 24px;
+            overflow: visible;
+        }
+        
+        .bulletin-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            font-size: 1rem;
+            line-height: 1.4;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            display: block;
+        }
+        
+        .bulletin-text.active {
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        /* About Section */
+        .about-section {
+            position: relative;
+            background: white;
+            padding: 50px 20px;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-text h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+        
+        .about-text p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .about-wave-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+        }
+        
+        /* Gallery Section - FIXED: 4 PER ROW ON DESKTOP, 2 PER ROW ON PHONE */
+        .gallery-section {
+            padding: 10px 20px 40px 20px;
+            margin-top: 0;
+            background: #fff;
+            width: 100%;
+        }
+        
+        .gallery-title {
+            text-align: center;
+            font-size: 2rem;
+            color: #111;
+            margin-bottom: 30px;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+            gap: 20px;
+            align-items: stretch;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .gallery-item {
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        
+        .gallery-caption {
+            padding: 15px;
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .gallery-caption h3 {
+            margin: 0 0 10px;
+            font-size: 1.1rem;
+            color: #222;
+            line-height: 1.4;
+            height: 3.2em;
+            overflow: hidden;
+        }
+        
+        .learn-more-btn {
+            display: block;
+            padding: 10px 15px;
+            background-color: var(--accent-blue);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .learn-more-btn:hover {
+            background-color: var(--primary-blue);
+            transform: scale(1.05);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal img {
+            max-width: 90%;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        /* Wave Section - CENTERED */
+        .custom-wave-section {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: url("images/pex10.jpg") no-repeat center center/cover;
+        }
+        
+        .custom-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .custom-overlay h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            line-height: 1.3;
+        }
+        
+        .custom-wave-top, .custom-wave-bottom {
+            position: absolute;
+            left: 0;
+            width: 100%;
+        }
+        
+        .custom-wave-top {
+            top: 0;
+            transform: rotate(180deg);
+        }
+        
+        .custom-wave-bottom {
+            bottom: 0;
+        }
+        
+        /* Why Choose Section */
+        .why-choose-section {
+            background-color: #edeff0;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .why-choose-section h2 {
+            font-size: 2.2rem;
+            color: #060707;
+            margin-bottom: 20px;
+        }
+        
+        .why-choose-section p {
+            max-width: 800px;
+            margin: 0 auto 40px;
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .why-choose-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .why-choose-card {
+            background: #fff;
+            border: 1px solid #dbe9f4;
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .why-choose-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .why-choose-card h3 {
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .why-choose-card p {
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        /* Achievements Section */
+        .achievements-section {
+            background-color: #717571;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .achievements-section h2 {
+            font-size: 2.2rem;
+            color: #ecf0f5;
+            margin-bottom: 40px;
+        }
+        
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            justify-content: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .achievement-card {
+            background: #77c2ee;
+            border-radius: 10px;
+            padding: 30px 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .achievement-card h3 {
+            font-size: 3rem;
+            color: #030303;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .achievement-card p {
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        /* Hero Banner Section - CENTERED */
+        .hero-banner-section {
+            background: url('images/hero-banner.jpg') no-repeat center center/cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            text-align: center;
+            width: 100%;
+            line-height: 1.6;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .hero-btn {
+            padding: 15px 30px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            transition: all 0.4s ease;
+            text-align: center;
+            font-size: 1.1rem;
+            min-width: 180px;
+        }
+        
+        .explore-btn {
+            background-color: var(--accent-blue);
+            color: white;
+        }
+        
+        .apply-btn {
+            background-color: white;
+            color: black;
+        }
+        
+        .explore-btn:hover {
+            background-color: var(--primary-blue);
+            box-shadow: 0 0 15px var(--accent-blue);
+            transform: translateY(-3px);
+        }
+        
+        .apply-btn:hover {
+            background-color: #28a745;
+            box-shadow: 0 0 15px #28a745;
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* Quick Facts Section */
+        .quick-facts-section {
+            padding: 60px 20px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        
+        .quick-facts-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+        }
+        
+        .quick-facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .quick-fact-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s;
+        }
+        
+        .quick-fact-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .quick-fact-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 20px;
+        }
+        
+        .quick-fact-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+        }
+        
+        .quick-fact-card p {
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #000;
+            color: white;
+            padding: 40px 20px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        
+        .footer-column {
+            margin: 0;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 1.3rem;
+        }
+        
+        .footer-column p, .footer-column a {
+            color: #ccc;
+            font-size: 0.95rem;
+            text-decoration: none;
+            line-height: 1.6;
+        }
+        
+        .footer-column a:hover {
+            color: #00aaff;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column form input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .footer-column form button {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent-blue);
+            border: none;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+        
+        .footer-column form button:hover {
+            background: var(--primary-blue);
+        }
+        
+        .social-icons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* RESPONSIVE STYLES - FIXED GALLERY */
+        @media (max-width: 1024px) {
+            .gallery-grid {
+                grid-template-columns: repeat(3, 1fr); /* 3 columns on tablets */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Mobile banner height - REDUCED */
+            .banner-marquee,
+            .banner-track,
+            .slide {
+                height: 40vh; /* REDUCED for mobile */
+            }
+            
+            .overlay h1 {
+                font-size: 1.5rem;
+            }
+            
+            .overlay p {
+                font-size: 1rem;
+            }
+            
+            /* Bulletin bar for mobile - SHOWS ALL TEXT */
+            .bulletin-bar {
+                padding: 10px;
+                min-height: auto;
+                height: auto;
+            }
+            
+            .bulletin-icon {
+                font-size: 1.2rem;
+                margin-right: 10px;
+            }
+            
+            .bulletin-message {
+                height: auto;
+                min-height: auto;
+            }
+            
+            .bulletin-text {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                position: static;
+                opacity: 0;
+                transform: none;
+                display: none;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+            
+            .bulletin-text.active {
+                display: block;
+                opacity: 1;
+                position: static;
+                transform: none;
+            }
+            
+            /* Gallery for mobile - 2 PER ROW */
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columns on phone */
+                gap: 15px;
+            }
+            
+            .gallery-item img {
+                height: 150px;
+            }
+            
+            .gallery-caption h3 {
+                height: auto;
+                min-height: 3.2em;
+                font-size: 1rem;
+            }
+            
+            .custom-wave-section {
+                height: 300px;
+            }
+            
+            .custom-overlay h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .hero-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .why-choose-grid, .achievements-grid, .quick-facts-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .banner-marquee,
+            .banner-track,
+            .slide {
+                height: 35vh; /* Even smaller for very small screens */
+            }
+            
+            .overlay h1 {
+                font-size: 1.3rem;
+            }
+            
+            .overlay p {
+                font-size: 0.9rem;
+            }
+            
+            .bulletin-text {
+                font-size: 0.85rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr); /* Still 2 per row */
+                gap: 10px;
+            }
+            
+            .gallery-item img {
+                height: 130px;
+            }
+            
+            .gallery-caption h3 {
+                font-size: 0.9rem;
+                height: auto;
+            }
+            
+            .custom-wave-section {
+                height: 200px;
+            }
+            
+            .custom-overlay h1 {
+                font-size: 1.5rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-column {
+                text-align: center;
+            }
+            
+            .social-icons {
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .gallery-grid {
+                grid-template-columns: 1fr; /* 1 column on very small screens */
+            }
+        }
+    </style>
+
+    <!-- JavaScript -->
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const navLinks = document.getElementById('nav-links');
+            
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', () => {
+                    navLinks.classList.toggle('active');
+                });
+            }
+            
+            // Mobile dropdown toggle
+            document.querySelectorAll('.dropdown > a').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        const dropdownContent = this.nextElementSibling;
+                        
+                        // Close all other dropdowns
+                        document.querySelectorAll('.dropdown-content').forEach(content => {
+                            if (content !== dropdownContent) {
+                                content.classList.remove('show');
+                            }
+                        });
+                        
+                        dropdownContent.classList.toggle('show');
+                    }
+                });
+            });
+            
+            // Close dropdowns if clicking outside
+            document.addEventListener('click', function (e) {
+                if (window.innerWidth <= 768 && !e.target.closest('.dropdown')) {
+                    document.querySelectorAll('.dropdown-content').forEach(content => {
+                        content.classList.remove('show');
+                    });
+                }
+            });
+            
+            // Bulletin text rotation - SIMPLE AND WORKING
+            const messages = document.querySelectorAll(".bulletin-text");
+            if (messages.length > 0) {
+                let index = 0;
+                
+                // Show first message
+                messages[index].classList.add("active");
+                
+                // Function to rotate messages
+                function rotateBulletin() {
+                    // Hide current message
+                    messages[index].classList.remove("active");
+                    
+                    // Move to next message
+                    index = (index + 1) % messages.length;
+                    
+                    // Show next message
+                    messages[index].classList.add("active");
+                }
+                
+                // Start rotation
+                setInterval(rotateBulletin, 4000);
+            }
+            
+            // Counter animation
+            const counters = document.querySelectorAll('.counter');
+            if (counters.length > 0) {
+                const speed = 200;
+                
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const increment = target / speed;
+                        
+                        if (count < target) {
+                            counter.innerText = Math.ceil(count + increment);
+                            setTimeout(updateCount, 20);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    
+                    const onScroll = () => {
+                        const rect = counter.getBoundingClientRect();
+                        if (rect.top < window.innerHeight) {
+                            updateCount();
+                            window.removeEventListener('scroll', onScroll);
+                        }
+                    };
+                    
+                    window.addEventListener('scroll', onScroll);
+                });
+            }
+            
+            // Image modal
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            
+            document.querySelectorAll('.gallery-item img').forEach(img => {
+                img.addEventListener('click', () => {
+                    modal.classList.add('active');
+                    modalImage.src = img.src;
+                    modalImage.alt = img.alt;
+                });
+            });
+            
+            function closeModal() {
+                modal.classList.remove('active');
+                modalImage.src = '';
+            }
+            
+            // Close modal on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal || e.target.classList.contains('modal-close')) {
+                    closeModal();
+                }
+            });
+            
+            // Banner animation starts immediately - NO DELAY
+            window.addEventListener('load', function() {
+                const bannerTrack = document.querySelector('.banner-track');
+                if (bannerTrack) {
+                    bannerTrack.style.animation = 'slide 50s infinite linear';
+                    bannerTrack.style.animationDelay = '0s';
+                }
+            });
+            
+            // Start banner immediately
+            const bannerTrack = document.querySelector('.banner-track');
+            if (bannerTrack) {
+                bannerTrack.style.animation = 'slide 50s infinite linear';
+                bannerTrack.style.animationDelay = '0s';
+            }
+        });
+    </script>
+</body>
+</html>

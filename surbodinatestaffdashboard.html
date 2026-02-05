@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>United College - Staff Portal</title>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2c5aa0;
+            --secondary: #1e3a5f;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --body-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #dee2e6;
+            --sidebar-bg: #1e3a5f;
+            --sidebar-hover: #2c5aa0;
+        }
+
+        [data-theme="dark"] {
+            --primary: #3a7bd5;
+            --secondary: #2d4a6e;
+            --body-bg: #1a1d23;
+            --card-bg: #2d3748;
+            --text-color: #e2e8f0;
+            --border-color: #4a5568;
+            --light: #2d3748;
+            --sidebar-bg: #1a202c;
+            --sidebar-hover: #2d3748;
+        }
+        
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            transition: all 0.3s ease;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 0;
+            margin-bottom: 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .college-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            color: white;
+            min-height: calc(100vh - 70px);
+            padding: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-sticky {
+            position: sticky;
+            top: 0;
+            padding-top: 15px;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 10px 15px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: var(--sidebar-hover);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: var(--sidebar-hover);
+            border-left: 3px solid white;
+        }
+        
+        .sidebar .nav-link i {
+            width: 18px;
+            margin-right: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            padding: 15px;
+            background-color: var(--body-bg);
+            min-height: calc(100vh - 70px);
+        }
+        
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            background-color: var(--light);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .stat-card i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .stat-card .label {
+            font-size: 0.85rem;
+        }
+        
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .module-section {
+            display: none;
+        }
+        
+        .module-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .table {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: var(--text-color);
+            background-color: var(--light);
+            font-size: 0.85rem;
+            padding: 10px 12px;
+        }
+        
+        .table td {
+            padding: 8px 12px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-success {
+            background: var(--success);
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            border: none;
+            color: #212529;
+            font-size: 0.9rem;
+        }
+        
+        .bg-primary { background: var(--primary) !important; }
+        .bg-success { background: var(--success) !important; }
+        .bg-warning { background: var(--warning) !important; }
+        .bg-danger { background: var(--danger) !important; }
+        .bg-info { background: var(--info) !important; }
+        
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .settings-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .export-buttons {
+            margin-bottom: 10px;
+        }
+        
+        .attendance-history, .payroll-history, .leave-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .quick-actions .btn {
+            padding: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .quick-actions .btn i {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Status badges for leave management */
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-badge.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-badge.on-leave {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        /* Success message */
+        .success-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .success-message.show {
+            transform: translateX(0);
+        }
+        
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 50px auto;
+                padding: 20px;
+            }
+            
+            .dashboard-header h3 {
+                font-size: 1.2rem;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 70px;
+                left: -250px;
+                width: 250px;
+                height: calc(100vh - 70px);
+                z-index: 1000;
+                transition: left 0.3s;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .main-content {
+                padding: 10px;
+            }
+            
+            .stat-card i {
+                font-size: 1.2rem;
+            }
+            
+            .stat-card .value {
+                font-size: 1rem;
+            }
+            
+            .profile-pic {
+                width: 70px;
+                height: 70px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .login-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .card-body {
+                padding: 12px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+        }
+        
+        .currency {
+            font-weight: 600;
+        }
+        
+        .attendance-status {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        
+        .leave-status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .leave-status-approved {
+            background-color: #d1edff;
+            color: #0c5460;
+        }
+        
+        .leave-status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Section -->
+    <div id="loginSection">
+        <div class="login-container">
+            <div class="text-center mb-4">
+                <i class="fas fa-user-tie fa-2x text-primary mb-3"></i>
+                <h2 style="font-size: 1.5rem;">United College of Science and Technology</h2>
+                <p class="text-muted" style="font-size: 0.9rem;">Staff Portal Login</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label" style="font-size: 0.9rem;">Full Name</label>
+                    <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required style="font-size: 0.9rem;">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" style="font-size: 0.9rem;">Employee ID</label>
+                    <input type="text" class="form-control" id="employeeId" placeholder="Enter employee ID" required style="font-size: 0.9rem;">
+                </div>
+                <button type="submit" class="btn btn-primary w-100 mb-3" style="font-size: 0.9rem;">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Portal
+                </button>
+                <div class="text-center">
+                    <a href="#" id="forgotPasswordLink" class="text-decoration-none" style="font-size: 0.85rem;">Forgot Employee ID?</a>
+                </div>
+            </form>
+            
+            <div id="loginMessage" class="alert alert-danger mt-3 d-none" style="font-size: 0.85rem;"></div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-size: 1.1rem;">Recover Employee ID</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 0.9rem;">Contact HR department to recover your Employee ID.</p>
+                    <div class="alert alert-info" style="font-size: 0.85rem;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Please visit the HR office or call 0722-XXX-XXX for assistance.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-size: 0.9rem;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="d-none">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-6 d-flex align-items-center justify-content-center justify-content-md-start">
+                        <button class="mobile-menu-btn me-3" id="mobileMenuBtn">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h3 class="college-title mb-0"><i class="fas fa-user-tie me-2"></i>STAFF PORTAL DASHBOARD</h3>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="theme-toggle me-3" id="themeToggle" title="Toggle Dark Mode">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button class="settings-btn me-3" id="settingsBtn" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <div class="dropdown d-inline-block me-3">
+                            <button class="btn btn-light position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown" style="font-size: 0.9rem;">
+                                <i class="fas fa-bell"></i>
+                                <span class="notification-badge" id="notificationCount">0</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" id="notificationList">
+                                <li><a class="dropdown-item" href="#" style="font-size: 0.85rem;"><i class="fas fa-info-circle me-2 text-info"></i>No new notifications</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown d-inline-block">
+                            <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" style="font-size: 0.9rem;">
+                                <img src="https://ui-avatars.com/api/?name=Staff&background=3498db&color=fff" class="profile-pic me-2" style="width: 30px; height: 30px;">
+                                <span id="staffNameHeader">Staff</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" data-module="profile" style="font-size: 0.85rem;"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn" style="font-size: 0.85rem;"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar Navigation -->
+                <div class="col-md-3 col-lg-2 sidebar" id="sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-module="overview">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="profile">
+                                    <i class="fas fa-user"></i> My Profile
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="attendance">
+                                    <i class="fas fa-calendar-check"></i> Attendance
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="payroll">
+                                    <i class="fas fa-money-bill"></i> Payroll
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-module="leaves">
+                                    <i class="fas fa-calendar-day"></i> Leave Management
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="col-md-9 col-lg-10 main-content">
+                    <!-- Overview Section -->
+                    <div id="overview" class="module-section active">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <img src="https://ui-avatars.com/api/?name=Staff&background=3498db&color=fff" class="profile-pic mb-3" id="mainProfilePic">
+                                        <h5 id="staffFullName" style="font-size: 1.1rem;">Lilian Muli</h5>
+                                        <p class="text-muted" id="staffPosition" style="font-size: 0.85rem;">Chief Accountant</p>
+                                        <p class="text-muted" id="staffDepartment" style="font-size: 0.85rem;">Finance & Accounts</p>
+                                        <p style="font-size: 0.9rem;"><strong>Employee ID:</strong> <span id="staffEmployeeId">STF2025001</span></p>
+                                        <button class="btn btn-outline-primary btn-sm" data-module="profile" style="font-size: 0.8rem;">
+                                            <i class="fas fa-edit me-1"></i>View Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card stat-card bg-primary">
+                                            <i class="fas fa-calendar-check"></i>
+                                            <div class="value" id="daysPresent">22</div>
+                                            <div class="label">Days Present (This Month)</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card stat-card bg-success">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <div class="value" id="netSalary">Ksh 60,000</div>
+                                            <div class="label">Net Salary</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card stat-card bg-info">
+                                            <i class="fas fa-calendar-day"></i>
+                                            <div class="value" id="leaveBalance">18</div>
+                                            <div class="label">Leave Days Balance</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mt-2">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0" style="font-size: 0.95rem;"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row quick-actions">
+                                            <div class="col-md-4 text-center mb-3">
+                                                <button class="btn btn-outline-primary btn-lg p-3 w-100" data-module="attendance">
+                                                    <i class="fas fa-fingerprint fa-2x mb-2"></i><br>
+                                                    Mark Attendance
+                                                </button>
+                                            </div>
+                                            <div class="col-md-4 text-center mb-3">
+                                                <button class="btn btn-outline-success btn-lg p-3 w-100" data-module="leaves">
+                                                    <i class="fas fa-calendar-plus fa-2x mb-2"></i><br>
+                                                    Apply Leave
+                                                </button>
+                                            </div>
+                                            <div class="col-md-4 text-center mb-3">
+                                                <button class="btn btn-outline-info btn-lg p-3 w-100" data-module="payroll">
+                                                    <i class="fas fa-file-invoice-dollar fa-2x mb-2"></i><br>
+                                                    Pay Slip
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0" style="font-size: 0.95rem;"><i class="fas fa-history me-2"></i>Recent Activity</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group list-group-flush" id="recentActivityList">
+                                            <div class="list-group-item" style="font-size: 0.85rem;">
+                                                <i class="fas fa-fingerprint text-success me-2"></i>
+                                                Attendance marked - Today
+                                                <small class="text-muted d-block">8:30 AM</small>
+                                            </div>
+                                            <div class="list-group-item" style="font-size: 0.85rem;">
+                                                <i class="fas fa-calendar-check text-info me-2"></i>
+                                                Leave application approved
+                                                <small class="text-muted d-block">2 days ago</small>
+                                            </div>
+                                            <div class="list-group-item" style="font-size: 0.85rem;">
+                                                <i class="fas fa-money-bill-wave text-warning me-2"></i>
+                                                Salary processed for September
+                                                <small class="text-muted d-block">1 week ago</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0" style="font-size: 0.95rem;"><i class="fas fa-calendar me-2"></i>Upcoming Events</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="list-group list-group-flush">
+                                            <div class="list-group-item" style="font-size: 0.85rem;">
+                                                <i class="fas fa-users text-primary me-2"></i>
+                                                Staff Meeting
+                                                <small class="text-muted d-block">Oct 15, 2023 - 10:00 AM</small>
+                                            </div>
+                                            <div class="list-group-item" style="font-size: 0.85rem;">
+                                                <i class="fas fa-gift text-warning me-2"></i>
+                                                College Anniversary
+                                                <small class="text-muted d-block">Oct 20, 2023</small>
+                                            </div>
+                                            <div class="list-group-item" style="font-size: 0.85rem;">
+                                                <i class="fas fa-money-check text-success me-2"></i>
+                                                Salary Payment
+                                                <small class="text-muted d-block">Oct 25, 2023</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section -->
+                    <div id="profile" class="module-section">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <img src="https://ui-avatars.com/api/?name=Staff&background=3498db&color=fff" class="profile-pic mb-3" id="profilePicture">
+                                        <input type="file" id="profilePictureInput" class="d-none" accept="image/*">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="document.getElementById('profilePictureInput').click()" style="font-size: 0.8rem;">
+                                            <i class="fas fa-camera me-1"></i>Change Photo
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h6 class="card-title mb-0" style="font-size: 0.95rem;"><i class="fas fa-id-card me-2"></i>Employment Details</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <p style="font-size: 0.85rem;"><strong>Employee ID:</strong> <span id="profileEmployeeId">STF2025001</span></p>
+                                        <p style="font-size: 0.85rem;"><strong>Department:</strong> <span id="profileDepartment">Finance & Accounts</span></p>
+                                        <p style="font-size: 0.85rem;"><strong>Position:</strong> <span id="profilePosition">Chief Accountant</span></p>
+                                        <p style="font-size: 0.85rem;"><strong>Employment Date:</strong> <span id="profileEmploymentDate">2025-09-30</span></p>
+                                        <p style="font-size: 0.85rem;"><strong>Status:</strong> <span class="badge bg-success" id="profileStatus">Active</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-user-edit me-2"></i>Personal Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="profileForm">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">First Name</label>
+                                                        <input type="text" class="form-control" id="profileFirstName" style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">Last Name</label>
+                                                        <input type="text" class="form-control" id="profileLastName" style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">Email</label>
+                                                        <input type="email" class="form-control" id="profileEmail" style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">Phone</label>
+                                                        <input type="tel" class="form-control" id="profilePhone" style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" style="font-size: 0.9rem;">Address</label>
+                                                <textarea class="form-control" id="profileAddress" rows="2" style="font-size: 0.9rem;"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary" style="font-size: 0.9rem;">
+                                                <i class="fas fa-save me-1"></i>Update Profile
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Section -->
+                    <div id="attendance" class="module-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-calendar-check me-2"></i>Attendance Records</h5>
+                                        <button class="btn btn-sm btn-outline-primary" id="markAttendanceBtn" style="font-size: 0.8rem;">
+                                            <i class="fas fa-fingerprint me-1"></i>Mark Today's Attendance
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive attendance-history">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Day</th>
+                                                        <th>Time In</th>
+                                                        <th>Status</th>
+                                                        <th>Remarks</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="attendanceRecordsBody">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">Loading attendance records...</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-chart-bar me-2"></i>Attendance Summary</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center mb-4">
+                                            <div class="display-4 text-primary" id="attendancePercentage">92%</div>
+                                            <p class="text-muted" style="font-size: 0.85rem;">This Month's Attendance</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span style="font-size: 0.85rem;">Present</span>
+                                                <span style="font-size: 0.85rem;" id="presentDays">22 days</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" style="width: 92%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span style="font-size: 0.85rem;">Absent</span>
+                                                <span style="font-size: 0.85rem;" id="absentDays">2 days</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-danger" style="width: 8%"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="d-flex justify-content-between mb-1">
+                                                <span style="font-size: 0.85rem;">Late</span>
+                                                <span style="font-size: 0.85rem;" id="lateDays">1 day</span>
+                                            </div>
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-warning" style="width: 4%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payroll Section -->
+                    <div id="payroll" class="module-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-money-bill-wave me-2"></i>Salary Details</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row text-center mb-4">
+                                            <div class="col-6">
+                                                <h4 id="basicSalary" class="currency" style="font-size: 1.2rem;">Ksh 60,000</h4>
+                                                <p class="text-muted" style="font-size: 0.85rem;">Basic Salary</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <h4 id="netPay" class="currency" style="font-size: 1.2rem;">Ksh 54,200</h4>
+                                                <p class="text-muted" style="font-size: 0.85rem;">Net Pay</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h6 style="font-size: 0.9rem;">Allowances</h6>
+                                                <ul class="list-unstyled" style="font-size: 0.85rem;">
+                                                    <li>Housing: <span class="float-end">Ksh 5,000</span></li>
+                                                    <li>Transport: <span class="float-end">Ksh 3,000</span></li>
+                                                    <li>Medical: <span class="float-end">Ksh 2,000</span></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-6">
+                                                <h6 style="font-size: 0.9rem;">Deductions</h6>
+                                                <ul class="list-unstyled" style="font-size: 0.85rem;">
+                                                    <li>Tax: <span class="float-end">Ksh 6,500</span></li>
+                                                    <li>NSSF: <span class="float-end">Ksh 1,080</span></li>
+                                                    <li>SHA: <span class="float-end">Ksh 1,200</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-history me-2"></i>Payroll History</h5>
+                                        <div class="export-buttons">
+                                            <button class="btn btn-sm btn-outline-primary" id="exportPayslip" style="font-size: 0.8rem;">
+                                                <i class="fas fa-file-pdf me-1"></i>Export
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body payroll-history">
+                                        <div id="payrollHistory">
+                                            <p class="text-muted" style="font-size: 0.85rem;">Loading payroll history...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leave Management Section -->
+                    <div id="leaves" class="module-section">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-calendar-plus me-2"></i>Apply for Leave</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="leaveApplicationForm">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">Leave Type</label>
+                                                        <select class="form-control" id="leaveType" required style="font-size: 0.9rem;">
+                                                            <option value="">Select Leave Type</option>
+                                                            <option value="Annual">Annual Leave</option>
+                                                            <option value="Sick">Sick Leave</option>
+                                                            <option value="Emergency">Emergency Leave</option>
+                                                            <option value="Maternity">Maternity Leave</option>
+                                                            <option value="Paternity">Paternity Leave</option>
+                                                            <option value="Study">Study Leave</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">Duration (Days)</label>
+                                                        <input type="number" class="form-control" id="leaveDuration" min="1" max="30" required style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">Start Date</label>
+                                                        <input type="date" class="form-control" id="leaveStartDate" required style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" style="font-size: 0.9rem;">End Date</label>
+                                                        <input type="date" class="form-control" id="leaveEndDate" required style="font-size: 0.9rem;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label" style="font-size: 0.9rem;">Reason</label>
+                                                <textarea class="form-control" id="leaveReason" rows="3" required style="font-size: 0.9rem;" placeholder="Please provide a reason for your leave application..."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-success" style="font-size: 0.9rem;">
+                                                <i class="fas fa-paper-plane me-1"></i>Submit Leave Application
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-history me-2"></i>Leave History</h5>
+                                    </div>
+                                    <div class="card-body leave-history">
+                                        <div id="leaveHistory">
+                                            <p class="text-muted" style="font-size: 0.85rem;">Loading leave history...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mt-3">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0" style="font-size: 1rem;"><i class="fas fa-chart-pie me-2"></i>Leave Balance</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center mb-3">
+                                            <div class="display-4 text-primary" id="totalLeaveBalance">21</div>
+                                            <p class="text-muted" style="font-size: 0.85rem;">Total Leave Days Available</p>
+                                        </div>
+                                        <div style="font-size: 0.85rem;">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Annual Leave</span>
+                                                <span class="fw-bold">18 days</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <span>Sick Leave</span>
+                                                <span class="fw-bold">10 days</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Emergency Leave</span>
+                                                <span class="fw-bold">5 days</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-size: 1.1rem;"><i class="fas fa-cog me-2"></i>Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size: 0.9rem;">Notification Preferences</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                            <label class="form-check-label" for="emailNotifications" style="font-size: 0.9rem;">
+                                Email Notifications
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="smsNotifications" checked>
+                            <label class="form-check-label" for="smsNotifications" style="font-size: 0.9rem;">
+                                SMS Notifications
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size: 0.9rem;">Language</label>
+                        <select class="form-control" id="languagePreference" style="font-size: 0.9rem;">
+                            <option value="en">English</option>
+                            <option value="sw">Swahili</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" style="font-size: 0.9rem;">Theme</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="theme" id="lightTheme" value="light" checked>
+                            <label class="form-check-label" for="lightTheme" style="font-size: 0.9rem;">
+                                Light Mode
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="theme" id="darkTheme" value="dark">
+                            <label class="form-check-label" for="darkTheme" style="font-size: 0.9rem;">
+                                Dark Mode
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="font-size: 0.9rem;">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveSettings" style="font-size: 0.9rem;">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i>
+        <span>Operation completed successfully!</span>
+    </div>
+
+    <!-- Bootstrap & jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- jsPDF for PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAQZ1_Grh00sFgOp8pxkKff10sMFSw9xlc",
+        authDomain: "jnnp-system.firebaseapp.com",
+        databaseURL: "https://jnnp-system-default-rtdb.firebaseio.com",
+        projectId: "jnnp-system",
+        storageBucket: "jnnp-system.firebasestorage.app",
+        messagingSenderId: "769232855377",
+        appId: "1:769232855377:web:e3ba51e3e25cc24735f370"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Global variables
+    let currentStaff = null;
+    let currentStaffKey = null;
+    let isDarkMode = false;
+    let leaves = {};
+    let notifications = {};
+
+    // Login functionality
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        staffLogin();
+    });
+
+    function staffLogin() {
+        const fullName = document.getElementById('fullName').value.trim();
+        const employeeId = document.getElementById('employeeId').value.trim();
+        const loginMessage = document.getElementById('loginMessage');
+
+        loginMessage.classList.add('d-none');
+
+        if (!fullName || !employeeId) {
+            showLoginMessage('Please enter both Full Name and Employee ID.', 'danger');
+            return;
+        }
+
+        const staffRef = database.ref('non_teaching_staff');
+        
+        staffRef.once('value')
+            .then((snapshot) => {
+                const allData = snapshot.val();
+                
+                if (!allData) {
+                    showLoginMessage('No staff records found in database.', 'danger');
+                    return;
+                }
+
+                let staffFound = false;
+                
+                for (const [key, staffData] of Object.entries(allData)) {
+                    if (staffData.employeeId === employeeId) {
+                        staffFound = true;
+                        
+                        const staffFullName = `${staffData.firstName} ${staffData.lastName}`;
+                        if (staffFullName.toLowerCase() === fullName.toLowerCase()) {
+                            currentStaff = staffData;
+                            currentStaffKey = key;
+                            
+                            showLoginMessage('Login successful! Loading dashboard...', 'success');
+                            
+                            setTimeout(() => {
+                                loadStaffDashboard();
+                            }, 1000);
+                            
+                        } else {
+                            showLoginMessage('Full Name does not match Employee ID.', 'danger');
+                        }
+                        break;
+                    }
+                }
+                
+                if (!staffFound) {
+                    showLoginMessage('Employee ID not found.', 'danger');
+                }
+            })
+            .catch((error) => {
+                console.error('Database error:', error);
+                showLoginMessage('Database connection failed. Please try again.', 'danger');
+            });
+    }
+
+    function showLoginMessage(message, type) {
+        const loginMessage = document.getElementById('loginMessage');
+        loginMessage.textContent = message;
+        loginMessage.className = `alert alert-${type} mt-3`;
+        loginMessage.classList.remove('d-none');
+    }
+
+    function loadStaffDashboard() {
+        document.getElementById('loginSection').classList.add('d-none');
+        document.getElementById('dashboardSection').classList.remove('d-none');
+        
+        loadStaffData();
+    }
+
+    function loadStaffData() {
+        if (!currentStaff) return;
+
+        // Update basic info
+        const fullName = `${currentStaff.firstName} ${currentStaff.lastName}`;
+        document.getElementById('staffNameHeader').textContent = currentStaff.firstName;
+        document.getElementById('staffFullName').textContent = fullName;
+        document.getElementById('staffPosition').textContent = currentStaff.position;
+        document.getElementById('staffDepartment').textContent = currentStaff.department;
+        document.getElementById('staffEmployeeId').textContent = currentStaff.employeeId;
+        
+        // Update profile section
+        document.getElementById('profileEmployeeId').textContent = currentStaff.employeeId;
+        document.getElementById('profileDepartment').textContent = currentStaff.department;
+        document.getElementById('profilePosition').textContent = currentStaff.position;
+        document.getElementById('profileEmploymentDate').textContent = currentStaff.employmentDate;
+        document.getElementById('profileStatus').textContent = currentStaff.status;
+        
+        document.getElementById('profileFirstName').value = currentStaff.firstName || '';
+        document.getElementById('profileLastName').value = currentStaff.lastName || '';
+        document.getElementById('profileEmail').value = currentStaff.email || '';
+        document.getElementById('profilePhone').value = currentStaff.phone || '';
+        document.getElementById('profileAddress').value = currentStaff.address || '';
+        
+        // Update profile pictures
+        const profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=3498db&color=fff`;
+        document.querySelectorAll('.profile-pic').forEach(img => {
+            img.src = profilePic;
+        });
+        
+        // Load additional data
+        loadAttendanceData();
+        loadPayrollData();
+        loadLeaveData();
+        loadNotifications();
+    }
+
+    function loadAttendanceData() {
+        const attendanceRef = database.ref('staff_attendance');
+        attendanceRef.orderByChild('records').once('value')
+            .then((snapshot) => {
+                let attendanceHTML = '';
+                let presentDays = 0;
+                let totalDays = 0;
+                
+                if (snapshot.exists()) {
+                    const today = new Date().toISOString().split('T')[0];
+                    const currentMonth = new Date().getMonth();
+                    const currentYear = new Date().getFullYear();
+                    
+                    snapshot.forEach((childSnapshot) => {
+                        const attendance = childSnapshot.val();
+                        const attendanceDate = attendance.date;
+                        
+                        // Check if this attendance record is for the current staff
+                        if (attendance.records && attendance.records[currentStaff.employeeId]) {
+                            const record = attendance.records[currentStaff.employeeId];
+                            const recordDate = new Date(attendanceDate);
+                            
+                            // Count for current month
+                            if (recordDate.getMonth() === currentMonth && recordDate.getFullYear() === currentYear) {
+                                totalDays++;
+                                if (record.status === 'Present') {
+                                    presentDays++;
+                                }
+                            }
+                            
+                            // Format date for display
+                            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+                            const formattedDate = recordDate.toLocaleDateString('en-US', options);
+                            
+                            attendanceHTML += `
+                                <tr>
+                                    <td style="font-size: 0.85rem;">${attendanceDate}</td>
+                                    <td style="font-size: 0.85rem;">${formattedDate.split(',')[0]}</td>
+                                    <td style="font-size: 0.85rem;">${record.timeIn || 'N/A'}</td>
+                                    <td><span class="attendance-status badge ${record.status === 'Present' ? 'bg-success' : record.status === 'Absent' ? 'bg-danger' : 'bg-warning'}">${record.status || 'N/A'}</span></td>
+                                    <td style="font-size: 0.85rem;">${record.remarks || '-'}</td>
+                                </tr>
+                            `;
+                        }
+                    });
+                    
+                    if (attendanceHTML === '') {
+                        attendanceHTML = '<tr><td colspan="5" class="text-center" style="font-size: 0.85rem;">No attendance records found.</td></tr>';
+                    }
+                    
+                    // Update attendance summary
+                    const attendancePercentage = totalDays > 0 ? Math.round((presentDays / totalDays) * 100) : 0;
+                    document.getElementById('attendancePercentage').textContent = `${attendancePercentage}%`;
+                    document.getElementById('presentDays').textContent = `${presentDays} days`;
+                    document.getElementById('absentDays').textContent = `${totalDays - presentDays} days`;
+                    document.getElementById('daysPresent').textContent = presentDays;
+                } else {
+                    attendanceHTML = '<tr><td colspan="5" class="text-center" style="font-size: 0.85rem;">No attendance records found.</td></tr>';
+                }
+                
+                document.getElementById('attendanceRecordsBody').innerHTML = attendanceHTML;
+            })
+            .catch((error) => {
+                console.error('Attendance data error:', error);
+                document.getElementById('attendanceRecordsBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger" style="font-size: 0.85rem;">Error loading attendance records.</td></tr>';
+            });
+    }
+
+    function loadPayrollData() {
+        const payrollRef = database.ref('staff_payroll');
+        payrollRef.orderByChild('staffId').equalTo(currentStaff.employeeId).once('value')
+            .then((snapshot) => {
+                let payrollHTML = '';
+                let payrollHistory = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((childSnapshot) => {
+                        const payroll = childSnapshot.val();
+                        
+                        payrollHistory += `
+                            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                <div>
+                                    <strong style="font-size: 0.85rem;">${payroll.month || 'N/A'} ${payroll.year || ''}</strong><br>
+                                    <small class="text-muted" style="font-size: 0.8rem;">Basic: Ksh ${(payroll.basicSalary || 0).toLocaleString()}</small>
+                                </div>
+                                <div class="text-end">
+                                    <strong class="text-success" style="font-size: 0.85rem;">Ksh ${(payroll.netSalary || 0).toLocaleString()}</strong><br>
+                                    <small class="text-muted" style="font-size: 0.8rem;">${payroll.status || 'Processed'}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    document.getElementById('payrollHistory').innerHTML = payrollHistory;
+                    
+                    // Update salary details
+                    document.getElementById('basicSalary').textContent = `Ksh ${(currentStaff.salary || 0).toLocaleString()}`;
+                    document.getElementById('netSalary').textContent = `Ksh ${(currentStaff.salary || 0).toLocaleString()}`;
+                    document.getElementById('netPay').textContent = `Ksh ${(currentStaff.salary || 0).toLocaleString()}`;
+                } else {
+                    document.getElementById('payrollHistory').innerHTML = '<p class="text-muted" style="font-size: 0.85rem;">No payroll records found.</p>';
+                    document.getElementById('basicSalary').textContent = `Ksh ${(currentStaff.salary || 0).toLocaleString()}`;
+                    document.getElementById('netSalary').textContent = `Ksh ${(currentStaff.salary || 0).toLocaleString()}`;
+                }
+            })
+            .catch((error) => {
+                console.error('Payroll data error:', error);
+                document.getElementById('payrollHistory').innerHTML = '<p class="text-danger" style="font-size: 0.85rem;">Error loading payroll history.</p>';
+            });
+    }
+
+    function loadLeaveData() {
+        const leaveRef = database.ref('staff_leaves');
+        leaveRef.orderByChild('staffId').equalTo(currentStaffKey).once('value')
+            .then((snapshot) => {
+                let leaveHTML = '';
+                let pendingLeaves = 0;
+                let approvedLeaves = 0;
+                
+                if (snapshot.exists()) {
+                    leaves = snapshot.val();
+                    
+                    snapshot.forEach((childSnapshot) => {
+                        const leave = childSnapshot.val();
+                        
+                        if (leave.status === 'Pending') pendingLeaves++;
+                        if (leave.status === 'Approved') approvedLeaves++;
+                        
+                        const statusClass = getLeaveStatusClass(leave.status);
+                        
+                        leaveHTML += `
+                            <div class="border-bottom pb-2 mb-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <strong style="font-size: 0.85rem;">${leave.leaveType || 'N/A'}</strong>
+                                    <span class="badge ${statusClass} attendance-status">${leave.status || 'Pending'}</span>
+                                </div>
+                                <div style="font-size: 0.8rem;">
+                                    <span class="text-muted">${leave.startDate || 'N/A'} to ${leave.endDate || 'N/A'}</span><br>
+                                    <span class="text-muted">Duration: ${leave.duration || 0} days</span>
+                                </div>
+                                <div style="font-size: 0.8rem;" class="mt-1">
+                                    <em>${leave.reason || 'No reason provided'}</em>
+                                </div>
+                                ${leave.status === 'Pending' ? `
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-danger" onclick="cancelLeave('${childSnapshot.key}')" style="font-size: 0.7rem;">
+                                        <i class="fas fa-times me-1"></i>Cancel Application
+                                    </button>
+                                </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    document.getElementById('leaveHistory').innerHTML = leaveHTML;
+                    
+                    // Update leave balance
+                    const totalLeaveBalance = 21 - approvedLeaves;
+                    document.getElementById('leaveBalance').textContent = totalLeaveBalance;
+                    document.getElementById('totalLeaveBalance').textContent = totalLeaveBalance;
+                } else {
+                    document.getElementById('leaveHistory').innerHTML = '<p class="text-muted" style="font-size: 0.85rem;">No leave records found.</p>';
+                }
+            })
+            .catch((error) => {
+                console.error('Leave data error:', error);
+                document.getElementById('leaveHistory').innerHTML = '<p class="text-danger" style="font-size: 0.85rem;">Error loading leave history.</p>';
+            });
+    }
+
+    function getLeaveStatusClass(status) {
+        switch(status) {
+            case 'Approved': return 'leave-status-approved';
+            case 'Declined': return 'leave-status-rejected';
+            default: return 'leave-status-pending';
+        }
+    }
+
+    function loadNotifications() {
+        const notificationRef = database.ref('staff_notifications');
+        notificationRef.orderByChild('staffId').equalTo(currentStaffKey).once('value')
+            .then((snapshot) => {
+                let notificationHTML = '';
+                let unreadCount = 0;
+                
+                if (snapshot.exists()) {
+                    notifications = snapshot.val();
+                    
+                    snapshot.forEach((childSnapshot) => {
+                        const notification = childSnapshot.val();
+                        
+                        if (!notification.read) unreadCount++;
+                        
+                        const iconClass = 
+                            notification.type === 'leave_approved' ? 'fa-check-circle text-success' :
+                            notification.type === 'leave_declined' ? 'fa-times-circle text-danger' : 'fa-info-circle text-info';
+                        
+                        notificationHTML += `
+                            <li><a class="dropdown-item ${!notification.read ? 'fw-bold' : ''}" href="#" style="font-size: 0.85rem;" onclick="markNotificationAsRead('${childSnapshot.key}')">
+                                <i class="fas ${iconClass} me-2"></i>${notification.message}
+                                <small class="text-muted d-block">${formatDate(notification.timestamp)}</small>
+                            </a></li>
+                        `;
+                    });
+                    
+                    document.getElementById('notificationList').innerHTML = notificationHTML;
+                    document.getElementById('notificationCount').textContent = unreadCount;
+                    
+                    // Update recent activity
+                    updateRecentActivity();
+                } else {
+                    document.getElementById('notificationList').innerHTML = '<li><a class="dropdown-item" href="#" style="font-size: 0.85rem;"><i class="fas fa-info-circle me-2 text-info"></i>No new notifications</a></li>';
+                }
+            })
+            .catch((error) => {
+                console.error('Notification data error:', error);
+            });
+    }
+
+    function updateRecentActivity() {
+        const activityList = document.getElementById('recentActivityList');
+        let activityHTML = '';
+        
+        // Add recent leave applications
+        Object.entries(leaves).slice(0, 3).forEach(([id, leave]) => {
+            const iconClass = 
+                leave.status === 'Approved' ? 'fa-check-circle text-success' :
+                leave.status === 'Declined' ? 'fa-times-circle text-danger' : 'fa-clock text-warning';
+            
+            activityHTML += `
+                <div class="list-group-item" style="font-size: 0.85rem;">
+                    <i class="fas ${iconClass} me-2"></i>
+                    ${leave.leaveType} leave ${leave.status.toLowerCase()}
+                    <small class="text-muted d-block">${formatDate(leave.appliedDate)}</small>
+                </div>
+            `;
+        });
+        
+        activityList.innerHTML = activityHTML;
+    }
+
+    function markNotificationAsRead(notificationId) {
+        database.ref('staff_notifications/' + notificationId).update({ read: true })
+            .then(() => {
+                loadNotifications();
+            })
+            .catch(error => {
+                console.error('Error marking notification as read:', error);
+            });
+    }
+
+    // Mark attendance functionality
+    document.getElementById('markAttendanceBtn').addEventListener('click', function() {
+        const today = new Date().toISOString().split('T')[0];
+        const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        
+        // Save to Firebase
+        const attendanceId = 'ATT' + Date.now();
+        const attendanceData = {
+            date: today,
+            records: {
+                [currentStaffKey]: {
+                    staffId: currentStaffKey,
+                    timeIn: currentTime,
+                    status: 'Present',
+                    remarks: 'Marked by staff'
+                }
+            },
+            markedAt: new Date().toISOString()
+        };
+        
+        database.ref('staff_attendance/' + attendanceId).set(attendanceData)
+            .then(() => {
+                showSuccessMessage('Attendance marked successfully!');
+                loadAttendanceData();
+            })
+            .catch(error => {
+                alert('Error marking attendance: ' + error.message);
+            });
+    });
+
+    // Leave application functionality
+    document.getElementById('leaveApplicationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const leaveType = document.getElementById('leaveType').value;
+        const leaveDuration = document.getElementById('leaveDuration').value;
+        const leaveStartDate = document.getElementById('leaveStartDate').value;
+        const leaveEndDate = document.getElementById('leaveEndDate').value;
+        const leaveReason = document.getElementById('leaveReason').value;
+        
+        if (!leaveType || !leaveDuration || !leaveStartDate || !leaveEndDate || !leaveReason) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        const leaveData = {
+            staffId: currentStaffKey,
+            leaveType: leaveType,
+            startDate: leaveStartDate,
+            endDate: leaveEndDate,
+            duration: parseInt(leaveDuration),
+            reason: leaveReason,
+            status: 'Pending',
+            appliedDate: new Date().toISOString(),
+            appliedBy: 'staff'
+        };
+        
+        // Generate leave ID
+        const leaveId = 'LEAVE' + Date.now();
+        
+        // Save to Firebase
+        database.ref('staff_leaves/' + leaveId).set(leaveData)
+            .then(() => {
+                showSuccessMessage('Leave application submitted successfully!');
+                document.getElementById('leaveApplicationForm').reset();
+                loadLeaveData();
+            })
+            .catch(error => {
+                alert('Error applying for leave: ' + error.message);
+            });
+    });
+
+    function cancelLeave(leaveId) {
+        if (confirm('Are you sure you want to cancel this leave application?')) {
+            database.ref('staff_leaves/' + leaveId).remove()
+                .then(() => {
+                    showSuccessMessage('Leave application cancelled successfully!');
+                    loadLeaveData();
+                })
+                .catch(error => {
+                    alert('Error cancelling leave: ' + error.message);
+                });
+        }
+    }
+
+    // Export payslip functionality
+    document.getElementById('exportPayslip').addEventListener('click', function() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(16);
+        doc.text('UNITED COLLEGE OF SCIENCE AND TECHNOLOGY', 20, 20);
+        doc.setFontSize(14);
+        doc.text('PAYSLIP', 20, 30);
+        
+        doc.setFontSize(10);
+        doc.text(`Employee: ${currentStaff.firstName} ${currentStaff.lastName}`, 20, 45);
+        doc.text(`Employee ID: ${currentStaff.employeeId}`, 20, 52);
+        doc.text(`Department: ${currentStaff.department}`, 20, 59);
+        doc.text(`Position: ${currentStaff.position}`, 20, 66);
+        doc.text(`Period: ${new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`, 20, 73);
+        
+        // Salary details
+        doc.setFontSize(12);
+        doc.text('EARNINGS', 20, 85);
+        doc.text('AMOUNT (Ksh)', 150, 85);
+        
+        doc.setFontSize(10);
+        doc.text('Basic Salary', 20, 95);
+        doc.text((currentStaff.salary || 0).toLocaleString(), 150, 95);
+        
+        doc.text('Housing Allowance', 20, 102);
+        doc.text('5,000', 150, 102);
+        
+        doc.text('Transport Allowance', 20, 109);
+        doc.text('3,000', 150, 109);
+        
+        doc.text('Medical Allowance', 20, 116);
+        doc.text('2,000', 150, 116);
+        
+        doc.setFontSize(12);
+        doc.text('DEDUCTIONS', 20, 130);
+        
+        doc.setFontSize(10);
+        doc.text('Tax', 20, 140);
+        doc.text('6,500', 150, 140);
+        
+        doc.text('NSSF', 20, 147);
+        doc.text('1,080', 150, 147);
+        
+        doc.text('NHIF', 20, 154);
+        doc.text('1,200', 150, 154);
+        
+        // Net salary
+        doc.setFontSize(12);
+        doc.text('NET SALARY', 20, 170);
+        doc.text(`Ksh ${(currentStaff.salary || 0).toLocaleString()}`, 150, 170);
+        
+        doc.save(`Payslip_${currentStaff.employeeId}_${new Date().getMonth()+1}_${new Date().getFullYear()}.pdf`);
+    });
+
+    // Navigation between modules
+    document.querySelectorAll('[data-module]').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            const module = this.getAttribute('data-module');
+            
+            document.querySelectorAll('.nav-link').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            document.querySelectorAll('.module-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(module).classList.add('active');
+            
+            // Refresh module data when switching to it
+            if (module === 'attendance') {
+                loadAttendanceData();
+            } else if (module === 'payroll') {
+                loadPayrollData();
+            } else if (module === 'leaves') {
+                loadLeaveData();
+            }
+            
+            // Close mobile sidebar after selection
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.remove('show');
+            }
+        });
+    });
+
+    // Theme toggle functionality
+    document.getElementById('themeToggle').addEventListener('click', function() {
+        isDarkMode = !isDarkMode;
+        if (isDarkMode) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            this.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            this.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+        
+        // Save theme preference to localStorage
+        localStorage.setItem('darkMode', isDarkMode);
+    });
+
+    // Settings modal
+    document.getElementById('settingsBtn').addEventListener('click', function() {
+        const settingsModal = new bootstrap.Modal(document.getElementById('settingsModal'));
+        settingsModal.show();
+    });
+
+    // Save settings
+    document.getElementById('saveSettings').addEventListener('click', function() {
+        alert('Settings saved successfully!');
+        const settingsModal = bootstrap.Modal.getInstance(document.getElementById('settingsModal'));
+        settingsModal.hide();
+    });
+
+    // Mobile menu toggle
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('show');
+    });
+
+    // Forgot password functionality
+    document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        const modal = new bootstrap.Modal(document.getElementById('forgotPasswordModal'));
+        modal.show();
+    });
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        currentStaff = null;
+        currentStaffKey = null;
+        
+        document.getElementById('dashboardSection').classList.add('d-none');
+        document.getElementById('loginSection').classList.remove('d-none');
+        document.getElementById('loginForm').reset();
+    });
+
+    // Profile picture upload
+    document.getElementById('profilePictureInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profilePicture').src = e.target.result;
+                document.getElementById('mainProfilePic').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Profile form submission
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const profileData = {
+            firstName: document.getElementById('profileFirstName').value,
+            lastName: document.getElementById('profileLastName').value,
+            email: document.getElementById('profileEmail').value,
+            phone: document.getElementById('profilePhone').value,
+            address: document.getElementById('profileAddress').value,
+            updatedAt: new Date().toISOString()
+        };
+        
+        // Update in Firebase
+        database.ref('non_teaching_staff/' + currentStaffKey).update(profileData)
+            .then(() => {
+                showSuccessMessage('Profile updated successfully!');
+                loadStaffData();
+            })
+            .catch(error => {
+                alert('Error updating profile: ' + error.message);
+            });
+    });
+
+    // Utility functions
+    function showSuccessMessage(message) {
+        const successMsg = document.getElementById('successMessage');
+        successMsg.querySelector('span').textContent = message;
+        successMsg.classList.add('show');
+        
+        setTimeout(() => {
+            successMsg.classList.remove('show');
+        }, 3000);
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    // Initialize the application
+    $(document).ready(function() {
+        // Pre-fill test data
+        document.getElementById('fullName').value = 'Lilian Muli';
+        document.getElementById('employeeId').value = 'STF2025001';
+        
+        // Load theme preference
+        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (savedDarkMode) {
+            isDarkMode = true;
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        }
+        
+        // Set current date for leave application
+        const today = new Date();
+        document.getElementById('leaveStartDate').valueAsDate = today;
+        document.getElementById('leaveEndDate').valueAsDate = new Date(today.getTime() + 24 * 60 * 60 * 1000); // Tomorrow
+        
+        // Calculate leave duration
+        document.getElementById('leaveStartDate').addEventListener('change', calculateLeaveDuration);
+        document.getElementById('leaveEndDate').addEventListener('change', calculateLeaveDuration);
+    });
+
+    function calculateLeaveDuration() {
+        const startDate = new Date(document.getElementById('leaveStartDate').value);
+        const endDate = new Date(document.getElementById('leaveEndDate').value);
+        
+        if (startDate && endDate && startDate <= endDate) {
+            const timeDiff = endDate.getTime() - startDate.getTime();
+            const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1; // +1 to include both start and end dates
+            document.getElementById('leaveDuration').value = dayDiff;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Application Procedures - Your Institution Name</title>
+  
+  <style>
+    button{
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      font-weight:bold;
+      text-decoration: none;
+      padding: 20px;
+      text-align: center;
+      border: 3px solid black;
+      border-radius: 6px;
+      height: 45px;
+      width: 250px;
+      background-color: white;
+      color:black;
+      padding-left: 20px;
+    }
+    
+    main {
+      margin-top: 80px;
+      padding: 20px;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Hero section styling */
+    .hero {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 40px;
+    }
+    
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    /* Application methods section */
+    .application-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+    
+    .method-card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-top: 4px solid #007bff;
+      transition: transform 0.3s ease;
+    }
+    
+    .method-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .method-card h2 {
+      color: #007bff;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    
+    .method-card ol, .method-card ul {
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .method-card li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    
+    /* Requirements section */
+    .requirements {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 8px;
+      margin-bottom: 40px;
+    }
+    
+    .requirements h2 {
+      color: #333;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .req-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .req-item {
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* CTA buttons */
+    .cta-section {
+      text-align: center;
+      padding: 30px 0;
+    }
+    
+    .btn {
+      display: inline-block;
+      background: #007bff;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0 10px;
+      transition: background 0.3s ease;
+    }
+    
+    .btn:hover {
+      background: #0056b3;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #007bff;
+      color: #007bff;
+    }
+    
+    .btn-outline:hover {
+      background: #007bff;
+      color: white;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .btn {
+        display: block;
+        margin: 10px auto;
+        max-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+<button><a href="index.html">Back Home</a></button>
+  
+  <main>
+    <section class="hero">
+      <h1>Application Procedures</h1>
+      <p>Begin your educational journey with us. Follow the steps below to complete your application through our online system or manual process.</p>
+    </section>
+    
+    <section class="application-methods">
+      <div class="method-card">
+        <h2>Online Application</h2>
+        <ol>
+          <li>Create your applicant account using a valid email address</li>
+          <li>Fill in the online application form with your personal details</li>
+          <li>Select your preferred course of study from our programs</li>
+          <li>Upload required documents (scanned copies)</li>
+          <li>Review your application for accuracy</li>
+          <li>Submit your application electronically</li>
+          <li>Make payment through the integrated payment system</li>
+          <li>Receive confirmation email with application reference number</li>
+        </ol>
+        <a href="application.html" class="btn">Start Online Application</a>
+      </div>
+      
+      <div class="method-card">
+        <h2>Manual Application</h2>
+        <ol>
+          <li>Download the application form or collect one from our admissions office</li>
+          <li>Complete the form using block letters or typewriter</li>
+          <li>Attach certified copies of all required documents</li>
+          <li>Include application fee payment proof</li>
+          <li>Submit completed forms in person or by registered mail</li>
+          <li>Wait for SMS confirmation of application receipt</li>
+          <li>Track application status via our student portal</li>
+          <li>Receive admission letter if successful</li>
+        </ol>
+        <a href="downloads/application-form.pdf" class="btn btn-outline">Download Application Form</a>
+      </div>
+    </section>
+    
+    <section class="requirements">
+      <h2>General Application Requirements</h2>
+      <div class="req-grid">
+        <div class="req-item">
+          <h3>Academic Documents</h3>
+          <ul>
+            <li>Secondary school certificate</li>
+            <li>Transcripts and result slips</li>
+            <li>National ID copy</li>
+            <li>Passport photos (2)</li>
+          </ul>
+        </div>
+        
+        <div class="req-item">
+          <h3>Additional Documents</h3>
+          <ul>
+            <li>Birth certificate</li>
+            <li>Recommendation letters (if required)</li>
+            <li>Sponsorship letter (if applicable)</li>
+            <li>Medical certificate</li>
+          </ul>
+        </div>
+        
+        <div class="req-item">
+          <h3>Application Fees</h3>
+          <ul>
+            <li>Non-refundable application fee</li>
+            <li>Bank deposit slip or payment confirmation</li>
+            <li>Financial aid application (if applicable)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+    <section class="cta-section">
+      <h2>Ready to Apply?</h2>
+      <p>Choose the application method that works best for you and begin your journey today.</p>
+      <a href="application.html" class="btn">Apply Online Now</a>
+      <a href="contacts.html" class="btn btn-outline">Contact Admissions Office</a>
+    </section>
+  </main>
+</body>
+</html>
